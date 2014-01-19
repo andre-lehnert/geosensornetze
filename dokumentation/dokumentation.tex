@@ -1,0 +1,70 @@
+\documentclass{report}
+
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{graphics}
+% ermoeglicht \begin{Verbatim}[samepage=true] fuer besseres copy&paste von Beispieloutput bzw. Code.
+\usepackage{fancyvrb}
+
+% Für anklickbare URLs mit \url{...}
+\usepackage[pdfborder={0 0 0}, colorlinks=false, plainpages=false, pdfpagelabels, hypertexnames=false]{hyperref}
+
+% Ohne das Package haben eps-Dateien bei mir nicht funktioniert
+\usepackage{epstopdf, epsfig}
+
+% Für Änderung des Spacings von Listen
+\usepackage{enumitem}
+
+\usepackage[ngerman]{babel}
+
+%Ermögliche das Nutzen von Umlauten im Quelltext ohne \"<vokal>
+\usepackage[utf8x]{inputenc}
+
+
+%Zeilenumbruch und mehr
+\usepackage[activate]{microtype}
+
+%Quellcode
+\usepackage{listings}
+\usepackage{caption}
+\lstset{               	         
+breaklines=true,                
+breakatwhitespace=true,  
+showspaces=true,
+showstringspaces=false,
+captionpos=b
+}
+
+% Abstand zwischen Text und Überschriften von Susbections verringern
+\usepackage{titlesec}
+\titlespacing\subsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+
+% Auszeichnung von Inline-Code für Klassennamen etc.?
+\newcommand{\inlcode}{\texttt}
+
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries}{}{0pt}{\Huge}
+\titlespacing*{\chapter}
+  {0pt}{10pt}{40pt}
+
+\title{Geosensornetze WS 2013/2014}
+\author{Andre Lehnert und Marcel Salvage}
+
+\begin{document}
+
+\parindent 0pt
+\parskip 6pt
+
+\maketitle
+\tableofcontents
+\parindent 0pt
+
+\input{einfuehrung/einfuehrung}
+\input{simulationsumgebung/simulationsumgebung}
+\input{algorithmik/algorithmik}
+\input{evaluation/evaluation}
+
+%\appendix
+%\input{appendix/appendix}
+
+\end{document}
