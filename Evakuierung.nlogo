@@ -1,7 +1,7 @@
 extensions [array table]
 
 ;;__includes["gsn.nls"]
-__includes["person.nls" "exit.nls" "event.nls" "gas.nls" "patch.nls"]
+__includes["person.nls" "person-linking.nls" "exit.nls" "event.nls" "gas.nls" "patch.nls"]
 
 breed[exits exit]
 breed[persons person]
@@ -141,7 +141,7 @@ CHOOSER
 inputFile
 inputFile
 "Abstract.png" "Simple.png" "Raumplan.png" "ikg.png"
-2
+0
 
 SLIDER
 14
@@ -184,7 +184,7 @@ eventCount
 eventCount
 0
 20
-2
+1
 1
 1
 NIL
@@ -214,7 +214,7 @@ maxCountdown
 maxCountdown
 2
 100
-38
+14
 1
 1
 NIL
@@ -336,7 +336,7 @@ gas-expansion-propability
 gas-expansion-propability
 0
 100
-100
+42
 1
 1
 %
@@ -351,7 +351,7 @@ person-detection-radius
 person-detection-radius
 1
 300
-60
+71
 1
 1
 NIL

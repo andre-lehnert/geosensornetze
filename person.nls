@@ -34,7 +34,8 @@ to person-state [newstate]
     set color grey    
     set shape "person_dead" ;; selbsterstellte Shape: rotierbar
     set heading 45
-    set label ""    
+    set label "" 
+    check-connection   
   ]
   
 end
@@ -58,7 +59,7 @@ to setup-persons
   
   ;; Verlinkung aller Personen, Kommunikation wird per Distance eingeschränkt
   createGG
-   
+  
   ask persons [       
     person-state("INIT")
   ]
@@ -103,25 +104,8 @@ to random-move
     face nb
     forward 1
     
-    let me self
+    check-connection
     
-    ask link-neighbors [ 
-      
-      ifelse distance myself <= person-detection-radius [ 
-         
-         ask link-with me [
-           set shape "connect"
-           set color blue
-         ]
-         
-      ][
-         ask link-with me [
-           set shape "communication"
-           set color grey
-         ]
-         
-      ]
-    ]
   ]  
   
   ;; Person kommt in Kontakt mit dem Giftgas und stirbt
@@ -132,66 +116,6 @@ to random-move
   ]
   
 end
-
-
-to createCompleteGraph
-  clear-links
-  foreach sort persons [    
-      ask persons [
-        if state != "DEAD" [                  
-          if distance ? > 0 [create-link-with ? ]   
-           
-        ]
-      ]   
-  ] 
-  
-end
- 
-to createGG
-  createCompleteGraph
-  foreach sort persons [
-    
-    
-      ask ? [
-        if state != "DEAD" [
-        let u ?
-        foreach sort link-neighbors [
-          let v ?
-          let distuv distance v
-          ifelse all? link-neighbors [isPlanar u v distuv "GG"] [] [ask link-with v [set color red hide-link ]]
-        ]
-      ]
-    ]
-  ]
-  ask links with [color = red] [die]
- 
-  
-end 
-
-to-report isPlanar[u v distuv graphtype]
-  ifelse graphtype = "RNG"
-  [report isRNG u v distuv] [report isGG u v distuv]
-  
-end
-
-
-to-report isRNG [u v distuv]
-   ifelse distance u >= distuv or distance v >= distuv
-    [report true]
-    [report false]
-end 
-
-
-to-report isGG [u v distuv]
-  ifelse ((distance u) ^ 2) + ((distance v) ^ 2)  >= (distuv ^ 2)
-    [report true]
-    [report false]
-
-end
-
-
-
-
 
 to person-detect-event
   
@@ -270,6 +194,7 @@ to person-move-to-exit
     face direction
     forward 1
     
+    check-connection
   ]  
   
   ;; Person kommt in Kontakt mit dem Giftgas und stirbt
@@ -306,5 +231,53 @@ to person-reach-exit
     person-state "RESCUED"
     
   ]
+  
+end
+
+
+
+to check-connection
+  
+  let me self
+    
+    ask link-neighbors [ 
+      
+      ifelse state != "DEAD" and [state] of me != "DEAD" [
+        
+        ifelse distance myself <= person-detection-radius [ 
+          
+          ask link-with me [
+            set shape "connect"
+            set color blue
+          ]
+          
+        ][
+        
+        ask link-with me [
+          set shape "communication"
+          set color grey
+        ]
+        
+        ]                
+      ][
+      
+      ask link-with me [
+        set shape "communication"
+        set color grey
+      ]
+      
+      ]
+      
+      
+      ;if state = "DEAD" or [state] of me = "DEAD" [
+       
+       ; ask link-with me [
+        ;  set shape "communication"
+        ;  set color grey
+        ;]
+        
+      ;]
+      
+    ]
   
 end
