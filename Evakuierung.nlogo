@@ -1,7 +1,7 @@
 extensions [array table]
 
 ;;__includes["gsn.nls"]
-__includes["person.nls" "exit.nls" "event.nls" "gas.nls"]
+__includes["person.nls" "exit.nls" "event.nls" "gas.nls" "patch.nls"]
 
 breed[exits exit]
 breed[persons person]
@@ -30,67 +30,11 @@ to setup-world
 end
 
 
-to patch-become [newstate]
-  
-  set patch-state newstate  
-  
-  ;; signal-spreading
-  
-  if state = "NONE" [
-    set pcolor white
-    set nearest-exit 0
-    set signal-noise 0
-  ]  
-  
-  if state = "WALL" [ ;; do nothing
-    
-  ]
-  
-  if state = "SPREADING" [
-    set pcolor orange
-  ] 
-  
-  if state = "IDLE" [
-    set pcolor yellow    
-  ]
-  
-  if state = "DONE" [
-    set pcolor white     
-  ]
-  
-  ;; events
-  
-  if state = "EVENT" [
-    set pcolor 126 ;; magenta
-  ]
-  
-end
-
-
-to setup-patches
-  
-  ask patches [ ;; Weltkarte reseten
-    
-    if (pcolor = white) [
-      set patch-state "NONE"
-      set signal-noise -1
-    ]
-    if (pcolor = black) [
-      set patch-state "WALL"
-      set signal-noise -1
-    ]
-  ]
-  
-end
-
-
 to go  
   
-  ask persons [
+  ask persons [    
     
-    if (state != "DEAD") [
-      random-move 
-    ]
+    random-move    
     
   ]
   
@@ -105,8 +49,10 @@ to go
     event-done
   ]
   
-  ask gases [
-    gas-expand
+  ask patches [
+    
+    patch-gassing
+    
   ]
   
   tick
@@ -175,17 +121,17 @@ personCount
 personCount
 1
 100
-1
+20
 1
 1
 NIL
 HORIZONTAL
 
 BUTTON
-225
-604
-288
-637
+210
+619
+273
+652
 NIL
 go
 T
@@ -200,27 +146,27 @@ NIL
 
 SLIDER
 14
-130
+173
 186
-163
+206
 eventCount
 eventCount
 0
 20
-1
+2
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-17
-217
-189
-250
+32
+210
+204
+243
 minCountdown
 minCountdown
-0
+1
 100
 1
 1
@@ -229,25 +175,25 @@ NIL
 HORIZONTAL
 
 SLIDER
-18
-261
-190
-294
+32
+247
+204
+280
 maxCountdown
 maxCountdown
-0
+2
 100
-5
+38
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-18
-301
-190
-334
+13
+399
+185
+432
 exitLimit
 exitLimit
 1
@@ -259,10 +205,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-204
-401
-283
-434
+198
+476
+277
+509
 NIL
 init-exits
 NIL
@@ -276,10 +222,10 @@ NIL
 1
 
 BUTTON
-134
-439
-283
-472
+128
+514
+277
+547
 Delete signalcolour
 hide-signal-spreading
 NIL
@@ -293,10 +239,10 @@ NIL
 1
 
 SWITCH
-19
-401
-198
-434
+13
+476
+192
+509
 show-signal-spreading
 show-signal-spreading
 0
@@ -304,10 +250,10 @@ show-signal-spreading
 -1000
 
 BUTTON
-107
-522
-285
-555
+97
+559
+275
+592
 NIL
 decentral-signal-spreading
 NIL
@@ -321,48 +267,48 @@ NIL
 1
 
 SLIDER
-15
-479
-187
-512
+13
+362
+185
+395
 exit-signal-strength
 exit-signal-strength
 1
 1000
-121
+131
 10
 1
 NIL
 HORIZONTAL
 
 SLIDER
-19
-349
-217
-382
+34
+127
+232
+160
 walk-propability
 walk-propability
 0
 100
-79
+100
 1
 1
 %
 HORIZONTAL
 
 SLIDER
-144
-168
-316
-201
-event-gas-amount
-event-gas-amount
+31
+284
+240
+317
+gas-expansion-propability
+gas-expansion-propability
 0
-1000
-285
-5
+100
+100
 1
-NIL
+1
+%
 HORIZONTAL
 
 @#$#@#$#@

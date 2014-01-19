@@ -3,8 +3,6 @@
 events-own [
   state
   countdown ;; Zeit bis zur Freisetzung des Gases
-  gas-amount
-  gas-released 
 ]
 
 breed[gases gas]
@@ -36,7 +34,7 @@ to event-state [newstate]
   
   ;; Gas wurde entlassen
   if state = "DONE" [
-    set color black
+    set color red
     set label ""
   ]
   
@@ -67,9 +65,6 @@ end
 to event-init
   
   if state = "INIT" [
-    
-    set gas-amount event-gas-amount
-    set gas-released 0
     
     set countdown minCountdown + (random (maxCountdown - minCountdown)) ;; Zufällig im Intervall [minCountdown, maxCountdown]
     set label countdown
@@ -103,27 +98,14 @@ to event-gassing
   
   if state = "GASSING" [
     
-    ifelse gas-released < gas-amount [
+    
+    ask patch-here [ 
       
-      ask patch-here [ 
-        
-        sprout-gases 1  
-        
-      ]
+      set patch-state "EVENT"
       
-      ask gases [
-        set shape "cloud"
-        set size 15
-        set color 66        
-      ]
-      
-      set gas-released ( gas-released + 1 )
-      
-    ][
+    ] 
     
     event-state("DONE")
-    
-    ]
     
   ]
   

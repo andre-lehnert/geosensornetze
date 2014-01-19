@@ -26,8 +26,9 @@ to person-state [newstate]
   ] 
   
   if state = "DEAD" [
-    set color grey 
+    set color grey    
     set shape "person_dead" ;; selbsterstellte Shape: rotierbar
+    set heading 45
   ]
   
 end
@@ -67,18 +68,28 @@ end
 
 to random-move
   
-  let g random-float 1.00000001 ;; Wahrscheinlichkeit g
-  let probability    0.00000001 ;; float initialisieren ?!
-  set probability ( walk-propability / 100 )
-  
-  if g <= probability [
+  if state != "DEAD" [
     
-    let nb one-of neighbors
-    while [[patch-state] of nb = "WALL"] [
-      set nb one-of neighbors   
+    let g random-float 1.00000001 ;; Wahrscheinlichkeit g
+    let probability    0.00000001 ;; float initialisieren ?!
+    set probability ( walk-propability / 100 )
+    
+    if g <= probability [
+      
+      let nb one-of neighbors
+      while [[patch-state] of nb = "WALL"] [
+        set nb one-of neighbors   
+      ]
+      face nb
+      forward 1
+      
     ]
-    face nb
-    forward 1
+    
+    if [patch-state] of patch-here = "EVENT" or [patch-state] of patch-here = "EVENT-DONE"[
+      
+      person-state("DEAD")
+      
+    ]
     
   ]
   
