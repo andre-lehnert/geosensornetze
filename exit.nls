@@ -169,7 +169,8 @@ to decentral-signal-spreading
     ask patches [
       
       ;; spread-signal-to-neighbors4 ;; 4 Nachbarn (Nord, Ost, Süd, West)
-      if (patch-state = "SPREADING" and signal-noise = i) [ 
+      if patch-state = "SPREADING" [; and signal-noise = i [ 
+       
         
         let parent-exit nearest-exit
         let signal-noise-here signal-noise + 1

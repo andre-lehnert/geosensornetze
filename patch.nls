@@ -9,11 +9,12 @@ to patch-become [newstate]
   if state = "NONE" [
     set pcolor white
     set nearest-exit 0
-    set signal-noise 0
+    set signal-noise 10000
   ]  
   
   if state = "WALL" [ ;; do nothing
-    
+    set pcolor black
+    set signal-noise 10000
   ]
   
   if state = "SPREADING" [
@@ -43,12 +44,20 @@ to setup-patches
     
     if (pcolor = white) [
       set patch-state "NONE"
-      set signal-noise -1
+      set signal-noise random 10000
     ]
+    
     if (pcolor = black) [
       set patch-state "WALL"
-      set signal-noise -1
+      set signal-noise 10000
     ]
+    
+    if (pcolor != black and pcolor != white) [
+      set pcolor black
+      set patch-state "WALL"
+      set signal-noise 10000
+    ]
+    
   ]
   
 end
@@ -65,7 +74,7 @@ to patch-gassing
       
       ask neighbors [
         
-        if patch-state = "NONE" [
+        if patch-state = "NONE" or patch-state = "DONE" [
           set patch-state "EVENT"
           set pcolor 66          
         ] 

@@ -17,8 +17,13 @@ to person-state [newstate]
     set label-color black
   ]
   
-  ;; Running
+  if state = "EVENT_DETECTED" [
+    set label "!"
+  ]  
   
+  if state = "FLEEING" [
+    set label "*"
+  ]  
   
   ;; Ende
   if state = "RESCUED" [
@@ -29,6 +34,7 @@ to person-state [newstate]
     set color grey    
     set shape "person_dead" ;; selbsterstellte Shape: rotierbar
     set heading 45
+    set label ""
   ]
   
 end
@@ -36,6 +42,7 @@ end
 
 ;; Zufällige Platzierung von Personen
 to setup-persons
+  
   if inputFile = "Abstract.png" [ ;; Zufällige Platzierung
     create-persons personCount [setxy random-pxcor random-pycor]
   ]
@@ -51,46 +58,172 @@ to setup-persons
   ask persons [    
     person-state("INIT")
   ]
+  
 end
 
 to place-persons
+  
   create-persons personCount [
+    
     let y random-pycor
     let x random-pxcor
+    
     while [[pcolor] of patch x y != white] [
+      
       set y random-pycor
       set x random-pxcor
+      
     ]
-    setxy x y  
+    
+    setxy x y 
+    
   ]
+  
 end
 
 
 to random-move
   
-  if state != "DEAD" [
+  let g random-float 1.00000001 ;; Wahrscheinlichkeit g
+  let probability    0.00000001 ;; float initialisieren ?!
+  set probability ( walk-propability / 100 )
+  
+  if g <= probability [
     
-    let g random-float 1.00000001 ;; Wahrscheinlichkeit g
-    let probability    0.00000001 ;; float initialisieren ?!
-    set probability ( walk-propability / 100 )
+    let nb one-of neighbors
     
-    if g <= probability [
+    while [[patch-state] of nb = "WALL"] [
+      set nb one-of neighbors   
+    ]
+    
+    face nb
+    forward 1
+    
+  ]
+  
+  ;; Person kommt in Kontakt mit dem Giftgas und stirbt
+  if [patch-state] of patch-here = "EVENT" or [patch-state] of patch-here = "EVENT-DONE"[
+    
+    person-state("DEAD")
+    
+  ]
+  
+end
+
+
+to person-detect-event
+  
+  let detect-event false
+  
+  ask patches in-radius 20 [
+    
+    if patch-state = "EVENT" or patch-state = "EVENT_DONE" [
       
-      let nb one-of neighbors
-      while [[patch-state] of nb = "WALL"] [
-        set nb one-of neighbors   
-      ]
-      face nb
-      forward 1
+      set detect-event true
       
     ]
     
-    if [patch-state] of patch-here = "EVENT" or [patch-state] of patch-here = "EVENT-DONE"[
-      
-      person-state("DEAD")
-      
-    ]
+  ]
+  
+  if detect-event [
     
+    person-state "EVENT_DETECTED"
+    
+  ]
+  
+end
+
+
+to person-notify-neighbors
+  
+  if state = "EVENT_DETECTED" [
+    
+    
+    
+    person-state "FLEEING"
+    
+  ]
+  
+end
+
+
+to person-flee
+  
+  if state = "FLEEING" [
+    
+    person-move-to-exit
+    
+  ]
+  
+end
+
+
+to person-move-to-exit
+  
+  let g random-float 1.00000001 ;; Wahrscheinlichkeit g
+  let probability    0.00000001 ;; float initialisieren ?!
+  set probability ( walk-propability / 100 )
+  
+  if g <= probability [
+    
+    let direction one-of neighbors
+    ;let min-noise exit-signal-strength + 1 ;; min auf maximalen wert + 1 gesetzt
+    let this-noise [signal-noise] of patch-here
+    
+    foreach sort neighbors [
+      
+      if [patch-state] of ? != "WALL" and [patch-state] of ? != "EVENT" and [patch-state] of ? != "EVENT_DONE" [
+        
+        if [signal-noise] of ? < this-noise [
+          set min-noise [signal-noise] of ?
+          set direction ?
+        ]
+        
+        ;if [signal-noise] of ? < min-noise [
+        ;  set min-noise [signal-noise] of ?
+        ;  set direction ?
+        ;]
+      ]      
+    ]  
+    
+    face direction
+    forward 1
+    
+  ]
+  
+  ;; Person kommt in Kontakt mit dem Giftgas und stirbt
+  if [patch-state] of patch-here = "EVENT" or [patch-state] of patch-here = "EVENT-DONE"[
+    
+    person-state("DEAD")
+    
+  ]
+  
+end
+
+
+to person-reach-exit
+  
+  let rescue false
+  
+  ask patch-here [
+   
+   let my-x pxcor
+   let my-y pycor
+   
+   ask exits [
+     
+     if (my-x = xcor and my-y = ycor) [
+      set rescue true
+     ]
+     
+   ]
+    
+  ]
+  
+  if rescue [
+   
+   person-state "RESCUED"
+       
   ]
   
 end

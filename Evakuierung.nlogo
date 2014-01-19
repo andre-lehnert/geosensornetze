@@ -13,20 +13,28 @@ patches-own[
   patch-state
 ]
 
+globals[
+  rescued-persons
+]
+
 to setup
   clear-all
   reset-ticks
   setup-world  
+  
+  set rescued-persons 0
 end
 
 
 to setup-world
+  
   resize-world 0 622 0 576
   import-pcolors inputFile
   setup-patches
   setup-exits
   setup-persons
   setup-events
+  
 end
 
 
@@ -34,7 +42,23 @@ to go
   
   ask persons [    
     
-    random-move    
+    if state = "INIT" [
+     
+     random-move
+      
+    ]
+    
+    if state != "DEAD" [
+      
+      person-detect-event
+      
+      person-notify-neighbors
+      
+      person-flee
+      
+      person-reach-exit
+        
+    ]
     
   ]
   
@@ -56,6 +80,7 @@ to go
   ]
   
   tick
+  
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -110,7 +135,7 @@ CHOOSER
 inputFile
 inputFile
 "Abstract.png" "Simple.png" "Raumplan.png" "ikg.png"
-2
+0
 
 SLIDER
 14
@@ -121,7 +146,7 @@ personCount
 personCount
 1
 100
-20
+45
 1
 1
 NIL
@@ -153,7 +178,7 @@ eventCount
 eventCount
 0
 20
-2
+3
 1
 1
 NIL
@@ -275,7 +300,7 @@ exit-signal-strength
 exit-signal-strength
 1
 1000
-131
+551
 10
 1
 NIL
@@ -290,7 +315,7 @@ walk-propability
 walk-propability
 0
 100
-100
+75
 1
 1
 %
@@ -305,7 +330,7 @@ gas-expansion-propability
 gas-expansion-propability
 0
 100
-100
+0
 1
 1
 %
