@@ -1,0 +1,89 @@
+;person-linking.nls
+
+to createCompleteGraph
+  clear-links
+  foreach sort persons [    
+      ask persons [
+        if state != "DEAD" [                  
+          if distance ? > 0 [create-link-with ? ]   
+           
+        ]
+      ]   
+  ] 
+  
+end
+
+to createUDG
+  clear-links
+  foreach sort persons[
+    ask persons [
+      if distance ? < person-detection-radius and distance ? > 0 [create-link-with ?]
+    ]
+  ] 
+end
+
+to createFixedUDG
+  clear-links
+  foreach sort persons[
+    ask persons [
+      if distance ? < 1000 and distance ? > 0 [create-link-with ?]
+    ]
+  ] 
+end
+
+to createRNG
+  createCompleteGraph
+   foreach sort persons[
+    ask ? [
+      let u ?
+      foreach sort link-neighbors [
+        let v ?
+        let distuv distance v
+        ifelse all? link-neighbors [isPlanar u v distuv "RNG"] [] [ask link-with v [set color red]]
+      ]
+    ]
+  ]
+  ask links with [color = red] [die] 
+end
+ 
+to createGG
+  createCompleteGraph
+  foreach sort persons [
+    
+    
+      ask ? [
+        if state != "DEAD" [
+        let u ?
+        foreach sort link-neighbors [
+          let v ?
+          let distuv distance v
+          ifelse all? link-neighbors [isPlanar u v distuv "GG"] [] [ask link-with v [set color red hide-link ]]
+        ]
+      ]
+    ]
+  ]
+  ask links with [color = red] [die]
+ 
+  
+end 
+
+to-report isPlanar[u v distuv graphtype]
+  ifelse graphtype = "RNG"
+  [report isRNG u v distuv] [report isGG u v distuv]
+  
+end
+
+
+to-report isRNG [u v distuv]
+   ifelse distance u >= distuv or distance v >= distuv
+    [report true]
+    [report false]
+end 
+
+
+to-report isGG [u v distuv]
+  ifelse ((distance u) ^ 2) + ((distance v) ^ 2)  >= (distuv ^ 2)
+    [report true]
+    [report false]
+
+end

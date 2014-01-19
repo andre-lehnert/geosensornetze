@@ -1,0 +1,54 @@
+;person-gsn.nls
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Functions for sending and receiving messages                                        ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Received messages are added to the queue
+to receive [message]
+  set messages lput message messages  
+end
+
+;; Broadcasting messages involves sending them to all link neighbors
+to broadcast [message]
+  
+  let me self      
+  ask link-neighbors [
+    
+    if state != "DEAD" and [state] of me != "DEAD" [        
+      if distance myself <= person-detection-radius [      
+        receive message
+      ]
+    ] 
+  ]  
+  
+end
+
+;; Sending messages is a unicast to a specified target
+to send [message target]
+  ask target [receive message]  
+end
+
+;; Reports true if a particular message has been received.
+to-report has-message [mtype]
+  foreach messages [
+    if first ? = mtype [
+      report true
+    ]
+  ]
+  report false
+end
+
+;; Received checks whether a message of a particular type has been received, and if so
+;; places this message in the nextmessage slot
+to-report received [mtype]
+  foreach messages [
+    if first ? = mtype [
+      set messages remove-item position ? messages messages ;; This only removes one item
+      let nextmessage ?
+      
+      report nextmessage
+    ]
+  ]
+  report []
+end
