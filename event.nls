@@ -2,60 +2,140 @@
 
 events-own [
   state
-  countdown ;; Zeit bis zur Freisetzung des Gases  
+  countdown ;; Zeit bis zur Freisetzung des Gases
+  gas-amount
+  gas-released 
 ]
 
+breed[gases gas]
 
 to event-state [newstate]
   
   set state newstate
   
   set size 15
-  set shape "x"
-  set color magenta 
+  set shape "x"  
   set heading 0 
   set label-color black 
-   
+  
   ;; Start
-  if state = "INIT" [    
-    set countdown minCountdown + (random (maxCountdown - minCountdown))
+  if state = "INIT" [   
+    set color magenta    
+  ]  
+  
+  if state = "COUNTDOWN" [   
+    set color magenta    
     set label countdown
+  ]  
+  
+  ;; Gas entlassen
+  if state = "GASSING" [
+    set color red
+    set label "gassing"
+  ]   
+  
+  ;; Gas wurde entlassen
+  if state = "DONE" [
+    set color black
+    set label ""
   ]
   
-  ;; Passierbar
-   if state = "GASSING" [
-    set label "gassing"
-  ]    
 end
 
 
 to setup-events
+  
   create-events eventCount [
+    
     let y random-pycor
     let x random-pxcor
-    while [[pcolor] of patch x y != white] [
+    
+    while [[patch-state] of patch x y = "WALL"] [
       set y random-pycor
       set x random-pxcor
     ]
+    
     setxy x y  
-  ]
-  ask events [
+    
     event-state("INIT")
-  ]
+    
+  ] 
+  
 end
 
 
-to count-down 
-  set countdown countdown - 1
-  set label countdown
-  if countdown = 0 [
-   event-state("GASSING")
+to event-init
+  
+  if state = "INIT" [
+    
+    set gas-amount event-gas-amount
+    set gas-released 0
+    
+    set countdown minCountdown + (random (maxCountdown - minCountdown)) ;; Zufällig im Intervall [minCountdown, maxCountdown]
+    set label countdown
+    
+    event-state("COUNTDOWN")
+    
   ]
+  
 end
 
 
-to gassing
+to event-countdown
   
+  if state = "COUNTDOWN" [
+    
+    set countdown countdown - 1
+    set label countdown
+    
+    if countdown = 0 [
+      
+      event-state("GASSING")
+      
+    ] 
+    
+  ]
   
+end
+
+
+to event-gassing
+  
+  if state = "GASSING" [
+    
+    ifelse gas-released < gas-amount [
+      
+      ask patch-here [ 
+        
+        sprout-gases 1  
+        
+      ]
+      
+      ask gases [
+        set shape "cloud"
+        set size 15
+        set color 66        
+      ]
+      
+      set gas-released ( gas-released + 1 )
+      
+    ][
+    
+    event-state("DONE")
+    
+    ]
+    
+  ]
+  
+end
+
+
+to event-done
+  
+  if state = "DONE" [
+    
+    ;; nichts
+    
+  ]
   
 end

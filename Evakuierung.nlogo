@@ -1,7 +1,7 @@
 extensions [array table]
 
 ;;__includes["gsn.nls"]
-__includes["person.nls" "exit.nls" "event.nls"]
+__includes["person.nls" "exit.nls" "event.nls" "gas.nls"]
 
 breed[exits exit]
 breed[persons person]
@@ -23,6 +23,7 @@ end
 to setup-world
   resize-world 0 622 0 576
   import-pcolors inputFile
+  setup-patches
   setup-exits
   setup-persons
   setup-events
@@ -32,6 +33,8 @@ end
 to patch-become [newstate]
   
   set patch-state newstate  
+  
+  ;; signal-spreading
   
   if state = "NONE" [
     set pcolor white
@@ -55,27 +58,59 @@ to patch-become [newstate]
     set pcolor white     
   ]
   
+  ;; events
+  
+  if state = "EVENT" [
+    set pcolor 126 ;; magenta
+  ]
+  
 end
 
 
-
-to go
-  ask persons [
-    if (state != "DEAD") [
-      random-move 
+to setup-patches
+  
+  ask patches [ ;; Weltkarte reseten
+    
+    if (pcolor = white) [
+      set patch-state "NONE"
+      set signal-noise -1
+    ]
+    if (pcolor = black) [
+      set patch-state "WALL"
+      set signal-noise -1
     ]
   ]
   
+end
+
+
+to go  
+  
+  ask persons [
+    
+    if (state != "DEAD") [
+      random-move 
+    ]
+    
+  ]
+  
   ask events [
-    if (state != "GASSING") [
-      count-down
-    ]   
+    
+    event-init
+    
+    event-countdown  
+    
+    event-gassing
+    
+    event-done
+  ]
+  
+  ask gases [
+    gas-expand
   ]
   
   tick
 end
-
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 352
@@ -140,7 +175,7 @@ personCount
 personCount
 1
 100
-27
+1
 1
 1
 NIL
@@ -172,7 +207,7 @@ eventCount
 eventCount
 0
 20
-5
+1
 1
 1
 NIL
@@ -187,7 +222,7 @@ minCountdown
 minCountdown
 0
 100
-25
+1
 1
 1
 NIL
@@ -202,7 +237,7 @@ maxCountdown
 maxCountdown
 0
 100
-50
+5
 1
 1
 NIL
@@ -275,7 +310,7 @@ BUTTON
 555
 NIL
 decentral-signal-spreading
-T
+NIL
 1
 T
 OBSERVER
@@ -294,8 +329,38 @@ exit-signal-strength
 exit-signal-strength
 1
 1000
-991
+121
 10
+1
+NIL
+HORIZONTAL
+
+SLIDER
+19
+349
+217
+382
+walk-propability
+walk-propability
+0
+100
+79
+1
+1
+%
+HORIZONTAL
+
+SLIDER
+144
+168
+316
+201
+event-gas-amount
+event-gas-amount
+0
+1000
+285
+5
 1
 NIL
 HORIZONTAL
@@ -404,6 +469,15 @@ false
 Circle -7500403 true true 0 0 300
 Circle -16777216 true false 30 30 240
 
+cloud
+false
+0
+Circle -7500403 true true 13 118 94
+Circle -7500403 true true 86 101 127
+Circle -7500403 true true 51 51 108
+Circle -7500403 true true 118 43 95
+Circle -7500403 true true 158 68 134
+
 cow
 false
 0
@@ -478,6 +552,20 @@ Circle -7500403 true true 96 51 108
 Circle -16777216 true false 113 68 74
 Polygon -10899396 true false 189 233 219 188 249 173 279 188 234 218
 Polygon -10899396 true false 180 255 150 210 105 210 75 240 135 240
+
+gas
+false
+0
+Circle -13840069 true false 88 93 94
+Circle -13840069 true false 95 21 108
+Circle -13840069 true false 15 60 120
+Circle -13840069 true false 14 119 152
+Circle -13840069 true false 146 146 127
+Circle -13840069 true false 161 101 127
+Circle -13840069 true false 65 171 108
+Circle -13840069 true false 146 26 127
+Circle -13840069 true false 101 161 127
+Circle -13840069 true false 50 21 108
 
 house
 false

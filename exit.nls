@@ -138,17 +138,7 @@ end
 to init-decentral-signal-spreading
   
   
-  ask patches [ ;; Weltkarte reseten
-    
-    if (pcolor = white) [
-      set patch-state "NONE"
-      set signal-noise -1
-    ]
-    if (pcolor = black) [
-      set patch-state "WALL"
-      set signal-noise -1
-    ]
-  ]
+  
   
   ask exits [    
    
