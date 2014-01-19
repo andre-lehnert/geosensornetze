@@ -1,0 +1,283 @@
+;; Every turtle stores 4 local variables:
+;; * messages, a list of received messages
+;; * state, the automaton state of the mote
+;; * parent, the parent of the mote
+;; * children, the list of the motes children
+;; In addition, two variables are used for reporting: 
+;; * Sent messages in msgsent (list of messages sent, structured [[m1, n1, l1], [n2, n2, l2], ...])
+;; * Received messages in msghear (messages heard, but not processed), same structure. 
+;; * Received messages in msgrecv (messages received and processed), same structure. 
+;; m1, m2, ... is message name; n1, n2, ... is number of messages; l1, l2, ... is message length
+turtles-own [messages state parent children msgsent msgrecv msghear]
+
+globals [messagecount]
+
+
+;; Changing state for a mote is achieved with the command 'become "STATE"'
+to become [newstate]
+  set state newstate
+  if state = "DONE" [set color 0] ;; Black
+  if state = "INIT" [set color 9.9 set size 10] ;; White
+  if state = "IDLE" [set color 86 set size 10] ;; Light blue
+  if state = "CHCK" or state = "RSRC" [set color 104] ;; Dark blue
+  if state = "PITX" [set color 45] ;; Yellow
+  if state = "DEAD" or state = "PEAK" [set color 15] ;; Red
+  if state = "SINK" or state = "LEAD" or state = "ROOT" [set color 114] ;; Purple
+  if state = "EVNT" or state = "GBRG" or state = "RNBR" or state = "BNDY" [
+    set color 95 ;; Mid blue
+	set size 15
+  ]
+  if state ="OBNDY" [
+	set color 20
+	set size 15
+  ]
+  if state = "OUTSIDE" [
+	set color 20
+	set size 10
+  ]
+  if state = "INSIDE" [
+	set color 95
+	set size 10
+  ]
+  
+  if state = "SEND" [
+    set shape "mote_communicate"
+    set color 86 ;; Light blue
+  ]
+  if state = "LSTN" [
+    set shape "mote_communicate"
+    set color 95 ;; Mid blue
+  ]
+end
+
+;; Performs the binary OR operation
+to-report BinaryOR [bina binb]
+  ifelse length bina = length binb [ ;; Making sure the two numbers are the same length
+    let stringlength length bina
+    let tmp 0
+    let result 10 ^ stringlength
+    set result (word result)
+    set result remove-item 0 result ;; Result is a string of zeros the same length of a
+    repeat stringlength [ ;; Performing the binary OR operation
+      if item tmp bina = "1" or item tmp binb = "1" [set result replace-item tmp result "1"]
+      set tmp (tmp + 1)
+    ]
+    report result
+  ]
+  [ ;; If the two numbers are not the same length
+    show "Error: numbers are not the same length"
+    report []
+  ]
+end
+
+;; Given the x and y coordinates of two positions, this function reports the distance
+to-report dist [coords.a coords.b]
+  let x1 item 0 coords.a
+  let y1 item 1 coords.a
+  let x2 item 0 coords.b
+  let y2 item 1 coords.b  
+  report sqrt ((x2 - x1) ^ 2 + (y2 - y1) ^ 2)
+end
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Functions for sending and receiving messages                                        ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Received messages are added to the queue
+to receive [message]
+  set messages lput message messages
+  if trackmsg [
+    update-msg-count "HEAR" message
+  ]
+end
+
+;; Broadcasting messages involves sending them to all link neighbors
+to broadcast [message]
+  ask link-neighbors [receive message]
+  if trackmsg [
+    update-msg-count "SENT" message
+    update-messagecount count link-neighbors
+  ]
+end
+
+;; Sending messages is a unicast to a specified target
+to send [message target]
+  ask target [receive message]
+  if trackmsg [
+    update-msg-count "SENT" message
+    update-messagecount 1
+  ]
+end
+
+;; Reports true if a particular message has been received.
+to-report has-message [mtype]
+  foreach messages [
+    if first ? = mtype [
+      report true
+    ]
+  ]
+  report false
+end
+
+;; Received checks whether a message of a particular type has been received, and if so
+;; places this message in the nextmessage slot
+to-report received [mtype]
+  foreach messages [
+    if first ? = mtype [
+      set messages remove-item position ? messages messages ;; This only removes one item
+      let nextmessage ?
+      if trackmsg [
+        update-msg-count "RECV" nextmessage
+      ]
+      report nextmessage
+    ]
+  ]
+  report []
+end
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Utility functions for reporting on different messages                               ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+to update-messagecount [n]
+  set messagecount messagecount + n
+end
+
+
+;; update-msg-count updates the stored message count on each node (number and length)
+;; The data is stored in a list [[name1 n1 l1] [name2 n2 l2] ... ] where 
+;; name1, name2, ... is the names of different message types, 
+;; n1, n2, ... is the number of messages of that type sent/received, and
+;; l1, l2, ... is the length of messages of that type sent/received
+;; Argument "sent" is either true or false. If true, the msgsent counts are updated; if 
+;; false the msgrecv counts are updated
+;; Argument "message" contains the message to be sent/received
+to update-msg-count [mtype message] 
+  let msgcount msghear ;; By default update counts messages heard 
+  if mtype = "SENT" [set msgcount msgsent] ;; If sent=true then update counts of messages sent
+  if mtype = "RECV" [set msgcount msgrecv] ;; If sent=true then update counts of messages received
+
+  ;; tind is the index of the message name in msgsent/msgrecv 
+  ;; if the message name does not appear in msgsent/msgrecv, tind is false
+  ;; for example: if msgcount is [["MSGE" 1 4] ["PING" 10 30]] and message is ["PING" ...] then tind = 1     
+  ;; conversely if message is ["BDNY" ...] then tind = false
+  let tind position first message map [first ?] msgcount  
+  ifelse is-number? tind [
+    ;; Update the count of numbers of message
+    set msgcount replace-item tind msgcount (replace-item 1 (item tind msgcount) ((item 1 (item tind msgcount)) + 1) ) 
+    ;; Update the count of length of message
+    set msgcount replace-item tind msgcount (replace-item 2 (item tind msgcount) ((item 2 (item tind msgcount)) + sum map [length (word ?)] message))
+  ]
+  [
+    ;; Add new count for this message type
+    set msgcount fput (list first message 1 (sum map [length (word ?)] message)) msgcount
+  ]
+  
+  ;; Write the results back to msgsent/msgrecv 
+  if mtype = "SENT" [set msgsent msgcount] ;; If update counts of messages sent
+  if mtype = "RECV" [set msgrecv msgcount] ;; If update counts of messages received
+  if mtype = "HEAR" [set msghear msgcount] ;; If update counts of messages heard
+end
+
+;; reports message count totals for all motes
+;; argument "mtype" is "SENT", "RECV", or "HEAR"
+;; argument "lngth" is true if message length is to be reported; false if number of messages is to be reported
+to-report msg-totals [mtype lngth]
+  let ind 1 
+  if lngth = true [set ind 2]
+  if mtype = "SENT" [
+    report sum [sum map [item ind ?] msgsent] of motes with [length msgsent > 0]
+  ]
+  if mtype = "RECV" [
+    report sum [sum map [item ind ?] msgrecv] of motes with [length msgrecv > 0]
+  ]
+  if mtype = "HEAR" [
+    report sum [sum map [item ind ?] msghear] of motes with [length msghear > 0]
+  ]
+end
+
+;; reports message count totals for all motes for a particular message name
+;; argument "sent" is true if sent messages to be reported; false if received messages to be reported
+;; argument "lngth" is true if message length is to be reported; false if number of messages is to be reported
+;; argument "name" is the name of the message to be counted
+to-report msg-totals-by-name [mtype lngth name]
+  let ind 1 
+  if lngth = true [set ind 2]
+  if mtype = "SENT" [
+    report sum [sum map [item ind ?] filter [first ? = name] msgsent] of motes with [length filter [first ? = name] msgsent > 0]
+  ]
+  if mtype = "HEAR" [
+    report sum [sum map [item ind ?] filter [first ? = name] msghear] of motes with [length filter [first ? = name] msghear > 0]
+  ]
+  if mtype = "RECV" [
+    report sum [sum map [item ind ?] filter [first ? = name] msgrecv] of motes with [length filter [first ? = name] msgrecv > 0]
+  ]
+end
+
+;; Wrapper for msg-totals
+to-report sent-length-msg-totals
+  report msg-totals "SENT" true
+end
+
+;; Wrapper for msg-totals
+to-report sent-number-msg-totals
+  report msg-totals "SENT" false
+end
+
+;; Wrapper for msg-totals
+to-report recv-length-msg-totals
+  report msg-totals "RECV" true
+end
+
+;; Wrapper for msg-totals
+to-report recv-number-msg-totals
+  report msg-totals "RECV" false
+end
+
+;; Wrapper for msg-totals
+to-report hear-length-msg-totals
+  report msg-totals "HEAR" true
+end
+
+;; Wrapper for msg-totals
+to-report hear-number-msg-totals
+  report msg-totals "HEAR" false
+end
+
+;; Wrapper for msg-totals-by-name
+to-report sent-length-msg-totals-by-name [name]
+  report msg-totals-by-name "SENT" true name
+end
+
+;; Wrapper for msg-totals-by-name
+to-report sent-number-msg-totals-by-name [name]
+  report msg-totals-by-name "SENT" false name
+end
+
+;; Wrapper for msg-totals-by-name
+to-report recv-length-msg-totals-by-name [name]
+  report msg-totals-by-name "RECV" true name
+end
+
+;; Wrapper for msg-totals-by-name
+to-report recv-number-msg-totals-by-name [name]
+  report msg-totals-by-name "RECV" false name
+end
+
+;; Wrapper for msg-totals-by-name
+to-report hear-length-msg-totals-by-name [name]
+  report msg-totals-by-name "HEAR" true name
+end
+
+;; Wrapper for msg-totals-by-name
+to-report hear-number-msg-totals-by-name [name]
+  report msg-totals-by-name "HEAR" false name
+end
+
+;; Runs the selected protocol
+
+
+

@@ -1,0 +1,75 @@
+;; Person
+
+persons-own [
+  state ;; Status im Lebenszyklus
+]
+
+to person-state [newstate]
+  
+  set state newstate
+  
+  ;; Start
+  if state = "INIT" [
+    set size 15
+    set shape "person"
+    set color brown
+    set heading 0
+    set label-color black
+  ]
+  
+  ;; Running
+  
+  
+  ;; Ende
+  if state = "RESCUED" [
+    die ;; turtle von der Karte entfernen
+  ] 
+  
+  if state = "DEAD" [
+    set color grey 
+    set shape "person_dead" ;; selbsterstellte Shape: rotierbar
+  ]
+  
+end
+
+
+;; Zufällige Platzierung von Personen
+to setup-persons
+  if inputFile = "Abstract.png" [ ;; Zufällige Platzierung
+    create-persons personCount [setxy random-pxcor random-pycor]
+  ]
+  if inputFile = "Simple.png" [ ;; Zufällige Platzierung mit Wand-Detektion
+    place-persons
+  ]
+  if inputFile = "ikg.png" [ ;; Zufällige Platzierung mit Wand-Detektion
+    place-persons
+  ]
+  if inputFile = "Raumplan.png" [ ;; Zufällige Platzierung mit Wand-Detektion
+    place-persons
+  ]
+  ask persons [    
+    person-state("INIT")
+  ]
+end
+
+to place-persons
+  create-persons personCount [
+    let y random-pycor
+    let x random-pxcor
+    while [[pcolor] of patch x y != white] [
+      set y random-pycor
+      set x random-pxcor
+    ]
+    setxy x y  
+  ]
+end
+
+
+to random-move
+  let nb one-of neighbors
+  while [[pcolor] of nb != white] [
+   set nb one-of neighbors 
+  ]
+  face nb
+  forward 1
+end

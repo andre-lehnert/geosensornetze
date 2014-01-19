@@ -1,0 +1,61 @@
+;; Event
+
+events-own [
+  state
+  countdown ;; Zeit bis zur Freisetzung des Gases  
+]
+
+
+to event-state [newstate]
+  
+  set state newstate
+  
+  set size 15
+  set shape "x"
+  set color magenta 
+  set heading 0 
+  set label-color black 
+   
+  ;; Start
+  if state = "INIT" [    
+    set countdown minCountdown + (random (maxCountdown - minCountdown))
+    set label countdown
+  ]
+  
+  ;; Passierbar
+   if state = "GASSING" [
+    set label "gassing"
+  ]    
+end
+
+
+to setup-events
+  create-events eventCount [
+    let y random-pycor
+    let x random-pxcor
+    while [[pcolor] of patch x y != white] [
+      set y random-pycor
+      set x random-pxcor
+    ]
+    setxy x y  
+  ]
+  ask events [
+    event-state("INIT")
+  ]
+end
+
+
+to count-down 
+  set countdown countdown - 1
+  set label countdown
+  if countdown = 0 [
+   event-state("GASSING")
+  ]
+end
+
+
+to gassing
+  
+  
+  
+end

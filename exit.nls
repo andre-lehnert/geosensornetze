@@ -1,0 +1,335 @@
+;; Exit
+
+__includes["decentral_signal_spreading.nls" "default_signal_spreading.nls" "bresenham_signal_spreading.nls"]
+
+exits-own [
+  radius
+  inner-radius 
+  state
+  negotiable 
+  limit ;; Limitierung der möglichen Personen, die zeitgleich den Ausgang benutzen können
+  signal-color
+  max-noise
+]
+
+to exit-state [newstate]
+  
+  set state newstate
+  
+  ;; Start
+  if state = "INIT" [    
+    set size 20
+    set shape "square"
+    set color yellow
+    set heading 0
+    set label-color black
+  ]
+  
+  ;; Passierbar
+  if state = "NEGOTIABLE" [
+    set negotiable true
+    set size 20
+    set shape "square"
+    set color green ;; Falls negotiable = true
+    set heading 0
+    set label-color black
+  ]  
+  
+  ;; Nicht passierbar
+  if state = "BLOCKED" [
+    set negotiable false
+    set size 20
+    set shape "square"
+    set color red ;; Falls negotiable = false
+    set heading 0
+    set label-color black
+  ] 
+  
+end
+
+
+;; Platzierung der Notausgänge
+to setup-exits
+  
+  ;; x,y für zwei (z.Z. fix) Notausgänge
+  let x1 0
+  let x2 0
+  let y1 0
+  let y2 0
+  
+  if inputFile = "Abstract.png" [ ;; Zufällige Platzierung
+    set x1 random-pxcor
+    set x2 random-pxcor
+    set y1 random-pycor
+    set y2 random-pycor
+  ]
+  if inputFile = "Simple.png" [ ;; Statische Platzierung
+    set x1 280
+    set x2 280
+    set y1 17
+    set y2 559
+  ]
+  if inputFile = "ikg.png" [ ;; Statische Platzierung
+    set x1 280
+    set x2 40
+    set y1 330
+    set y2 510
+  ]
+  if inputFile = "Raumplan.png" [ ;; Statische Platzierung
+    set x1 290
+    set x2 0
+    set y1 330
+    set y2 510
+  ]
+  
+  create-exits 1 [
+    setxy x1 y1
+    set signal-color cyan
+  ]
+  create-exits 1 [
+    setxy x2 y2
+    set signal-color orange
+  ]
+  
+  ask exits [    
+    exit-state("INIT")
+    
+    set limit exitLimit
+    
+    set radius 600 
+    set inner-radius 1 
+    set max-noise exit-signal-strength   
+  ]
+  
+end
+
+
+
+to init-exits 
+  
+  init-decentral-signal-spreading
+  
+  ;ask exits [   
+  
+  ;default-signal-spreading    
+  ;bresenham-signal-spreading
+  
+  ;exit-state("NEGOTIABLE") 
+  
+  ;] 
+  
+end
+
+
+to hide-signal-spreading
+  
+  ask patches [
+    
+    if ( pcolor = orange or pcolor = cyan or pcolor = blue ) [
+      set pcolor white 
+    ]  
+    
+  ]
+  
+end
+
+
+
+to init-decentral-signal-spreading
+  
+  
+  ask patches [ ;; Weltkarte reseten
+    
+    if (pcolor = white) [
+      set patch-state "NONE"
+      set signal-noise -1
+    ]
+    if (pcolor = black) [
+      set patch-state "WALL"
+      set signal-noise -1
+    ]
+  ]
+  
+  ask exits [    
+   
+    ask patch-here [ ;; Initialisierung des Patches unter einem exit
+      
+      if (patch-state = "NONE") [ 
+        
+        set patch-state "SPREADING"   
+        set nearest-exit myself
+        set signal-noise 0
+        if (show-signal-spreading) [ 
+          let patch-color 0 
+          ask nearest-exit [ set patch-color signal-color ]
+          set pcolor patch-color
+        ]
+        
+      ]      
+    ]    
+  ]
+  
+  
+end
+
+to decentral-signal-spreading
+  let i 0
+  
+  while [i < exit-signal-strength] [
+    ask patches [
+      
+      ;; spread-signal-to-neighbors4 ;; 4 Nachbarn (Nord, Ost, Süd, West)
+      if (patch-state = "SPREADING" and signal-noise = i) [ 
+        
+        let parent-exit nearest-exit
+        let signal-noise-here signal-noise + 1
+        
+        ask neighbors4 [
+          
+          if (patch-state = "NONE") [ 
+            
+            set patch-state "SPREADING"
+            set nearest-exit parent-exit 
+            set signal-noise signal-noise-here
+            
+            if (show-signal-spreading) [ 
+              let patch-color 0 
+              ask nearest-exit [ set patch-color signal-color ]
+              ;set pcolor patch-color  ;; <- Farbwahl 1: Zugehörigkeit
+              
+              ;; Farbwahl 2: Abstand
+              if (signal-noise > 0) [
+                set pcolor 56
+              ]
+              if (signal-noise > 50) [
+                set pcolor 65
+              ]
+              if (signal-noise > 100) [
+                set pcolor 46
+              ]
+              if (signal-noise > 150) [
+                set pcolor 44
+              ]
+              if (signal-noise > 200) [
+                set pcolor 26
+              ]
+              if (signal-noise > 250) [
+                set pcolor 16
+              ]
+              if (signal-noise > 300) [
+                set pcolor 15
+              ]
+              if (signal-noise > 350) [
+                set pcolor 14
+              ]
+              if (signal-noise > 400) [
+                set pcolor 13
+              ]
+            ]
+            
+            let noise 0
+            ask nearest-exit [ set noise max-noise ]
+            if (signal-noise >= noise) [
+              set patch-state "DONE"
+            ]   
+          ]
+          
+          if (patch-state = "SPREADING") [            
+            
+            if (signal-noise > signal-noise-here) [
+              if (nearest-exit != parent-exit) [
+                
+                set nearest-exit parent-exit 
+                set signal-noise signal-noise-here 
+                                               
+                if (show-signal-spreading) [  
+                  ;set pcolor red                  
+                ] 
+              ] 
+              set patch-state "IDLE"              
+            ]    
+            
+                      
+          ]
+          
+          if (patch-state = "IDLE") [            
+            
+            if (signal-noise > signal-noise-here) [
+              if (nearest-exit != parent-exit) [
+                show self
+                 set nearest-exit parent-exit 
+                 set signal-noise signal-noise-here
+                if (show-signal-spreading) [        
+                  ;set pcolor blue
+                ] 
+              ]             
+            ]              
+            set patch-state "DONE"           
+          ]
+          
+        ]    
+        set patch-state "DONE"  
+      ]
+      
+      if (patch-state = "IDLE") [
+        if (show-signal-spreading) [        
+          set pcolor white
+        ]
+      ]  
+    ]
+    set i (i + 1)
+  ]
+   
+  
+end
+
+
+
+
+
+
+
+to-report is-available [x y x0 y0]
+  
+  if (is-world x y x0 y0) [  
+    if (is-wall x y x0 y0) [
+      report false 
+    ]
+    report true
+  ]
+  
+  report false
+  
+end
+
+
+to-report is-world [x y x0 y0]
+  
+  set x x + x0
+  set y y + y0
+  
+  let in (x > 0 and y > 0) and (x < max-pxcor and y < max-pycor)
+  
+  report in
+  
+end
+
+
+to-report is-wall [x y x0 y0]
+  
+  let wall false
+  
+  
+  ask patch-at x y [  
+    if (pcolor != white and pcolor != orange) [         
+      set wall true
+    ]
+  ] 
+  
+  report wall
+  
+end
+
+
+
+
