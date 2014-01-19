@@ -1,7 +1,7 @@
 extensions [array table]
 
 ;;__includes["gsn.nls"]
-__includes["person.nls" "person-linking.nls" "exit.nls" "event.nls" "gas.nls" "patch.nls"]
+__includes["person.nls" "person-linking.nls" "person-gsn.nls" "exit.nls" "event.nls" "gas.nls" "patch.nls"]
 
 breed[exits exit]
 breed[persons person]
@@ -31,6 +31,12 @@ to setup-world
   setup-exits
   setup-persons
   setup-events
+  
+  ask links [
+   
+   hide-link
+    
+  ]
   
 end
 
@@ -141,7 +147,7 @@ CHOOSER
 inputFile
 inputFile
 "Abstract.png" "Simple.png" "Raumplan.png" "ikg.png"
-0
+2
 
 SLIDER
 14
@@ -152,7 +158,7 @@ personCount
 personCount
 1
 100
-100
+40
 1
 1
 NIL
@@ -184,7 +190,7 @@ eventCount
 eventCount
 0
 20
-1
+2
 1
 1
 NIL
@@ -276,7 +282,7 @@ SWITCH
 509
 show-signal-spreading
 show-signal-spreading
-0
+1
 1
 -1000
 
@@ -306,7 +312,7 @@ exit-signal-strength
 exit-signal-strength
 1
 1000
-551
+701
 10
 1
 NIL
@@ -336,7 +342,7 @@ gas-expansion-propability
 gas-expansion-propability
 0
 100
-42
+7
 1
 1
 %
@@ -351,11 +357,21 @@ person-detection-radius
 person-detection-radius
 1
 300
-71
+1
 1
 1
 NIL
 HORIZONTAL
+
+CHOOSER
+201
+77
+339
+122
+graph-type
+graph-type
+"Complete Graph" "UDG" "Fixed UDG" "RNG" "GG"
+4
 
 @#$#@#$#@
 ## WHAT IS IT?

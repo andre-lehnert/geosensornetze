@@ -2,6 +2,12 @@
 
 persons-own [
   state ;; Status im Lebenszyklus
+  messages
+  parent 
+  children 
+  msgsent 
+  msgrecv 
+  msghear
 ]
 
 to person-state [newstate]
@@ -14,7 +20,7 @@ to person-state [newstate]
     set shape "person"
     set color brown
     set heading 0
-    set label-color black
+    set label-color black    
   ]
   
   if state = "EVENT_DETECTED" [
@@ -58,11 +64,41 @@ to setup-persons
   ] 
   
   ;; Verlinkung aller Personen, Kommunikation wird per Distance eingeschränkt
-  createGG
+  create-graph
   
-  ask persons [       
+  ask persons [
+    
+    set messages[] ;; Clear any messages
+    set msgsent [] ;; Clear the list of messages sent
+    set msgrecv [] ;; Clear the list of messages received
+    set msghear []
+    
     person-state("INIT")
   ]
+  
+end
+
+to create-graph
+  
+  if graph-type = "Complete Graph" [
+    createCompleteGraph
+  ]
+  
+  if graph-type = "UDG" [
+    createUDG
+  ]
+  
+  if graph-type = "Fixed UDG" [
+    createFixedUDG
+  ]
+  
+  if graph-type = "RNG" [
+    createRNG
+  ]
+  
+  if graph-type = "GG" [
+    createGG
+  ]    
   
 end
 
@@ -88,6 +124,16 @@ end
 
 
 to random-move
+  
+  ;; Erhalten der Broadcast Meldung, dass ein event detektiert wurde
+  let msg received "EVENT_DETECTED"
+  if msg != [] [
+    broadcast ["EVENT_DETECTED"]
+    ask link-neighbors [ask link-with myself [set color orange]] ;; Link colors are orange
+    person-state "EVENT_DETECTED"
+    stop
+  ]
+  
   
   let g random-float 1.00000001 ;; Wahrscheinlichkeit g
   let probability    0.00000001 ;; float initialisieren ?!
@@ -144,10 +190,10 @@ to person-notify-neighbors
   
   if state = "EVENT_DETECTED" [
     
+    ;; Broadcast (BasicFlooding) der event Detektion zur Warnung der anderen Personen
+    broadcast ["EVENT_DETECTED"]
     
-    
-    person-state "FLEEING"
-    
+    person-state "FLEEING"    
   ]
   
 end
@@ -156,6 +202,9 @@ end
 to person-flee
   
   if state = "FLEEING" [
+    
+    ;; Broadcast (BasicFlooding) der event Detektion zur Warnung der anderen Personen
+    broadcast ["EVENT_DETECTED"]
     
     person-move-to-exit
     
@@ -239,45 +288,48 @@ end
 to check-connection
   
   let me self
+  
+  ask link-neighbors [ 
     
-    ask link-neighbors [ 
+    ifelse state != "DEAD" and [state] of me != "DEAD" [
       
-      ifelse state != "DEAD" and [state] of me != "DEAD" [
-        
-        ifelse distance myself <= person-detection-radius [ 
-          
-          ask link-with me [
-            set shape "connect"
-            set color blue
-          ]
-          
-        ][
+      ifelse distance myself <= person-detection-radius [ 
         
         ask link-with me [
-          set shape "communication"
-          set color grey
+          set shape "connect"
+          set color blue
+          show-link
         ]
         
-        ]                
       ][
       
       ask link-with me [
         set shape "communication"
         set color grey
+        hide-link
       ]
       
-      ]
-      
-      
-      ;if state = "DEAD" or [state] of me = "DEAD" [
-       
-       ; ask link-with me [
-        ;  set shape "communication"
-        ;  set color grey
-        ;]
-        
-      ;]
-      
+      ]                
+    ][
+    
+    ask link-with me [
+      set shape "communication"
+      set color grey
+      hide-link
     ]
+    
+    ]
+    
+    
+    ;if state = "DEAD" or [state] of me = "DEAD" [
+    
+    ; ask link-with me [
+    ;  set shape "communication"
+    ;  set color grey
+    ;]
+    
+    ;]
+    
+  ]
   
 end
