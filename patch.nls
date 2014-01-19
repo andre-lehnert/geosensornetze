@@ -1,0 +1,82 @@
+;; patch
+
+to patch-become [newstate]
+  
+  set patch-state newstate  
+  
+  ;; signal-spreading
+  
+  if state = "NONE" [
+    set pcolor white
+    set nearest-exit 0
+    set signal-noise 0
+  ]  
+  
+  if state = "WALL" [ ;; do nothing
+    
+  ]
+  
+  if state = "SPREADING" [
+    set pcolor orange
+  ] 
+  
+  if state = "IDLE" [
+    set pcolor yellow    
+  ]
+  
+  if state = "DONE" [
+    set pcolor white     
+  ]
+  
+  ;; events
+  
+  if state = "EVENT" [
+    set pcolor 126 ;; magenta
+  ]
+  
+end
+
+
+to setup-patches
+  
+  ask patches [ ;; Weltkarte reseten
+    
+    if (pcolor = white) [
+      set patch-state "NONE"
+      set signal-noise -1
+    ]
+    if (pcolor = black) [
+      set patch-state "WALL"
+      set signal-noise -1
+    ]
+  ]
+  
+end
+
+to patch-gassing
+  
+  if patch-state = "EVENT" [
+   
+    let g random-float 1.00000001
+    let probability    0.00000001
+    set probability ( gas-expansion-propability / 100 )
+    
+    if g <= probability [     
+      
+      ask neighbors [
+        
+        if patch-state = "NONE" [
+          set patch-state "EVENT"
+          set pcolor 66          
+        ] 
+        
+      ]
+      
+      set patch-state "EVENT-DONE"
+      
+    ]  
+     
+    
+  ]
+  
+end
