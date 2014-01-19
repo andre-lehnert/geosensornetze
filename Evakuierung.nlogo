@@ -13,16 +13,13 @@ patches-own[
   patch-state
 ]
 
-globals[
-  rescued-persons
-]
-
 to setup
   clear-all
   reset-ticks
-  setup-world  
   
-  set rescued-persons 0
+  set-default-shape links "communication"
+  
+  setup-world    
 end
 
 
@@ -39,7 +36,7 @@ end
 
 
 to go  
-  
+ 
   ask persons [    
     
     if state = "INIT" [
@@ -81,6 +78,15 @@ to go
   
   tick
   
+end
+
+
+to-report dist [coords.a coords.b]
+  let x1 item 0 coords.a
+  let y1 item 1 coords.a
+  let x2 item 0 coords.b
+  let y2 item 1 coords.b  
+  report sqrt ((x2 - x1) ^ 2 + (y2 - y1) ^ 2)
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -135,7 +141,7 @@ CHOOSER
 inputFile
 inputFile
 "Abstract.png" "Simple.png" "Raumplan.png" "ikg.png"
-0
+2
 
 SLIDER
 14
@@ -146,7 +152,7 @@ personCount
 personCount
 1
 100
-45
+100
 1
 1
 NIL
@@ -170,25 +176,25 @@ NIL
 1
 
 SLIDER
-14
-173
-186
-206
+11
+252
+183
+285
 eventCount
 eventCount
 0
 20
-3
+2
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-32
-210
-204
-243
+29
+289
+201
+322
 minCountdown
 minCountdown
 1
@@ -200,10 +206,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-32
-247
-204
-280
+29
+326
+201
+359
 maxCountdown
 maxCountdown
 2
@@ -215,10 +221,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-13
-399
-185
-432
+12
+438
+184
+471
 exitLimit
 exitLimit
 1
@@ -292,10 +298,10 @@ NIL
 1
 
 SLIDER
-13
-362
-185
-395
+12
+401
+184
+434
 exit-signal-strength
 exit-signal-strength
 1
@@ -315,25 +321,40 @@ walk-propability
 walk-propability
 0
 100
-75
+100
 1
 1
 %
 HORIZONTAL
 
 SLIDER
-31
-284
-240
-317
+28
+363
+237
+396
 gas-expansion-propability
 gas-expansion-propability
 0
 100
-0
+100
 1
 1
 %
+HORIZONTAL
+
+SLIDER
+34
+163
+216
+196
+person-detection-radius
+person-detection-radius
+1
+300
+60
+1
+1
+NIL
 HORIZONTAL
 
 @#$#@#$#@
@@ -727,6 +748,26 @@ true
 0
 Line -7500403 true 150 150 90 180
 Line -7500403 true 150 150 210 180
+
+communication
+0.0
+-0.2 0 0.0 1.0
+0.0 1 4.0 4.0
+0.2 0 0.0 1.0
+link direction
+true
+0
+
+connect
+0.5
+-0.2 0 0.0 1.0
+0.0 1 1.0 0.0
+0.2 0 0.0 1.0
+link direction
+true
+0
+Polygon -13345367 true false 150 135 105 225 195 225 150 135
+Rectangle -13345367 true false 105 240 195 270
 
 @#$#@#$#@
 0
