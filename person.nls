@@ -8,6 +8,9 @@ persons-own [
   msgsent 
   msgrecv 
   msghear
+  exit-hopcounts
+  exit-positions
+  est-pos
 ]
 
 to person-state [newstate]
@@ -21,6 +24,8 @@ to person-state [newstate]
     set color brown
     set heading 0
     set label-color black    
+    set exit-hopcounts array:from-list n-values 2 [-1]
+    set exit-positions array:from-list n-values 2 [-1]
   ]
   
   if state = "EVENT_DETECTED" [

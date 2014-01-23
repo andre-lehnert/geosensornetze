@@ -1,7 +1,7 @@
 extensions [array table]
 
 ;;__includes["gsn.nls"]
-__includes["person.nls" "person-linking.nls" "person-gsn.nls" "exit.nls" "event.nls" "gas.nls" "patch.nls"]
+__includes["person.nls" "person-linking.nls" "person-gsn.nls" "exit.nls" "event.nls" "gas.nls" "patch.nls" "locate.nls"]
 
 breed[exits exit]
 breed[persons person]
@@ -96,10 +96,10 @@ to-report dist [coords.a coords.b]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-352
-20
-993
-635
+349
+22
+990
+637
 -1
 -1
 1.013
@@ -147,7 +147,7 @@ CHOOSER
 inputFile
 inputFile
 "Abstract.png" "Simple.png" "Raumplan.png" "ikg.png"
-2
+0
 
 SLIDER
 14
@@ -157,8 +157,8 @@ SLIDER
 personCount
 personCount
 1
-100
-40
+300
+165
 1
 1
 NIL
@@ -312,7 +312,7 @@ exit-signal-strength
 exit-signal-strength
 1
 1000
-701
+371
 10
 1
 NIL
@@ -372,6 +372,23 @@ graph-type
 graph-type
 "Complete Graph" "UDG" "Fixed UDG" "RNG" "GG"
 4
+
+BUTTON
+23
+604
+136
+637
+NIL
+locate-persons
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
