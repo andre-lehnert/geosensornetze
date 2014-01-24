@@ -9,7 +9,7 @@ to patch-become [newstate]
   if state = "NONE" [
     set pcolor white
     set nearest-exit 0
-    set signal-noise 10000
+    set signal-noise -1
   ]  
   
   if state = "WALL" [ ;; do nothing
@@ -44,7 +44,7 @@ to setup-patches
     
     if (pcolor = white) [
       set patch-state "NONE"
-      set signal-noise random 10000
+      set signal-noise random -1
     ]
     
     if (pcolor = black) [

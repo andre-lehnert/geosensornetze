@@ -10,7 +10,8 @@ persons-own [
   msghear
   exit-hopcounts
   exit-positions
-  est-pos  
+  est-pos
+  last-random-heading
 ]
 
 to person-state [newstate]
@@ -26,7 +27,8 @@ to person-state [newstate]
     set label-color black
     set label ""    
     set exit-hopcounts array:from-list n-values 2 [-1]
-    set exit-positions array:from-list n-values 2 [-1]   
+    set exit-positions array:from-list n-values 2 [-1]
+    set last-random-heading 361
   ]
   
   if state = "EVENT_DETECTED" [
@@ -136,7 +138,7 @@ to place-persons
     let y random-pycor
     let x random-pxcor
     
-    while [[pcolor] of patch x y != white] [
+    while [[patch-state] of patch x y = "WALL"] [
       
       set y random-pycor
       set x random-pxcor
@@ -168,14 +170,7 @@ to random-move
   
   if g <= probability [
     
-    let nb one-of neighbors
-    
-    while [[patch-state] of nb = "WALL"] [
-      set nb one-of neighbors   
-    ]
-    
-    face nb
-    forward 1  
+    random-walk
   ]  
   
   ;; Person kommt in Kontakt mit dem Giftgas und stirbt
@@ -186,6 +181,61 @@ to random-move
   ]
   
 end
+
+
+to random-walk
+  
+  if walk-strategy = "Straight with probability" and last-random-heading != 361 [
+    
+    let g random-float 1.00000001 ;; Wahrscheinlichkeit g
+    let probability    0.00000001 
+    set probability ( random-walk-probability / 100)
+    
+    set heading last-random-heading    
+   
+    if g <= probability [       
+      set last-random-heading 361
+      random-walk
+    ]
+    
+    change-direction     
+  ]
+  
+  if walk-strategy = "Straight with collision detection" and last-random-heading != 361 [   
+    
+    set heading last-random-heading    
+    change-direction 
+    
+  ]  
+  
+  if last-random-heading = 361 [
+    let nb one-of neighbors
+    
+    while [[patch-state] of nb = "WALL"] [
+      set nb one-of neighbors   
+    ]
+    
+    face nb
+    forward 1 
+    
+    set last-random-heading heading    
+  ] 
+  
+end
+
+
+to change-direction
+  
+  ifelse patch-ahead 1 != nobody and [patch-state] of patch-ahead 1 != "WALL" [
+      forward 1   
+    ]
+    [
+      set last-random-heading 361      
+    ]  
+  
+end
+
+
 
 to person-detect-event
   
@@ -245,27 +295,40 @@ to person-move-to-exit
   
   if g <= probability [
     
-    let direction one-of neighbors
-    ;let min-noise exit-signal-strength + 1 ;; min auf maximalen wert + 1 gesetzt
-    let this-noise [signal-noise] of patch-here
+    let direction one-of neighbors   
+    let this-noise [signal-noise] of patch-here    
     
-    foreach sort neighbors [
+    ifelse this-noise != 0 [ ;; Fallunterscheidung: Zellulärer Automat (Patches mit signal-noise != -1) ?
       
-      if [patch-state] of ? != "WALL" and [patch-state] of ? != "EVENT" and [patch-state] of ? != "EVENT_DONE" [
+      foreach sort neighbors [
         
-        if [signal-noise] of ? < this-noise [          
-          set direction ?
-        ]
-        
-        ;if [signal-noise] of ? < min-noise [
-        ;  set min-noise [signal-noise] of ?
-        ;  set direction ?
-        ;]
-      ]      
-    ]  
+        if [patch-state] of ? != "WALL" and [patch-state] of ? != "EVENT" and [patch-state] of ? != "EVENT_DONE" [
+          
+          if [signal-noise] of ? < this-noise [          
+            set direction ?            
+          ]
+          
+        ]      
+      ] 
+      
+    ][ ;; Keine Patchinformation    
+    
+    ifelse orientation-algorithm = "Gradient localization" [ ;; Orientierung über die "Gradient localization" ?      
+      
+                                                             ;; TODO Wie den Exit lokalisieren?      
+      
+    ] 
+    [
+      
+      random-walk
+      
+    ]
+    
+    ]
     
     face direction
-    forward 1   
+    forward 1    
+    
   ]  
   
   ;; Person kommt in Kontakt mit dem Giftgas und stirbt

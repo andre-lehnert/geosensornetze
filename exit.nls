@@ -70,7 +70,7 @@ to setup-exits
     set y2 559
   ]
   if inputFile = "ikg.png" [ ;; Statische Platzierung
-    set x1 280
+    set x1 290
     set x2 40
     set y1 330
     set y2 510

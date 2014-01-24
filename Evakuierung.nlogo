@@ -178,18 +178,18 @@ CHOOSER
 inputFile
 inputFile
 "Abstract.png" "Simple.png" "Raumplan.png" "ikg.png"
-1
+2
 
 SLIDER
-11
-139
-183
-172
+14
+113
+174
+146
 personCount
 personCount
 1
 300
-30
+203
 1
 1
 NIL
@@ -197,9 +197,9 @@ HORIZONTAL
 
 BUTTON
 161
-542
+589
 224
-575
+622
 NIL
 go
 T
@@ -213,10 +213,10 @@ NIL
 1
 
 SLIDER
-11
-252
-183
-285
+14
+314
+186
+347
 eventCount
 eventCount
 0
@@ -224,14 +224,14 @@ eventCount
 1
 1
 1
-NIL
+bombs
 HORIZONTAL
 
 SLIDER
-29
-289
-201
-322
+32
+351
+204
+384
 minCountdown
 minCountdown
 1
@@ -239,29 +239,29 @@ minCountdown
 5
 1
 1
-NIL
+ticks
 HORIZONTAL
 
 SLIDER
-29
-326
-201
-359
+32
+388
+204
+421
 maxCountdown
 maxCountdown
 2
 100
-18
+19
 1
 1
-NIL
+ticks
 HORIZONTAL
 
 SLIDER
-12
-438
-184
-471
+15
+500
+187
+533
 exitLimit
 exitLimit
 1
@@ -273,10 +273,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-197
-476
-346
-509
+200
+538
+349
+571
 Delete signalcolour
 hide-signal-spreading
 NIL
@@ -290,10 +290,10 @@ NIL
 1
 
 SWITCH
-13
-476
-192
-509
+16
+538
+187
+571
 show-signal-spreading
 show-signal-spreading
 1
@@ -301,25 +301,25 @@ show-signal-spreading
 -1000
 
 SLIDER
-12
-401
-184
-434
+15
+463
+187
+496
 exit-signal-strength
 exit-signal-strength
 1
 1000
-1
+871
 10
 1
 NIL
 HORIZONTAL
 
 SLIDER
-31
-176
-229
-209
+32
+148
+214
+181
 walk-propability
 walk-propability
 0
@@ -331,33 +331,33 @@ walk-propability
 HORIZONTAL
 
 SLIDER
-28
-363
-237
-396
+31
+425
+205
+458
 gas-expansion-propability
 gas-expansion-propability
 0
 100
-100
+12
 1
 1
 %
 HORIZONTAL
 
 SLIDER
-31
-212
-213
-245
+33
+265
+230
+298
 person-detection-radius
 person-detection-radius
 1
 300
-108
+60
 1
 1
-NIL
+patches
 HORIZONTAL
 
 CHOOSER
@@ -368,13 +368,13 @@ CHOOSER
 graph-type
 graph-type
 "Complete Graph" "UDG" "RNG" "GG"
-0
+1
 
 BUTTON
 16
-542
+589
 129
-575
+622
 NIL
 locate-persons
 NIL
@@ -413,6 +413,31 @@ NIL
 NIL
 NIL
 1
+
+CHOOSER
+32
+183
+214
+228
+walk-strategy
+walk-strategy
+"Complete random" "Straight with collision detection" "Straight with probability"
+2
+
+SLIDER
+32
+230
+230
+263
+random-walk-probability
+random-walk-probability
+0
+100
+2
+1
+1
+%
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
