@@ -101,25 +101,13 @@ to setup-exits
     set max-noise exit-signal-strength   
   ]
   
-end
-
-
-
-to init-exits 
-  
+ 
+ if orientation-algorithm = "Cellular automaton" [
   init-decentral-signal-spreading
-  
-  ;ask exits [   
-  
-  ;default-signal-spreading    
-  ;bresenham-signal-spreading
-  
-  ;exit-state("NEGOTIABLE") 
-  
-  ;] 
+  decentral-signal-spreading
+ ]
   
 end
-
 
 to hide-signal-spreading
   
@@ -134,11 +122,7 @@ to hide-signal-spreading
 end
 
 
-
-to init-decentral-signal-spreading
-  
-  
-  
+to init-decentral-signal-spreading  
   
   ask exits [    
    

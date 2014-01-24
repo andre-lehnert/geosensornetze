@@ -244,23 +244,6 @@ NIL
 HORIZONTAL
 
 BUTTON
-198
-476
-277
-509
-NIL
-init-exits
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
 128
 514
 277
@@ -287,23 +270,6 @@ show-signal-spreading
 1
 1
 -1000
-
-BUTTON
-97
-559
-275
-592
-NIL
-decentral-signal-spreading
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
 
 SLIDER
 12
@@ -359,7 +325,7 @@ person-detection-radius
 person-detection-radius
 1
 300
-40
+99
 1
 1
 NIL
