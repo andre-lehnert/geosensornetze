@@ -7,6 +7,10 @@ breed[exits exit]
 breed[persons person]
 breed[events event]
 
+globals [
+  reset-params
+]
+
 patches-own[
   nearest-exit
   signal-noise
@@ -19,7 +23,10 @@ to setup
   
   set-default-shape links "communication" ;; hidden shape
   
-  setup-world    
+  setup-world
+  
+  save-reset-params
+    
 end
 
 
@@ -31,12 +38,6 @@ to setup-world
   setup-exits
   setup-persons
   setup-events
-  
-  ask links [
-   
-   hide-link
-    
-  ]
   
 end
 
@@ -89,6 +90,34 @@ to go
 end
 
 
+to save-reset-params
+
+ set reset-params array:from-list n-values personCount [-1]
+ 
+ let i 0
+ foreach sort persons [
+   
+   let x [xcor] of ?
+   let y [ycor] of ?   
+   
+   array:set reset-params i (list x y)
+  
+   set i i + 1
+ ]
+  
+end
+
+
+to reset
+  
+  reset-patches
+  reset-exits
+  reset-persons
+  reset-events
+  
+end
+
+
 to-report dist [coords.a coords.b]
   let x1 item 0 coords.a
   let y1 item 1 coords.a
@@ -98,10 +127,10 @@ to-report dist [coords.a coords.b]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-349
-22
-990
-637
+354
+21
+995
+636
 -1
 -1
 1.013
@@ -125,10 +154,10 @@ ticks
 30.0
 
 BUTTON
-164
+179
 20
-230
-60
+245
+53
 NIL
 setup
 NIL
@@ -149,7 +178,7 @@ CHOOSER
 inputFile
 inputFile
 "Abstract.png" "Simple.png" "Raumplan.png" "ikg.png"
-0
+1
 
 SLIDER
 11
@@ -160,17 +189,17 @@ personCount
 personCount
 1
 300
-165
+30
 1
 1
 NIL
 HORIZONTAL
 
 BUTTON
-210
-619
-273
-652
+161
+542
+224
+575
 NIL
 go
 T
@@ -192,7 +221,7 @@ eventCount
 eventCount
 0
 20
-2
+1
 1
 1
 NIL
@@ -207,7 +236,7 @@ minCountdown
 minCountdown
 1
 100
-1
+5
 1
 1
 NIL
@@ -222,7 +251,7 @@ maxCountdown
 maxCountdown
 2
 100
-14
+18
 1
 1
 NIL
@@ -244,10 +273,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-128
-514
-277
-547
+197
+476
+346
+509
 Delete signalcolour
 hide-signal-spreading
 NIL
@@ -280,7 +309,7 @@ exit-signal-strength
 exit-signal-strength
 1
 1000
-871
+691
 10
 1
 NIL
@@ -310,7 +339,7 @@ gas-expansion-propability
 gas-expansion-propability
 0
 100
-6
+0
 1
 1
 %
@@ -325,7 +354,7 @@ person-detection-radius
 person-detection-radius
 1
 300
-99
+101
 1
 1
 NIL
@@ -342,10 +371,10 @@ graph-type
 1
 
 BUTTON
-23
-604
-136
-637
+16
+542
+129
+575
 NIL
 locate-persons
 NIL
@@ -367,6 +396,23 @@ orientation-algorithm
 orientation-algorithm
 "Cellular automaton" "Gradient localization"
 0
+
+BUTTON
+253
+20
+316
+53
+NIL
+reset
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?

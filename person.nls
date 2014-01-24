@@ -1,7 +1,7 @@
 ;; Person
 
 persons-own [
-  state ;; Status im Lebenszyklus
+  state ;; Status im Lebenszyklus 
   messages
   parent 
   children 
@@ -10,7 +10,7 @@ persons-own [
   msghear
   exit-hopcounts
   exit-positions
-  est-pos
+  est-pos  
 ]
 
 to person-state [newstate]
@@ -23,9 +23,10 @@ to person-state [newstate]
     set shape "person"
     set color brown
     set heading 0
-    set label-color black    
+    set label-color black
+    set label ""    
     set exit-hopcounts array:from-list n-values 2 [-1]
-    set exit-positions array:from-list n-values 2 [-1]
+    set exit-positions array:from-list n-values 2 [-1]   
   ]
   
   if state = "EVENT_DETECTED" [
@@ -50,12 +51,54 @@ to person-state [newstate]
   
 end
 
+to reset-persons
+  
+  clear-links
+  clear-persons  
+  
+  let i 0
+  while [i < array:length reset-params] [
+    create-persons 1 [
+      person-state "INIT"
+      setxy (item 0 array:item reset-params i) (item 1 array:item reset-params i)  
+    ]
+    set i i + 1
+  ]
+  
+  ask persons [
+    
+    set messages[] ;; Clear any messages
+    set msgsent [] ;; Clear the list of messages sent
+    set msgrecv [] ;; Clear the list of messages received
+    set msghear []
+    
+    person-state "INIT"   
+    
+  ]
+  
+end
+
+to clear-persons
+  
+  ask persons [ 
+    
+    set messages[] ;; Clear any messages
+    set msgsent [] ;; Clear the list of messages sent
+    set msgrecv [] ;; Clear the list of messages received
+    set msghear []
+    die 
+    
+  ]
+  
+end
 
 ;; Zufällige Platzierung von Personen
 to setup-persons
   
   if inputFile = "Abstract.png" [ ;; Zufällige Platzierung
-    create-persons personCount [setxy random-pxcor random-pycor]
+    create-persons personCount [
+      setxy random-pxcor random-pycor     
+    ]
   ]
   if inputFile = "Simple.png" [ ;; Zufällige Platzierung mit Wand-Detektion
     place-persons
@@ -80,6 +123,8 @@ to setup-persons
     person-state("INIT")
   ]
   
+  
+  
 end
 
 
@@ -98,7 +143,7 @@ to place-persons
       
     ]
     
-    setxy x y 
+    setxy x y
     
   ]
   

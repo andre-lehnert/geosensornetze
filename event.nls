@@ -3,6 +3,7 @@
 events-own [
   state
   countdown ;; Zeit bis zur Freisetzung des Gases
+  reset-countdown
 ]
 
 breed[gases gas]
@@ -18,7 +19,8 @@ to event-state [newstate]
   
   ;; Start
   if state = "INIT" [   
-    set color magenta    
+    set color magenta
+    set label ""   
   ]  
   
   if state = "COUNTDOWN" [   
@@ -61,12 +63,21 @@ to setup-events
   
 end
 
+to reset-events
+  
+  ask events [
+    set countdown reset-countdown
+    event-state "INIT"
+  ]
+  
+end
 
 to event-init
   
   if state = "INIT" [
     
     set countdown minCountdown + (random (maxCountdown - minCountdown)) ;; Zufällig im Intervall [minCountdown, maxCountdown]
+    set reset-countdown countdown ;; reset Möglichkeit
     set label countdown
     
     event-state("COUNTDOWN")
