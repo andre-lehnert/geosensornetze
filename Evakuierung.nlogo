@@ -17,7 +17,7 @@ to setup
   clear-all
   reset-ticks
   
-  set-default-shape links "communication"
+  set-default-shape links "communication" ;; hidden shape
   
   setup-world    
 end
@@ -42,7 +42,9 @@ end
 
 
 to go  
- 
+  
+  create-graph
+  
   ask persons [    
     
     if state = "INIT" [
@@ -80,7 +82,7 @@ to go
     
     patch-gassing
     
-  ]
+  ]  
   
   tick
   
@@ -150,10 +152,10 @@ inputFile
 0
 
 SLIDER
-14
-90
-186
-123
+11
+139
+183
+172
 personCount
 personCount
 1
@@ -312,17 +314,17 @@ exit-signal-strength
 exit-signal-strength
 1
 1000
-371
+871
 10
 1
 NIL
 HORIZONTAL
 
 SLIDER
-34
-127
-232
-160
+31
+176
+229
+209
 walk-propability
 walk-propability
 0
@@ -342,36 +344,36 @@ gas-expansion-propability
 gas-expansion-propability
 0
 100
-7
+6
 1
 1
 %
 HORIZONTAL
 
 SLIDER
-34
-163
-216
-196
+31
+212
+213
+245
 person-detection-radius
 person-detection-radius
 1
 300
-1
+40
 1
 1
 NIL
 HORIZONTAL
 
 CHOOSER
-201
-77
-339
-122
+179
+65
+317
+110
 graph-type
 graph-type
 "Complete Graph" "UDG" "Fixed UDG" "RNG" "GG"
-4
+1
 
 BUTTON
 23
@@ -389,6 +391,16 @@ NIL
 NIL
 NIL
 1
+
+CHOOSER
+14
+64
+173
+109
+orientation-algorithm
+orientation-algorithm
+"Cellular automaton" "Gradient localization"
+0
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -773,14 +785,12 @@ NetLogo 5.0.4
 @#$#@#$#@
 default
 0.0
--0.2 0 1.0 0.0
-0.0 1 1.0 0.0
-0.2 0 1.0 0.0
+-0.2 0 0.0 1.0
+0.0 0 0.0 1.0
+0.2 0 0.0 1.0
 link direction
 true
 0
-Line -7500403 true 150 150 90 180
-Line -7500403 true 150 150 210 180
 
 communication
 0.0
@@ -792,7 +802,7 @@ true
 0
 
 connect
-0.5
+0.0
 -0.2 0 0.0 1.0
 0.0 1 1.0 0.0
 0.2 0 0.0 1.0

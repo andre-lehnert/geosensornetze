@@ -1,5 +1,32 @@
 ;person-linking.nls
 
+
+to create-graph  
+  
+  if graph-type = "Complete Graph" [
+    createCompleteGraph
+  ]
+  
+  if graph-type = "UDG" [
+    createUDG
+  ]
+  
+  if graph-type = "Fixed UDG" [
+    createFixedUDG
+  ]
+  
+  if graph-type = "RNG" [
+    createRNG
+  ]
+  
+  if graph-type = "GG" [
+    createGG
+  ]    
+ 
+end
+
+
+
 to createCompleteGraph
   clear-links
   foreach sort persons [    
@@ -9,8 +36,7 @@ to createCompleteGraph
            
         ]
       ]   
-  ] 
-  
+  ]   
 end
 
 to createUDG

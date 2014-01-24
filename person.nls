@@ -45,8 +45,7 @@ to person-state [newstate]
     set color grey    
     set shape "person_dead" ;; selbsterstellte Shape: rotierbar
     set heading 45
-    set label "" 
-    check-connection   
+    set label ""   
   ]
   
 end
@@ -83,29 +82,7 @@ to setup-persons
   
 end
 
-to create-graph
-  
-  if graph-type = "Complete Graph" [
-    createCompleteGraph
-  ]
-  
-  if graph-type = "UDG" [
-    createUDG
-  ]
-  
-  if graph-type = "Fixed UDG" [
-    createFixedUDG
-  ]
-  
-  if graph-type = "RNG" [
-    createRNG
-  ]
-  
-  if graph-type = "GG" [
-    createGG
-  ]    
-  
-end
+
 
 to place-persons
   
@@ -153,10 +130,7 @@ to random-move
     ]
     
     face nb
-    forward 1
-    
-    check-connection
-    
+    forward 1  
   ]  
   
   ;; Person kommt in Kontakt mit dem Giftgas und stirbt
@@ -246,9 +220,7 @@ to person-move-to-exit
     ]  
     
     face direction
-    forward 1
-    
-    check-connection
+    forward 1   
   ]  
   
   ;; Person kommt in Kontakt mit dem Giftgas und stirbt
@@ -283,57 +255,6 @@ to person-reach-exit
   if rescue [
     
     person-state "RESCUED"
-    
-  ]
-  
-end
-
-
-
-to check-connection
-  
-  let me self
-  
-  ask link-neighbors [ 
-    
-    ifelse state != "DEAD" and [state] of me != "DEAD" [
-      
-      ifelse distance myself <= person-detection-radius [ 
-        
-        ask link-with me [
-          set shape "connect"
-          set color blue
-          show-link
-        ]
-        
-      ][
-      
-      ask link-with me [
-        set shape "communication"
-        set color grey
-        hide-link
-      ]
-      
-      ]                
-    ][
-    
-    ask link-with me [
-      set shape "communication"
-      set color grey
-      hide-link
-    ]
-    
-    ]
-    
-    
-    ;if state = "DEAD" or [state] of me = "DEAD" [
-    
-    ; ask link-with me [
-    ;  set shape "communication"
-    ;  set color grey
-    ;]
-    
-    ;]
     
   ]
   
