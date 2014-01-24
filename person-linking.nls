@@ -11,10 +11,6 @@ to create-graph
     createUDG
   ]
   
-  if graph-type = "Fixed UDG" [
-    createFixedUDG
-  ]
-  
   if graph-type = "RNG" [
     createRNG
   ]
@@ -22,44 +18,41 @@ to create-graph
   if graph-type = "GG" [
     createGG
   ]    
- 
+  
 end
 
 
 
 to createCompleteGraph
   clear-links
-  foreach sort persons [    
+  foreach sort persons [  
+    if [state] of ? != "DEAD" [      
       ask persons [
         if state != "DEAD" [                  
           if distance ? > 0 [create-link-with ? ]   
-           
+          
         ]
-      ]   
+      ]
+    ]   
   ]   
 end
 
 to createUDG
   clear-links
   foreach sort persons[
-    ask persons [
-      if distance ? < person-detection-radius and distance ? > 0 [create-link-with ?]
-    ]
-  ] 
-end
-
-to createFixedUDG
-  clear-links
-  foreach sort persons[
-    ask persons [
-      if distance ? < 1000 and distance ? > 0 [create-link-with ?]
+    if [state] of ? != "DEAD" [      
+      ask persons [
+        if state != "DEAD" [ 
+          if distance ? < person-detection-radius and distance ? > 0 [create-link-with ?]
+        ]
+      ]
     ]
   ] 
 end
 
 to createRNG
   createCompleteGraph
-   foreach sort persons[
+  foreach sort persons[
     ask ? [
       let u ?
       foreach sort link-neighbors [
@@ -71,14 +64,12 @@ to createRNG
   ]
   ask links with [color = red] [die] 
 end
- 
+
 to createGG
   createCompleteGraph
-  foreach sort persons [
-    
-    
-      ask ? [
-        if state != "DEAD" [
+  foreach sort persons [    
+    ask ? [
+      if state != "DEAD" [
         let u ?
         foreach sort link-neighbors [
           let v ?
@@ -89,7 +80,7 @@ to createGG
     ]
   ]
   ask links with [color = red] [die]
- 
+  
   
 end 
 
@@ -101,7 +92,7 @@ end
 
 
 to-report isRNG [u v distuv]
-   ifelse distance u >= distuv or distance v >= distuv
+  ifelse distance u >= distuv or distance v >= distuv
     [report true]
     [report false]
 end 
@@ -111,5 +102,5 @@ to-report isGG [u v distuv]
   ifelse ((distance u) ^ 2) + ((distance v) ^ 2)  >= (distuv ^ 2)
     [report true]
     [report false]
-
+  
 end

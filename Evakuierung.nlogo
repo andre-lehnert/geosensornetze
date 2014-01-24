@@ -309,7 +309,7 @@ exit-signal-strength
 exit-signal-strength
 1
 1000
-691
+1
 10
 1
 NIL
@@ -339,7 +339,7 @@ gas-expansion-propability
 gas-expansion-propability
 0
 100
-0
+100
 1
 1
 %
@@ -354,7 +354,7 @@ person-detection-radius
 person-detection-radius
 1
 300
-101
+108
 1
 1
 NIL
@@ -367,8 +367,8 @@ CHOOSER
 110
 graph-type
 graph-type
-"Complete Graph" "UDG" "Fixed UDG" "RNG" "GG"
-1
+"Complete Graph" "UDG" "RNG" "GG"
+0
 
 BUTTON
 16
