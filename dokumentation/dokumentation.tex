@@ -1,13 +1,66 @@
-\documentclass{report}
+\documentclass[
+	pdftex,
+	a4paper,
+	oneside,		% Einseitiger Druck.
+	BCOR12mm,       % Bindekorrektur
+	            	% Satzspiegel berechnen
+	11pt,			% Schriftgroesse
+	parskip=half,	% Halbe Zeile Abstand zwischen AbsÃ¤tzen.
+	headsepline,	% Linie nach Kopfzeile.
+	%abstracton,	% Abstract Überschriften
+	ngerman		    % Translator
+]{scrreprt}
 
-\usepackage{titlesec}
 \usepackage{graphicx}
 \usepackage{graphics}
+
 % ermoeglicht \begin{Verbatim}[samepage=true] fuer besseres copy&paste von Beispieloutput bzw. Code.
 \usepackage{fancyvrb}
 
-% Für anklickbare URLs mit \url{...}
-\usepackage[pdfborder={0 0 0}, colorlinks=false, plainpages=false, pdfpagelabels, hypertexnames=false]{hyperref}
+\usepackage{scrhack}
+\usepackage{listings}
+
+\usepackage[headsepline,plainheadsepline]{scrpage2}
+\pagestyle{scrheadings}
+\ihead[\rightmark]{\rightmark} \chead[]{}
+\ohead[\pagemark]{\pagemark} \cfoot[]{}
+
+\automark{chapter}
+\renewcommand{\chaptermark}[1]{\markright{\ #1}}
+
+
+
+\newcommand{\pdftitel}{Hausarbeit: Evakuierung}
+\newcommand{\autor}{Andre Lehnert und Marcell Salvage}
+\newcommand{\arbeit}{Geosensornetze}
+
+\usepackage[
+	pdftitle={\pdftitel},
+	pdfauthor={\autor},
+	pdfsubject={\arbeit},
+	pdfcreator={pdflatex},
+	pdfpagemode=UseOutlines, % Beim Oeffnen Inhaltsverzeichnis anzeigen
+	pdfdisplaydoctitle=true, % Dokumenttitel statt Dateiname anzeigen.
+	pdflang=de,              % Sprache des Dokuments.
+	bookmarks,               % PDF-Lesezeichen
+    bookmarksopen=true,      % Lesezeichenbaum aufgeklappt...
+    bookmarksopenlevel=1,    % ...um eine Ebene
+    bookmarksnumbered=true,
+    pdfusetitle,             % LaTeX-Titelei als Metainfo nehmen
+    pdfstartpage={1},        % mit welcher Seite das PDF öffnen
+    pdfstartview={FitH},
+    hyperfootnotes=true,     % Links auf Fußnoten
+    hyperindex=true,         % Indexeinträge verweisen auf Text
+    linkbordercolor={0 1 1}, % Rahmenfarbe interne Links
+    menubordercolor={0 1 1}, % Rahmenfarbe Literaturlinks
+    urlbordercolor={1 0 0}   % Rahmenfarbe externe Links
+]{hyperref}
+
+%Zeilenumbruch und mehr
+\usepackage[activate]{microtype}
+
+% Unterschrift
+%\usepackage{caption}
 
 % Ohne das Package haben eps-Dateien bei mir nicht funktioniert
 \usepackage{epstopdf, epsfig}
@@ -20,6 +73,14 @@
 %Ermögliche das Nutzen von Umlauten im Quelltext ohne \"<vokal>
 \usepackage[utf8x]{inputenc}
 
+%Inhaltsverzeichnis
+\usepackage{tocloft}
+\tocloftpagestyle{empty}
+
+%Farben
+\usepackage{color}
+\definecolor{LinkColor}{rgb}{0,0,0.2}
+\definecolor{ListingBackground}{rgb}{0.92,0.92,0.92}
 
 %Zeilenumbruch und mehr
 \usepackage[activate]{microtype}
@@ -35,20 +96,13 @@ showstringspaces=false,
 captionpos=b
 }
 
-% Abstand zwischen Text und Überschriften von Susbections verringern
-\usepackage{titlesec}
-\titlespacing\subsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
 
 % Auszeichnung von Inline-Code für Klassennamen etc.?
 \newcommand{\inlcode}{\texttt}
 
-\titleformat{\chapter}[display]
-  {\normalfont\huge\bfseries}{}{0pt}{\Huge}
-\titlespacing*{\chapter}
-  {0pt}{10pt}{40pt}
 
-\title{Geosensornetze WS 2013/2014}
-\author{Andre Lehnert und Marcel Salvage}
+\title{\textbf{Geosensornetze}\\WS 2013/2014}
+\author{Hausarbeit von\\\autor}
 
 \begin{document}
 
@@ -66,5 +120,35 @@ captionpos=b
 
 %\appendix
 %\input{appendix/appendix}
+
+
+% Literaturverzeichnis
+\clearpage
+\setcounter{page}{1}
+\pagenumbering{roman}
+
+\begin{thebibliography}{123}
+
+\bibitem[1]{Amundson.}
+Isaac Amundson and Xenofon D. Koutsoukos.
+\newblock {\em {A} Survey on {L}ocalization for {M}obile {W}ireless {S}ensor {N}etworks}.
+\newblock Department of Electrical Engineering and Computer Science, Vanderbilt University.
+
+
+\bibitem[2]{Jonathan.2004}
+{Jonathan Bachrach}, {Radhika Nagpal}, {Michael Salib} and {Howard Shrobe}.
+\newblock {\em {E}xperimental {R}esults for and {T}heoretical {A}nalysis of a {S}elf-{O}rganizing {G}lobal {C}oordinate {S}ystem for {A}d {H}oc {S}ensor {N}etworks}.
+\newblock Telecommunication Systems, page 213--233. 2004.
+
+\bibitem[3]{Netlogo.1999}
+Uri Wilensky.
+\newblock {\em Netlogo}. 
+\newblock Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL. 1999.
+\newblock \url{http://ccl.northwestern.edu/netlogo/}, Stand: 26.01.2014.
+
+\end{thebibliography}
+
+\addtocontents{toc}{\protect\vspace*{\baselineskip}}
+\addcontentsline{toc}{chapter}{Literaturverzeichnis}
 
 \end{document}
