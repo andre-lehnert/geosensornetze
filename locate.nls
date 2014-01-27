@@ -90,7 +90,7 @@ to estimate-point
       set estimated-coords array:item exit-positions nearest
       let alpha 0.1
       let i 0
-      while [i < 100] [
+      while [i < locate-iterations] [
         set j 0
         let calculated-dists array:from-list n-values array:length exit-positions [-1]
         while [j < array:length exit-positions] [
