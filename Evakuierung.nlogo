@@ -178,7 +178,7 @@ CHOOSER
 inputFile
 inputFile
 "Abstract.png" "Abstract_static.png" "Simple.png" "Raumplan.png" "ikg.png"
-0
+3
 
 SLIDER
 14
@@ -189,11 +189,7 @@ personCount
 personCount
 1
 300
-<<<<<<< HEAD
 13
-=======
-137
->>>>>>> 7631f8ca7d01f1191b59fba9badaabfe74968c52
 1
 1
 NIL
@@ -451,13 +447,8 @@ SLIDER
 approx-dist
 approx-dist
 0
-<<<<<<< HEAD
 1000
 497
-=======
-200
-45
->>>>>>> 7631f8ca7d01f1191b59fba9badaabfe74968c52
 1
 1
 NIL
@@ -494,21 +485,6 @@ NIL
 NIL
 NIL
 1
-
-SLIDER
-138
-692
-310
-725
-locate-iterations
-locate-iterations
-0
-200
-74
-1
-1
-NIL
-HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?

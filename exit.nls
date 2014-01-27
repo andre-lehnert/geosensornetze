@@ -93,11 +93,11 @@ to setup-exits
       set y1 17
     ]
     if number-of-exits >= 2 [
-      set x2 15
+      set x2 280
       set y2 559
     ]
     if number-of-exits >= 3 [
-      set x3 605
+      set x3 280
       set y3 559
     ]    
   ]
