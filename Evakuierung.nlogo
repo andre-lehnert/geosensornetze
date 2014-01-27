@@ -191,7 +191,7 @@ personCount
 personCount
 1
 300
-106
+203
 1
 1
 NIL
@@ -326,7 +326,7 @@ walk-propability
 walk-propability
 0
 100
-0
+100
 1
 1
 %
@@ -450,7 +450,7 @@ approx-dist
 approx-dist
 0
 1000
-108
+45
 1
 1
 NIL

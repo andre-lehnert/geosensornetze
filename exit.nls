@@ -125,7 +125,7 @@ to setup-exits
       set y2 510
     ]
     if number-of-exits >= 3 [
-      set x3 0
+      set x3 610
       set y3 510
     ]   
   ]

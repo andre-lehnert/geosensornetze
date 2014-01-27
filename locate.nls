@@ -14,11 +14,12 @@ to reset-locate
 end
 
 to locate-persons
+  reset-locate
   let exit-n 0
   let nearest-neighbor 0
   foreach sort exits [
     let exit ?
-    foreach filter [[distance exit] of ? <= APPROX-DIST] sort persons [
+    foreach filter [[distance exit] of ? <= person-detection-radius] sort persons [
       set-hopcount ? 1 exit-n [(list xcor ycor)] of exit
     ]
     prop-persons 1 exit-n [(list xcor ycor)] of exit
@@ -62,7 +63,7 @@ to prop-persons [ hop-count exit-n exit-coords]
   let proceed false
   foreach filter [[array:item exit-hopcounts exit-n] of ? = hop-count] sort persons [
     let person ?
-    foreach filter [[distance person] of ? <= APPROX-DIST] sort persons [
+    foreach filter [[distance person] of ? <= person-detection-radius] sort persons [
       set-hopcount ? (hop-count + 1) exit-n exit-coords
       set proceed true
     ]
