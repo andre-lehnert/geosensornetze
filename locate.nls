@@ -1,68 +1,120 @@
+breed[ests est]
+
+to reset-locate
+  ask persons [
+    set exit-hopcounts array:from-list n-values number-of-exits [-1]
+    set exit-positions array:from-list n-values number-of-exits [-1]
+    set est-pos (list -1 -1)
+  ]
+  ask ests [ die ]
+end
+
 to locate-persons
-  let APPROX-DIST 10
   let exit-n 0
   let nearest-neighbor 0
   foreach sort exits [
-    set nearest-neighbor min-one-of (persons) [ distance ? ]
-    ask nearest-neighbor [
-      ask-person-to-locate APPROX-DIST self 1 exit-n [(list xcor ycor)] of ?
+    let exit ?
+    foreach filter [[distance exit] of ? <= APPROX-DIST] sort persons [
+      set-hopcount ? 1 exit-n [(list xcor ycor)] of exit
     ]
-    set exit-n exit-n + 1
+    prop-persons 1 exit-n [(list xcor ycor)] of exit
+    set exit-n (exit-n + 1)
   ]
-  estimate-point APPROX-DIST
+  
+  estimate-point
+  visualize-est-pos
 end
 
-to ask-person-to-locate [APPROX-DIST person hop-count exit-n exit-coords]
-  if [array:item exit-hopcounts exit-n] of person = -1 OR [array:item exit-hopcounts exit-n] of person > hop-count [
+to visualize-est-pos
+  foreach sort persons [
+    let person ?
+    if (item 0 [est-pos] of person) >= 0 AND (item 0 [est-pos] of person) <= 622 AND (item 1 [est-pos] of person) >= 0 AND (item 1 [est-pos] of person) <= 576[
+      create-ests 1 [
+        set size 15
+        set shape "person"
+        set color red
+        set heading 0
+        set label-color black
+        set label ""
+        setxy (item 0 [est-pos] of person) (item 1 [est-pos] of person)
+        create-link-with person
+      ]
+    ]
+  ]
+end
+
+to set-hopcount [person hop-count exit-n exit-coords]
+  if [array:item exit-hopcounts exit-n] of person = -1 [
     ask person [
       array:set exit-hopcounts exit-n hop-count
       array:set exit-positions exit-n exit-coords
-      ask link-neighbors [
-        ask-person-to-locate APPROX-DIST self (hop-count + 1) exit-n exit-coords
-      ]
     ]
-    
   ]
 end
 
-to estimate-point [APPROX-DIST]
+to prop-persons [ hop-count exit-n exit-coords]
+  let proceed false
+  foreach filter [[array:item exit-hopcounts exit-n] of ? = hop-count] sort persons [
+    let person ?
+    foreach filter [[distance person] of ? <= APPROX-DIST] sort persons [
+      set-hopcount ? (hop-count + 1) exit-n exit-coords
+      set proceed true
+    ]
+  ]
+  if proceed [
+    prop-persons (hop-count + 1) exit-n exit-coords
+  ]
+end
+
+to estimate-point
+  let j 0
   let estimated-coords (list -1 -1)
   ask persons [
-    let nearest nearest-exit-of-person self
-    set estimated-coords array:item exit-positions nearest
-    let alpha 0.1
-    let i 0
-    while [i < 100] [
-      let j 0
-      let calculated-dists array:from-list n-values array:length exit-positions [-1]
-      while [j < array:length exit-positions] [
-        array:set calculated-dists j dist array:item exit-positions j estimated-coords
-        set j (j + 1)
+    let proceed true
+    set j 0
+    while [j < array:length exit-hopcounts] [
+      if array:item exit-hopcounts j = -1 [
+        set proceed false
       ]
-      
-      let gradient_x 0
-      set j 0
-      while [j < array:length exit-positions] [
-        set gradient_x gradient_x + gradient-x (item 0 array:item exit-positions j) (item 0 estimated-coords) (array:item calculated-dists j) (array:item exit-hopcounts j * APPROX-DIST) 
-        set j (j + 1)
-      ]
-      
-      let gradient_y 0
-      set j 0
-      while [j < array:length exit-positions] [
-        set gradient_y gradient_y + gradient-y (item 1 array:item exit-positions j) (item 1 estimated-coords) (array:item calculated-dists j) (array:item exit-hopcounts j * APPROX-DIST) 
-        set j (j + 1)
-      ]
-      
-      
-      let delta_x (- alpha * gradient_x)
-      let delta_y (- alpha * gradient_y)
-      
-      set estimated-coords (list (item 0 estimated-coords - delta_x) (item 1 estimated-coords - delta_y))
-      
-      set i (i + 1)
+      set j (j + 1)
     ]
-    set est-pos estimated-coords
+    if proceed [
+      let nearest nearest-exit-of-person self
+      set estimated-coords array:item exit-positions nearest
+      let alpha 0.1
+      let i 0
+      while [i < 100] [
+        set j 0
+        let calculated-dists array:from-list n-values array:length exit-positions [-1]
+        while [j < array:length exit-positions] [
+          array:set calculated-dists j dist array:item exit-positions j estimated-coords
+          set j (j + 1)
+        ]
+        
+        let gradient_x 0
+        set j 0
+        while [j < array:length exit-positions] [
+          set gradient_x gradient_x + gradient-x (item 0 array:item exit-positions j) (item 0 estimated-coords) (array:item calculated-dists j) (array:item exit-hopcounts j * APPROX-DIST) 
+          set j (j + 1)
+        ]
+        
+        let gradient_y 0
+        set j 0
+        while [j < array:length exit-positions] [
+          set gradient_y gradient_y + gradient-y (item 1 array:item exit-positions j) (item 1 estimated-coords) (array:item calculated-dists j) (array:item exit-hopcounts j * APPROX-DIST) 
+          set j (j + 1)
+        ]
+        
+        
+        let delta_x (- alpha * gradient_x)
+        let delta_y (- alpha * gradient_y)
+        
+        set estimated-coords (list (item 0 estimated-coords - delta_x) (item 1 estimated-coords - delta_y))
+        
+        set i (i + 1)
+      ]
+      set est-pos estimated-coords
+    ]
   ]
 end
 

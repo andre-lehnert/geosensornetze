@@ -178,7 +178,7 @@ CHOOSER
 inputFile
 inputFile
 "Abstract.png" "Simple.png" "Raumplan.png" "ikg.png"
-2
+0
 
 SLIDER
 14
@@ -189,17 +189,17 @@ personCount
 personCount
 1
 300
-203
+300
 1
 1
 NIL
 HORIZONTAL
 
 BUTTON
-161
-589
-224
-622
+241
+582
+304
+615
 NIL
 go
 T
@@ -371,10 +371,10 @@ graph-type
 1
 
 BUTTON
-16
-589
-129
-622
+17
+735
+130
+768
 NIL
 locate-persons
 NIL
@@ -395,7 +395,7 @@ CHOOSER
 orientation-algorithm
 orientation-algorithm
 "Cellular automaton" "Gradient localization"
-0
+1
 
 BUTTON
 253
@@ -433,11 +433,58 @@ random-walk-probability
 random-walk-probability
 0
 100
-2
+1
 1
 1
 %
 HORIZONTAL
+
+SLIDER
+19
+643
+191
+676
+approx-dist
+approx-dist
+0
+300
+55
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+19
+599
+191
+632
+number-of-exits
+number-of-exits
+1
+3
+2
+1
+1
+NIL
+HORIZONTAL
+
+BUTTON
+18
+693
+116
+726
+NIL
+reset-locate
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -832,7 +879,7 @@ true
 communication
 0.0
 -0.2 0 0.0 1.0
-0.0 1 4.0 4.0
+0.0 1 2.0 2.0
 0.2 0 0.0 1.0
 link direction
 true

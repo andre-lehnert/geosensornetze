@@ -54,42 +54,90 @@ to setup-exits
   ;; x,y für zwei (z.Z. fix) Notausgänge
   let x1 0
   let x2 0
+  let x3 0
   let y1 0
   let y2 0
+  let y3 0
   
   if inputFile = "Abstract.png" [ ;; Zufällige Platzierung
-    set x1 random-pxcor
-    set x2 random-pxcor
-    set y1 random-pycor
-    set y2 random-pycor
+    if number-of-exits >= 1 [
+      set x1 random-pxcor
+      set y1 random-pycor
+    ]
+    if number-of-exits >= 2 [
+      set x2 random-pxcor
+      set y2 random-pycor
+    ]
+    if number-of-exits >= 3 [
+      set x3 random-pxcor
+      set y3 random-pycor
+    ]
   ]
   if inputFile = "Simple.png" [ ;; Statische Platzierung
-    set x1 280
-    set x2 280
-    set y1 17
-    set y2 559
+    if number-of-exits >= 1 [
+      set x1 280
+      set y1 17
+    ]
+    if number-of-exits >= 2 [
+      set x2 280
+      set y2 559
+    ]
+    if number-of-exits >= 3 [
+      set x3 280
+      set y3 559
+    ]    
   ]
   if inputFile = "ikg.png" [ ;; Statische Platzierung
-    set x1 290
-    set x2 40
-    set y1 330
-    set y2 510
+    if number-of-exits >= 1 [
+      set x1 290
+      set y1 330
+    ]
+    if number-of-exits >= 2 [
+      set x2 40
+      set y2 510
+    ]
+    if number-of-exits >= 3 [
+      set x3 40
+      set y3 510
+    ]   
   ]
   if inputFile = "Raumplan.png" [ ;; Statische Platzierung
-    set x1 290
-    set x2 0
-    set y1 330
-    set y2 510
+    if number-of-exits >= 1 [
+      set x1 290
+      set y1 330
+    ]
+    if number-of-exits >= 2 [
+      set x2 0
+      set y2 510
+    ]
+    if number-of-exits >= 3 [
+      set x3 0
+      set y3 510
+    ]   
   ]
   
-  create-exits 1 [
-    setxy x1 y1
-    set signal-color cyan
+  if number-of-exits >= 1 [
+    create-exits 1 [
+      setxy x1 y1
+      set signal-color cyan
+    ]
   ]
-  create-exits 1 [
-    setxy x2 y2
-    set signal-color orange
+  if number-of-exits >= 2 [
+    create-exits 1 [
+      setxy x2 y2
+      set signal-color orange
+    ]
   ]
+  if number-of-exits >= 3 [
+    create-exits 1 [
+      setxy x3 y3
+      set signal-color blue
+    ]
+  ]   
+  
+  
+  
+  
   
   ask exits [    
     exit-state("INIT")

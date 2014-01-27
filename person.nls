@@ -26,8 +26,9 @@ to person-state [newstate]
     set heading 0
     set label-color black
     set label ""    
-    set exit-hopcounts array:from-list n-values 2 [-1]
-    set exit-positions array:from-list n-values 2 [-1]
+    set exit-hopcounts array:from-list n-values number-of-exits [-1]
+    set exit-positions array:from-list n-values number-of-exits [-1]
+    set est-pos (list -1 -1)
     set last-random-heading 361
   ]
   
