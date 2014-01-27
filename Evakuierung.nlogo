@@ -39,6 +39,8 @@ to setup-world
   setup-persons
   setup-events
   
+  connect-exit
+  
 end
 
 
@@ -178,7 +180,7 @@ CHOOSER
 inputFile
 inputFile
 "Abstract.png" "Abstract_static.png" "Simple.png" "Raumplan.png" "ikg.png"
-3
+2
 
 SLIDER
 14
@@ -189,7 +191,7 @@ personCount
 personCount
 1
 300
-13
+127
 1
 1
 NIL
@@ -354,7 +356,7 @@ person-detection-radius
 person-detection-radius
 1
 1000
-221
+100
 1
 1
 patches
@@ -448,7 +450,7 @@ approx-dist
 approx-dist
 0
 1000
-497
+45
 1
 1
 NIL
