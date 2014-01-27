@@ -448,7 +448,7 @@ approx-dist
 approx-dist
 0
 300
-55
+60
 1
 1
 NIL
@@ -463,7 +463,7 @@ number-of-exits
 number-of-exits
 1
 3
-2
+1
 1
 1
 NIL

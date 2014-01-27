@@ -135,10 +135,6 @@ to setup-exits
     ]
   ]   
   
-  
-  
-  
-  
   ask exits [    
     exit-state("INIT")
     
