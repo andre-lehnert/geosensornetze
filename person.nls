@@ -103,6 +103,9 @@ to setup-persons
       setxy random-pxcor random-pycor     
     ]
   ]
+  if inputFile = "Abstract_static.png" [ ;; Zufällige Platzierung
+    place-persons-regular 5
+  ]
   if inputFile = "Simple.png" [ ;; Zufällige Platzierung mit Wand-Detektion
     place-persons
   ]
@@ -148,6 +151,27 @@ to place-persons
     
     setxy x y
     
+  ]
+  
+end
+
+to place-persons-regular [diff]
+  
+  let y 0
+  let x 0    
+  
+  create-persons personCount [
+    
+    while [x < max-pxcor and y < max-pycor and [patch-state] of patch x y = "WALL"] [
+      
+      set y y + diff
+      set x x + diff
+      
+    ]
+    
+    setxy x y
+    set x x + diff
+    set y y + diff
   ]
   
 end
@@ -306,7 +330,8 @@ to person-move-to-exit
         if [patch-state] of ? != "WALL" and [patch-state] of ? != "EVENT" and [patch-state] of ? != "EVENT_DONE" [
           
           if [signal-noise] of ? < this-noise [          
-            set direction ?            
+            set direction ?
+            face direction           
           ]
           
         ]      
@@ -315,19 +340,31 @@ to person-move-to-exit
     ][ ;; Keine Patchinformation    
     
     ifelse orientation-algorithm = "Gradient localization" [ ;; Orientierung über die "Gradient localization" ?      
+       
+      if [patch-state] of patch-here != "WALL" [
+        
+        
+        ;; TODO Wie den Exit lokalisieren?      
+        let exit array:item exit-positions nearest-exit-of-person self 
+        
+        let x first exit
+        let y last exit
+        
+        facexy x y
+       
+      ]
       
-                                                             ;; TODO Wie den Exit lokalisieren?      
-      
+     
     ] 
     [
       
-      random-walk
+      random-walk 
       
     ]
     
     ]
     
-    face direction
+    
     forward 1    
     
   ]  

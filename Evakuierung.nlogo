@@ -46,6 +46,8 @@ to go
   
   create-graph
   
+  locate-persons
+  
   ask persons [    
     
     if state = "INIT" [
@@ -173,12 +175,12 @@ NIL
 CHOOSER
 12
 15
-150
+170
 60
 inputFile
 inputFile
-"Abstract.png" "Simple.png" "Raumplan.png" "ikg.png"
-0
+"Abstract.png" "Abstract_static.png" "Simple.png" "Raumplan.png" "ikg.png"
+1
 
 SLIDER
 14
@@ -189,7 +191,7 @@ personCount
 personCount
 1
 300
-300
+106
 1
 1
 NIL
@@ -324,7 +326,7 @@ walk-propability
 walk-propability
 0
 100
-100
+0
 1
 1
 %
@@ -339,7 +341,7 @@ gas-expansion-propability
 gas-expansion-propability
 0
 100
-12
+0
 1
 1
 %
@@ -354,7 +356,7 @@ person-detection-radius
 person-detection-radius
 1
 300
-60
+80
 1
 1
 patches
@@ -422,7 +424,7 @@ CHOOSER
 walk-strategy
 walk-strategy
 "Complete random" "Straight with collision detection" "Straight with probability"
-2
+1
 
 SLIDER
 32
@@ -447,8 +449,8 @@ SLIDER
 approx-dist
 approx-dist
 0
-300
-60
+1000
+64
 1
 1
 NIL

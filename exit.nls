@@ -73,6 +73,20 @@ to setup-exits
       set y3 random-pycor
     ]
   ]
+  if inputFile = "Abstract_static.png" [
+    if number-of-exits >= 1 [
+      set x1 10
+      set y1 10
+    ]
+    if number-of-exits >= 2 [
+      set x2 max-pxcor - 10
+      set y2 max-pycor - 10
+    ]
+    if number-of-exits >= 3 [
+      set x3 max-pxcor / 2
+      set y3 max-pycor / 2
+    ]
+  ]
   if inputFile = "Simple.png" [ ;; Statische Platzierung
     if number-of-exits >= 1 [
       set x1 280

@@ -1,5 +1,7 @@
 breed[ests est]
 
+ests-own[state messages]
+
 to reset-locate
   ask persons [
     set exit-hopcounts array:from-list n-values number-of-exits [-1]
@@ -37,7 +39,7 @@ to visualize-est-pos
         set label-color black
         set label ""
         setxy (item 0 [est-pos] of person) (item 1 [est-pos] of person)
-        create-link-with person
+        ;create-link-with person
       ]
     ]
   ]
@@ -133,7 +135,7 @@ to-report nearest-exit-of-person [person]
   let nearest 0
   ask person [
     while [n < array:length exit-hopcounts] [
-      if array:item exit-hopcounts n < nearest-value [
+      if array:item exit-hopcounts n < nearest-value and array:item exit-hopcounts n != -1 [
         set nearest-value array:item exit-hopcounts n
         set nearest n
       ]

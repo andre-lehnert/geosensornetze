@@ -13,12 +13,14 @@ end
 to broadcast [message]
   
   let me self      
-  ask link-neighbors [    
+  ask link-neighbors [
+    
     if state != "DEAD" and [state] of me != "DEAD" [        
       ;if distance myself <= person-detection-radius [      
         receive message
       ;]
     ] 
+ 
   ]  
   
 end
