@@ -35,12 +35,70 @@ Die Ausgangsbasis für die verwendeten Modelle und Protokolle stammen aus den er
 
 Dieser Abschnitt beschreibt zunächst das Bewegungsmodell der Personen ohne aktive Gefahrensituation.
 
+\floatname{algorithm}{Algorithmus} 
+\begin{algorithm}
+\caption{random-walk}
+\begin{algorithmic} 
+\STATE nb $\leftarrow$ one-of neighbors
+\WHILE{\textit{[patch-state] of nb = WALL}}
+\STATE nb $\leftarrow$ one-of neighbors 
+\ENDWHILE
+\STATE face nb
+\STATE forward 1
+\end{algorithmic}
+\end{algorithm}
+
 
 \subsection{Kommunikationsmodell}
 \label{sec:kommunikationsmodell}
 %Kommunikationsmodell: Als Kommunikationsmodell können beliebige Modelle der Vorlesung implementiert werden. Dabei sollte insbesondere auf die dynamische Netzwerktopologie geach-tet werden. 
 
+\floatname{algorithm}{Protokoll} 
+\begin{algorithm}
+\caption{Warnung vor Gefahrensituationen}
+\begin{algorithmic} 
+\STATE \textit{State Trans. Sys.:} $\langle\{$INIT, EVENT{\_}DETECTED, FLEEING, RESCUED, DEAD$\}\rangle$
+\STATE \textit{Initialization:} All notes in state INIT
+\STATE \textit{Restrictions:} Reliable communication; connected, bidirected communication graph $G = (V,E)$, neighborhoodfunction nbr: $V \rightarrow 2^{V}$
+\STATE \textit{Local data:}
 
+\STATE $ $
+\STATE \textbf{INIT}
+\STATE Receiving(\textit{event{\_}detected})
+\WHILE{\textit{not event{\_}detected}}
+\STATE random-walk
+\STATE create-graph($G$)\hfill\emph{; generate complete new graph}
+\ENDWHILE
+\STATE become EVENT{\_}DETECTED
+
+
+\STATE $ $
+\STATE \textbf{EVENT{\_}DETECTED}
+\STATE broadcast(\textit{event{\_}detected})\hfill\emph{; broadcast event detection to linked neighbors}
+\STATE become FLEEING
+
+\STATE $ $
+\STATE \textbf{FLEEING}
+\STATE broadcast(\textit{event{\_}detected})\hfill\emph{; rebroadcast event detection to linked neighbors}
+\WHILE{\textit{not person-reach-exit}}
+\STATE person-move-to-exit\hfill\emph{; using orientation-algorithm}
+\STATE create-graph($G$)\hfill\emph{; generate complete new graph}
+\IF{touching-gas}
+\STATE become DEAD
+\ENDIF
+\ENDWHILE
+\STATE become RESCUED
+
+\STATE $ $
+\STATE \textbf{RESCUED}
+\STATE create-graph($G$)\hfill\emph{; generate complete new graph without note}
+
+\STATE $ $
+\STATE \textbf{DEAD}
+\STATE create-graph($G$)\hfill\emph{; generate complete new graph without note}
+
+\end{algorithmic}
+\end{algorithm}
 
 \section{Notausgänge}
 \label{sec:notausgaenge}
@@ -59,6 +117,50 @@ Dieser Abschnitt beschreibt zunächst das Bewegungsmodell der Personen ohne akti
 \label{fig:exit}
 \end{figure}
 
+%\begin{algorithm}
+%\caption{Patch-Flooding (Zellulärer Automat)}
+%\begin{algorithmic} 
+%\STATE \textit{State Trans. Sys.:} $\langle\{$NONE$\},\{$NONE, SPREADING, IDLE, DONE$\}\rangle$
+%\STATE \textit{Initialization:} All patches in state NONE
+%\STATE \textit{Restrictions:} orientation-algorithm = $"$Cellular automaton$"$
+%\STATE \textit{Global data:} exit-signal-strength $\in \mathbb{N}_{\geq0}$
+%\STATE \textit{Local data:} 
+%\STATE Set \textit{exits} of exits in range
+%\STATE Set \textit{signal-noises} of exit signals
+%
+%\STATE $ $
+%\STATE \textbf{NONE}
+%\STATE \textit{Spontaneously}
+%\STATE exits $\leftarrow$ myself\hfill\emph{;exit on this patch}
+%\STATE signal-noises $\leftarrow$ 0
+%\STATE become SPREADING
+%
+%
+%\STATE $ $
+%\STATE \textbf{SPREADING}
+%\STATE parent-exit $\leftarrow$ exit
+%\STATE signal-noise-here $\leftarrow$ signal-noise + 1
+%\FOR{? one-of neighbors}
+%\IF{[patch-state] of ? = NONE}
+%\STATE exits $\leftarrow$ parent-exit
+%\STATE signal-noises $\leftarrow$ signal-noise-here
+%\ENDIF
+%\ENDFOR
+%\STATE become IDLE
+%
+%
+%\STATE $ $
+%\STATE \textbf{IDLE}
+%
+%\STATE become DONE
+%
+%\STATE $ $
+%\STATE \textbf{DONE}
+%
+%\end{algorithmic}
+%\end{algorithm}
+
+
 \section{Gefahrensituationen}
 \label{sec:gefahrensituationen}
 %Gefahrenevents: Gefahrenevents erscheinen an zufälligen Orten im Grundriss. Ihr Erscheinen sollte zur vollständigen Evakuierung des Areals führen.
@@ -74,6 +176,40 @@ Dieser Abschnitt beschreibt zunächst das Bewegungsmodell der Personen ohne akti
 \caption{Zustandsdiagramm der Gefahrenevents}
 \label{fig:event}
 \end{figure}
+
+\floatname{algorithm}{Protokoll} 
+\begin{algorithm}
+\caption{Gefahrensituation}
+\begin{algorithmic} 
+\STATE \textit{State Trans. Sys.:} $\langle\{$INIT, COUNTDOWN, GASSING, DONE$\}\rangle$
+\STATE \textit{Initialization:} All notes in state INIT
+\STATE \textit{Restrictions:} All patches in state $\{$NONE, DONE$\}$
+\STATE \textit{Local data:} countdown $\in \mathbb{N}_{\geq0}$ 
+\STATE $ $
+\STATE \textbf{INIT}
+\STATE \textit{Spontaneously}
+
+\STATE countdown $\leftarrow$ minCountdown + (random (maxCountdown - minCountdown))
+\STATE become COUNTDOWN
+
+
+\STATE $ $
+\STATE \textbf{COUNTDOWN}
+\STATE countdown $\leftarrow$ countdown - 1
+\IF{$countdown = 0$}
+\STATE become GASSING
+\ENDIF
+
+\STATE $ $
+\STATE \textbf{GASSING}
+\STATE ask patch-here $[$ patch-state $\leftarrow$ EVENT $]$ 
+\STATE become DONE
+
+\STATE $ $
+\STATE \textbf{DONE}
+
+\end{algorithmic}
+\end{algorithm}
 
 
 \section{Patches}
