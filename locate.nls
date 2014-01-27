@@ -30,6 +30,18 @@ to locate-persons
   visualize-est-pos
 end
 
+to connect-exit
+  let exit-n 0
+  let nearest-neighbor 0
+  foreach sort exits [
+    let exit ?
+    foreach filter [[distance exit] of ? <= person-detection-radius] sort persons [
+      ask exit [create-est-link-with ?]
+    ]
+    set exit-n (exit-n + 1)
+  ]
+end
+
 to visualize-est-pos
   foreach sort persons [
     let person ?
@@ -90,7 +102,7 @@ to estimate-point
       set estimated-coords array:item exit-positions nearest
       let alpha 0.1
       let i 0
-      while [i < 100] [
+      while [i < locate-iterations] [
         set j 0
         let calculated-dists array:from-list n-values array:length exit-positions [-1]
         while [j < array:length exit-positions] [

@@ -39,6 +39,8 @@ to setup-world
   setup-persons
   setup-events
   
+  connect-exit
+  
 end
 
 
@@ -46,7 +48,7 @@ to go
   
   create-graph
   
-  ask persons [    
+  ask-concurrent persons [    
     
     if state = "INIT" [
      
@@ -189,7 +191,7 @@ personCount
 personCount
 1
 300
-13
+152
 1
 1
 NIL
@@ -309,7 +311,7 @@ exit-signal-strength
 exit-signal-strength
 1
 1000
-871
+611
 10
 1
 NIL
@@ -354,7 +356,7 @@ person-detection-radius
 person-detection-radius
 1
 1000
-221
+94
 1
 1
 patches
@@ -447,8 +449,8 @@ SLIDER
 approx-dist
 approx-dist
 0
-1000
-497
+200
+89
 1
 1
 NIL
@@ -462,8 +464,8 @@ SLIDER
 number-of-exits
 number-of-exits
 1
-3
-3
+5
+4
 1
 1
 NIL
@@ -485,6 +487,21 @@ NIL
 NIL
 NIL
 1
+
+SLIDER
+295
+695
+467
+728
+locate-iterations
+locate-iterations
+0
+100
+8
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?

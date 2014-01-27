@@ -55,9 +55,13 @@ to setup-exits
   let x1 0
   let x2 0
   let x3 0
+  let x4 0
+  let x5 0
   let y1 0
   let y2 0
   let y3 0
+  let y4 0
+  let y5 0
   
   if inputFile = "Abstract.png" [ ;; Zufällige Platzierung
     if number-of-exits >= 1 [
@@ -71,6 +75,14 @@ to setup-exits
     if number-of-exits >= 3 [
       set x3 random-pxcor
       set y3 random-pycor
+    ]
+    if number-of-exits >= 4 [
+      set x4 random-pxcor
+      set y4 random-pycor
+    ]
+    if number-of-exits >= 5 [
+      set x5 random-pxcor
+      set y5 random-pycor
     ]
   ]
   if inputFile = "Abstract_static.png" [
@@ -86,19 +98,35 @@ to setup-exits
       set x3 max-pxcor / 2
       set y3 max-pycor / 2
     ]
+    if number-of-exits >= 4 [
+      set x4 10
+      set y4 max-pycor - 10
+    ]
+    if number-of-exits >= 5 [
+      set x5 max-pxcor - 10
+      set y5 10
+    ]
   ]
   if inputFile = "Simple.png" [ ;; Statische Platzierung
     if number-of-exits >= 1 [
-      set x1 280
-      set y1 17
+      set x1 20
+      set y1 max-pycor - 20
     ]
     if number-of-exits >= 2 [
-      set x2 280
-      set y2 559
+      set x2 max-pxcor - 20
+      set y2 max-pycor - 20
     ]
     if number-of-exits >= 3 [
-      set x3 280
-      set y3 559
+      set x3 max-pxcor - 20
+      set y3 20
+    ]    
+    if number-of-exits >= 4 [
+      set x4 20
+      set y4 20
+    ]    
+    if number-of-exits >= 5 [
+      set x5 260
+      set y5 20
     ]    
   ]
   if inputFile = "ikg.png" [ ;; Statische Platzierung
@@ -128,6 +156,14 @@ to setup-exits
       set x3 610
       set y3 510
     ]   
+    if number-of-exits >= 4 [
+      set x4 22
+      set y4 26
+    ]   
+    if number-of-exits >= 5 [
+      set x5 max-pxcor - 30
+      set y5 26
+    ]   
   ]
   
   if number-of-exits >= 1 [
@@ -147,7 +183,20 @@ to setup-exits
       setxy x3 y3
       set signal-color blue
     ]
+  ]
+  if number-of-exits >= 4 [
+    create-exits 1 [
+      setxy x4 y4
+      set signal-color black
+    ]
   ]   
+  if number-of-exits >= 5 [
+    create-exits 1 [
+      setxy x5 y5
+      set signal-color grey
+    ]
+  ]   
+  
   
   ask exits [    
     exit-state("INIT")
