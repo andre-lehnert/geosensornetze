@@ -191,7 +191,7 @@ personCount
 personCount
 1
 300
-53
+152
 1
 1
 NIL
@@ -311,7 +311,7 @@ exit-signal-strength
 exit-signal-strength
 1
 1000
-871
+611
 10
 1
 NIL
@@ -356,7 +356,7 @@ person-detection-radius
 person-detection-radius
 1
 1000
-116
+94
 1
 1
 patches
@@ -450,7 +450,7 @@ approx-dist
 approx-dist
 0
 200
-68
+89
 1
 1
 NIL
@@ -465,7 +465,7 @@ number-of-exits
 number-of-exits
 1
 5
-5
+4
 1
 1
 NIL
