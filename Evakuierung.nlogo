@@ -486,6 +486,21 @@ NIL
 NIL
 1
 
+SLIDER
+295
+695
+467
+728
+locate-iterations
+locate-iterations
+0
+100
+50
+1
+1
+NIL
+HORIZONTAL
+
 @#$#@#$#@
 ## WHAT IS IT?
 
