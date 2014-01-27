@@ -48,7 +48,7 @@ to go
   
   create-graph
   
-  ask persons [    
+  ask-concurrent persons [    
     
     if state = "INIT" [
      
@@ -191,7 +191,7 @@ personCount
 personCount
 1
 300
-300
+53
 1
 1
 NIL
@@ -356,7 +356,7 @@ person-detection-radius
 person-detection-radius
 1
 1000
-60
+116
 1
 1
 patches
@@ -450,7 +450,7 @@ approx-dist
 approx-dist
 0
 200
-41
+68
 1
 1
 NIL
@@ -497,7 +497,7 @@ locate-iterations
 locate-iterations
 0
 100
-24
+8
 1
 1
 NIL
