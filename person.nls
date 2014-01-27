@@ -341,17 +341,25 @@ to person-move-to-exit
     
     ifelse orientation-algorithm = "Gradient localization" [ ;; Orientierung über die "Gradient localization" ?      
        
-      if [patch-state] of patch-here != "WALL" [
+      ifelse [patch-state] of patch-here != "WALL" [
         
         
         ;; TODO Wie den Exit lokalisieren?      
         let exit array:item exit-positions nearest-exit-of-person self 
         
-        let x first exit
-        let y last exit
-        
-        facexy x y
-       
+        ifelse exit != -1 [
+          
+          let x first exit
+          let y last exit
+          
+          facexy x y
+        ]
+        [
+         random-walk  
+        ]
+      ]
+      [
+        random-walk  
       ]
       
      

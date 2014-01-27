@@ -178,8 +178,11 @@ to init-orientation-algorithm
   ]
   
   if orientation-algorithm = "Gradient localization" [
-    ;; TODO
-    print "NOT IMPLEMENTED: Gradient localization"
+    locate-persons
+  ]
+  
+  ask exits [    
+   exit-state "NEGOTIABLE"
   ]
   
 end

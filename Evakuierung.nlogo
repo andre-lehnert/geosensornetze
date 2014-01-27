@@ -46,8 +46,6 @@ to go
   
   create-graph
   
-  locate-persons
-  
   ask persons [    
     
     if state = "INIT" [
@@ -191,7 +189,7 @@ personCount
 personCount
 1
 300
-203
+13
 1
 1
 NIL
@@ -355,8 +353,8 @@ SLIDER
 person-detection-radius
 person-detection-radius
 1
-300
-80
+1000
+221
 1
 1
 patches
@@ -424,7 +422,7 @@ CHOOSER
 walk-strategy
 walk-strategy
 "Complete random" "Straight with collision detection" "Straight with probability"
-1
+2
 
 SLIDER
 32
@@ -450,7 +448,7 @@ approx-dist
 approx-dist
 0
 1000
-45
+497
 1
 1
 NIL
@@ -906,7 +904,6 @@ est
 link direction
 true
 0
-Rectangle -7500403 true true 180 60 180 60
 
 @#$#@#$#@
 0
