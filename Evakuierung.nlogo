@@ -180,7 +180,7 @@ CHOOSER
 inputFile
 inputFile
 "Abstract.png" "Abstract_static.png" "Simple.png" "Raumplan.png" "ikg.png"
-1
+3
 
 SLIDER
 14
@@ -435,7 +435,7 @@ random-walk-probability
 random-walk-probability
 0
 100
-1
+100
 1
 1
 %
@@ -450,7 +450,7 @@ approx-dist
 approx-dist
 0
 1000
-64
+108
 1
 1
 NIL
@@ -465,7 +465,7 @@ number-of-exits
 number-of-exits
 1
 3
-1
+3
 1
 1
 NIL
@@ -897,6 +897,16 @@ true
 0
 Polygon -13345367 true false 150 135 105 225 195 225 150 135
 Rectangle -13345367 true false 105 240 195 270
+
+est
+0.0
+-0.2 0 0.0 1.0
+0.0 1 1.0 0.0
+0.2 0 0.0 1.0
+link direction
+true
+0
+Rectangle -7500403 true true 180 60 180 60
 
 @#$#@#$#@
 0

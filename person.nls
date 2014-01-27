@@ -104,7 +104,7 @@ to setup-persons
     ]
   ]
   if inputFile = "Abstract_static.png" [ ;; Zufällige Platzierung
-    place-persons-regular 5
+    place-persons
   ]
   if inputFile = "Simple.png" [ ;; Zufällige Platzierung mit Wand-Detektion
     place-persons

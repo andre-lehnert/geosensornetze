@@ -2,6 +2,8 @@ breed[ests est]
 
 ests-own[state messages]
 
+undirected-link-breed [est-links est-link]
+
 to reset-locate
   ask persons [
     set exit-hopcounts array:from-list n-values number-of-exits [-1]
@@ -39,7 +41,9 @@ to visualize-est-pos
         set label-color black
         set label ""
         setxy (item 0 [est-pos] of person) (item 1 [est-pos] of person)
-        ;create-link-with person
+        create-est-link-with person [
+          set shape "est"
+        ]
       ]
     ]
   ]

@@ -1,5 +1,5 @@
 ;person-linking.nls
-
+undirected-link-breed [comm-links comm-link]
 
 to create-graph  
   
@@ -29,7 +29,7 @@ to createCompleteGraph
     if [state] of ? != "DEAD" [      
       ask persons [
         if state != "DEAD" [                  
-          if distance ? > 0 [create-link-with ? ]   
+          if distance ? > 0 [create-comm-link-with ? ]   
           
         ]
       ]
@@ -43,7 +43,7 @@ to createUDG
     if [state] of ? != "DEAD" [      
       ask persons [
         if state != "DEAD" [ 
-          if distance ? < person-detection-radius and distance ? > 0 [create-link-with ?]
+          if distance ? < person-detection-radius and distance ? > 0 [create-comm-link-with ?]
         ]
       ]
     ]
@@ -58,7 +58,7 @@ to createRNG
       foreach sort link-neighbors [
         let v ?
         let distuv distance v
-        ifelse all? link-neighbors [isPlanar u v distuv "RNG"] [] [ask link-with v [set color red]]
+        ifelse all? link-neighbors [isPlanar u v distuv "RNG"] [] [ask comm-link-with v [set color red]]
       ]
     ]
   ]
@@ -74,7 +74,7 @@ to createGG
         foreach sort link-neighbors [
           let v ?
           let distuv distance v
-          ifelse all? link-neighbors [isPlanar u v distuv "GG"] [] [ask link-with v [set color red hide-link ]]
+          ifelse all? comm-link-neighbors [isPlanar u v distuv "GG"] [] [ask comm-link-with v [set color red hide-link ]]
         ]
       ]
     ]
