@@ -180,7 +180,7 @@ CHOOSER
 inputFile
 inputFile
 "Abstract.png" "Abstract_static.png" "Simple.png" "Raumplan.png" "ikg.png"
-2
+3
 
 SLIDER
 14
@@ -191,7 +191,7 @@ personCount
 personCount
 1
 300
-127
+300
 1
 1
 NIL
@@ -356,7 +356,7 @@ person-detection-radius
 person-detection-radius
 1
 1000
-100
+60
 1
 1
 patches
@@ -449,8 +449,8 @@ SLIDER
 approx-dist
 approx-dist
 0
-1000
-45
+200
+41
 1
 1
 NIL
@@ -464,8 +464,8 @@ SLIDER
 number-of-exits
 number-of-exits
 1
-3
-3
+5
+5
 1
 1
 NIL
@@ -497,7 +497,7 @@ locate-iterations
 locate-iterations
 0
 100
-50
+24
 1
 1
 NIL
