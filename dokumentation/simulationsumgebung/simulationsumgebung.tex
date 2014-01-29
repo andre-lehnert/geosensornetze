@@ -8,6 +8,57 @@ Die Ausgangsbasis für die verwendeten Modelle und Protokolle stammen aus den er
 \section{Benutzerschnittstelle}
 \label{sec:benutzerschnittstelle}
 
+In diesem Abschnitt werden die Interaktions- und Konfigurationsmöglichkeiten mit der Simulationsumgebung erläutert. Abbildung \ref{fig:gui} stellt einen Ausschnitt des grafischen Interfaces von NetLogo da, anhand dessen die Erklärungen in den folgenden Abschnitten besser einzuordnen sind. 
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[height=0.85\textwidth]{simulationsumgebung/gui_3}
+\caption{Grafische Oberfläche}
+\label{fig:gui}
+\end{figure}
+
+\subsection{Benutzerevents}
+\label{sec:gui_userevents}
+
+Zum Auslösen von Benutzerevents werden Buttons verwendet. Zu diesen zählen \verb|setup|, \verb|reset| und \verb|go|, die hier kurz beschrieben werden.
+
+\subsubsection*{setup-Button}
+
+Die Betätigung des \verb|setup|-Buttons ruft eine Folge von Setup und Initialisierungsschritten auf. Zu Beginn wird die Simulationswelt erstellt. Dazu wird der Parameter \verb|inputFile| (siehe Abschnitt \ref{sec:gui_general}) zum Einbinden einer Bild-Datei und das Mapping der Pixel-Farbwerte auf die passend skalierte NetLogo-Welt gemappt. Das Ergebnis ist der gewählte Grundriss, bei dem jedes Patch einen Farbwert erhalten hat.
+
+Dieser Farbwert ist essentiell für den nachfolgenden Schritt in der \verb|setup-patches|-Methode. Diese legt den Initialzustand jedes Patches fest (siehe Abschnitt \ref{sec:patches}). Generell wird auf Grund des Grundrisses zwischen leerem Raum (weiß) und einer Wand unterschieden (schwarz). 
+
+Wände spielen auch bei der Initialisierung und Platzierung der Notausgänge eine wichtige Rolle, die mit der \verb|setup-exits|-Methode realisiert sind. Entsprechend der Aufgabenstellung werden Notausgänge auf einem abstrakten Grundriss, ohne Wände, zufällig in der Welt platziert. Für alle anderen Grundrisse mit Wänden wurde auf statische vordefinierte Positionen für Notausgänge gesetzt.\par
+Bei der Initialisierung wird zudem die lokale Konstante der maximalen Signalreichweite für den Orientierungsalgorithmus \emph{cellular automaton} mit dem Parameter \verb|exit-signal-strength| aus Abschnitt \ref{sec:gui_exit} gesetzt und alle Notausgänge in den Zustand \emph{INIT} versetzt (vgl. Abschnitt \ref{sec:notausgaenge}).\par
+Im Anschluss wird der \emph{cellular automaton}-Algorithmus (siehe Abschnitt \ref{sec:cellular_automaton}) ausgeführt, um die Patches mit Signalqualitätsinformationen auszustatten, damit die Personen den optimalen Fluchtweg bei einer Gefahrensituation nutzen.
+
+Nachdem die Simulationswelt mit den statischen Elementen vorbereitet wurde, werden die Personen initialisiert und platziert. Dies geschieht mit der Methode \verb|setup-persons|. Hier wird eine definierte Anzahl von Personen erstellt (siehe Abschnitt \ref{sec:gui_person}, die auf einem abstrakten Grundriss zufällig und auf allen anderen zufällig mit einer Wand-Detektion platziert werden. Die Personen befinden sich nun im Zustand \emph{INIT} (vgl. Abschnitt \ref{sec:bewegungsmodell}).\par
+Nach der Platzierung wird einmalig ein Kommunikationsgraph zwischen den Personen und den Notausgängen erstellt, damit der Nutzer ggf. den Graph-Typen oder die Kantenlänge anpassen kann (siehe Abschnitt \ref{sec:gui_person}).
+ 
+Als letzter Schritt folgt die Initialisierung und Platzierung der Gefahrenevents  mittels \verb|setup-events|. Die analog zu den Personen auf dem abstrakten Grundriss zufällig und bei allen anderen Grundrissen mit Wand-Detektion platziert werden. Danach befinden sich alle Gefahrenevents im Zustand \emph{INIT} (vgl. Abschnitt \ref{sec:gefahrensituationen}).
+ 
+\subsubsection*{reset-Button}
+
+Mit dem \verb|reset|-Button werden alle definierten Parameter des letzten Setups wiederhergestellt und die Personen auf ihre ursprüngliche Position zurückgesetzt.
+Ein fluten des Grundrisses ist nicht erforderlich und beschleunigt das durchführen von Messreihenreihen.
+Zudem bietet es die Möglichkeit den Kommunikationsgraphen der Personen auszublenden, dies ist unter anderem nützlich bei der Darstellung der initial approximierten Positionen der Personen.
+
+\subsubsection*{go-Button}
+
+Schließlich kann die Simulation mit dem \verb|go|-Button gestartet und pausiert werden, da hier die \emph{forever}-Option aktiv ist. Ist diese deaktiviert, wird pro Betätigung des \verb|go|-Buttons nur ein \emph{Tick} durchgeführt.
+
+\subsection{Generelle Parameter}
+\label{sec:gui_general}
+
+\subsection{Personen--Parameter}
+\label{sec:gui_person}
+
+\subsection{Notausgang--Parameter}
+\label{sec:gui_exit}
+
+\subsection{Gradient localization--Parameter}
+\label{sec:gui_localization}
+
 
 \section{Personen}
 \label{sec:personen}
@@ -215,9 +266,17 @@ Dieser Abschnitt beschreibt zunächst das Bewegungsmodell der Personen ohne akti
 \section{Patches}
 \label{sec:patches}
 
+- Initialisierung der Patches setup-patches
+ - Zustandsfestlegung für alle Patches 
+  - white -> NONE
+  - black -> WALL
+  - rest -> WALL
+ - Initialisierung der lokalen Daten \verb|signal-noise| abhängig vom Zustand: leerer Raum -> -1, Wand -> sehr hohe Dämpfung \ref{sec:gui_exit} 
+
+
 %Lifecyle
 \subsection{Implizite Zustände}
-
+\label{sec:patch_states}
 % NONE, WALL, SPREADING, IDLE, DONE, EVENT, EVENT-DONE
 
 % Kategorie: Grundriss
