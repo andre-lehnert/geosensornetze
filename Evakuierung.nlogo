@@ -507,6 +507,23 @@ locate-iterations
 NIL
 HORIZONTAL
 
+BUTTON
+210
+313
+341
+346
+NIL
+block-random-exit
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+0
+
 @#$#@#$#@
 ## WHAT IS IT?
 

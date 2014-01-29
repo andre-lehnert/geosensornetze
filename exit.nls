@@ -3,6 +3,7 @@
 __includes["decentral_signal_spreading.nls" "default_signal_spreading.nls" "bresenham_signal_spreading.nls"]
 
 exits-own [
+  messages
   radius
   inner-radius 
   state
@@ -11,6 +12,12 @@ exits-own [
   signal-color
   max-noise
 ]
+
+to block-random-exit
+  ask one-of exits [
+    exit-state "BLOCKED"
+  ]
+end
 
 to exit-state [newstate]
   
@@ -43,6 +50,7 @@ to exit-state [newstate]
     set color red ;; Falls negotiable = false
     set heading 0
     set label-color black
+    broadcast (list "EXIT_BLOCKED" who)
   ] 
   
 end
@@ -201,6 +209,7 @@ to setup-exits
   ask exits [    
     exit-state("INIT")
     
+    set messages []
     set limit exitLimit
     
     set radius 600 

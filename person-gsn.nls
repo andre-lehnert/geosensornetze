@@ -15,7 +15,7 @@ to broadcast [message]
   let me self      
   ask comm-link-neighbors [
     
-    if state != "DEAD" and [state] of me != "DEAD" [        
+    if state != "DEAD" and [state] of me != "DEAD" [   
       ;if distance myself <= person-detection-radius [      
         receive message
       ;]

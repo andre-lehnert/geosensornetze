@@ -10,6 +10,7 @@ persons-own [
   msghear
   exit-hopcounts
   exit-positions
+  exit-stati ;; array of status of all exits 1 = passable 0 = blocked
   est-pos
   last-random-heading
 ]
@@ -28,6 +29,7 @@ to person-state [newstate]
     set label ""    
     set exit-hopcounts array:from-list n-values number-of-exits [-1]
     set exit-positions array:from-list n-values number-of-exits [-1]
+    set exit-stati array:from-list n-values number-of-exits [1]
     set est-pos (list -1 -1)
     set last-random-heading 361
   ]
@@ -185,6 +187,18 @@ to random-move
     broadcast ["EVENT_DETECTED"]
     ask link-neighbors [ask link-with myself [set color orange]] ;; Link colors are orange
     person-state "EVENT_DETECTED"
+    stop
+  ]
+  
+  ;; Erhalten der Broadcast Meldung, dass ein Exit blockiert ist
+  let exit_msg received "EXIT_BLOCKED"
+  if exit_msg != [] [
+    let blocked_exit item 1 exit_msg
+    if array:item exit-stati blocked_exit = 1 [
+      array:set exit-stati blocked_exit 0
+      broadcast exit_msg
+    ]
+    
     stop
   ]
   
