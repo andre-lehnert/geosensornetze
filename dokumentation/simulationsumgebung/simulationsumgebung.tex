@@ -5,6 +5,11 @@ Das Kapitel der Simulationsumgebung befasst sich mit den Eingabemöglichkeiten z
 
 Die Ausgangsbasis für die verwendeten Modelle und Protokolle stammen aus den erstellten Übungen zur Vorlesung Gensensornetze, sie wurden jedoch auf die Anforderungen der Hausarbeit adaptiert.
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 \section{Benutzerschnittstelle}
 \label{sec:benutzerschnittstelle}
 
@@ -50,15 +55,134 @@ Schließlich kann die Simulation mit dem \verb|go|-Button gestartet und pausiert
 \subsection{Generelle Parameter}
 \label{sec:gui_general}
 
+Der Parameter \verb|input-file| erlaubt die Definition des Grundrisses der Simulationsumgebung. Während des Setups wird der Parameter zur Pfadauflösung für eine Bild-Datei verwendet. Diese wird mit dem Befehl \verb|import-pcolors inputFile| auf die Simulationswelt gemappt.
+
+\begin{quote}
+\verb|input-file| $\in \{Abstract.png, Abstract\_static.png, Simple.png, Raumplan.png\}$
+\end{quote}
+
+Der nächste generelle Parameter ist \verb|orientation-algorithm|. Dieser dient der Auswahl eines Algorithmus zur Orientierung und Lokalisierung der Personen. Detaillierte Informationen sind im Kapitel \ref{cha:algorithmik} aufgeführt.
+
+\begin{quote}
+\verb|orientation-algorithm| $\in \{Cellular$ $automaton, Gradient$ $localization\}$
+\end{quote}
+
+Mit dem \verb|graph-type|-Parameter hat der Nutzer die Wahl zwischen den Graphtypen, die in der Vorlesung vorgestellt wurden. Sofern \emph{UDG} gewählt ist, wird der \verb|person-detection-radius|-Parameter des folgenden Abschnitts für den Disk-Radius verwendet.
+
+\begin{quote}
+\verb|graph-type| $\in \{Complete$ $Graph, UDG, RNG, GG\}$
+\end{quote}
+
 \subsection{Personen--Parameter}
 \label{sec:gui_person}
+
+\verb|person-count| definiert die Anzahl der Personen in der Simulationsumgebung.
+
+\begin{quote}
+\verb|person-count| $\in [1, 300]$
+\end{quote}
+
+Mit dem \verb|walk-probability|-Parameter wird die Wahrscheinlichkeit definiert, mit der Personen bei einem Tick einen Schritt machen. Bei $0 \%$ werden die Personen statisch an der gegenwärtigen Position fixiert. Es ist also möglich diesen Parameter während der Laufzeit zu verändern.  
+
+\begin{quote}
+\verb|walk-probability| $\in [0, 100]$
+\end{quote}
+
+Der \verb|walk-strategy|-Parameter erlaubt die Auswahl der \emph{random walk}-Strategie (siehe Abschnitt \ref{sec:bewegungsmodell}).
+
+\begin{quote}
+\verb|walk-strategy| $\in \{Complete$ $random, Straight$ $with$ $collision$ $detection,$\\\hspace*{3.2cm}$Straight$ $with$ $probability\}$
+\end{quote}
+
+Analog zur \verb|walk-probability| kann der Nutzer den \verb|random-walk-probability|-Parameter zur Laufzeit anpassen und somit die Wahrscheinlichkeit der \emph{random walk} Richtungsänderung bestimmen. Bei $100 \%$ wird jede Person nach jedem Tick eine Richtungsänderung vornehmen.
+
+\begin{quote}
+\verb|random-walk-probability| $\in [0, 100]$
+\end{quote}
+
+Der \verb|person-detection-radius|-Parameter ist einer der entscheidendsten bei der Simulation. Hiermit wird der Radius definiert in dem eine Person eine Gefahrensituation wahrnehmen kann, sowie die Kommunikationsreichweite bei dem UDG-Graphen bestimmt. Zudem wird damit der Abstand zu einem Notausgang bestimmt (siehe Kapitel \ref{cha:algorithmik}.
+
+\begin{quote}
+\verb|person-detection-radius| $\in [0, 700]$
+\end{quote}
+
+
+
+\subsection{Event--Parameter}
+\label{sec:gui_event}
+
+
+\verb|event-count|
+
+\begin{quote}
+\verb|event-count| $\in [0, 20]$
+\end{quote}
+
+
+\verb|min-countdown|
+
+\begin{quote}
+\verb|min-countdown| $\in [1, $\textit{max-countdown}$]$
+\end{quote}
+
+
+
+\verb|max-countdown|
+
+\begin{quote}
+\verb|max-countdown| $\in [$\textit{min-countdown}$, 100]$
+\end{quote}
+
+
+\verb|gas-expansion-probability|
+
+\begin{quote}
+\verb|gas-expansion-probability| $\in [0, 100]$
+\end{quote}
+
 
 \subsection{Notausgang--Parameter}
 \label{sec:gui_exit}
 
+\verb|number-of-exits|
+
+\begin{quote}
+\verb|number-of-exits| $\in [1, 5]$
+\end{quote}
+
+\verb|exit-signal-strength|
+
+\begin{quote}
+\verb|exit-signal-strength| $\in [0, 1000]$
+\end{quote}
+
+\verb|exit-limit|
+
+\begin{quote}
+\verb|exit-limit| $\in [1, 300]$
+\end{quote}
+
 \subsection{Gradient localization--Parameter}
 \label{sec:gui_localization}
 
+\verb|locate-iterations|
+
+\begin{quote}
+\verb|locate-iterations| $\in [0, 100]$
+\end{quote}
+
+\verb|approx-dist|
+
+\begin{quote}
+\verb|approx-dist| $\in [0, 200]$
+\end{quote}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Personen}
 \label{sec:personen}
