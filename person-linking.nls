@@ -24,7 +24,7 @@ end
 
 
 to createCompleteGraph
-  clear-links
+  ask comm-links [die]
   foreach sort persons [  
     if [state] of ? != "DEAD" [      
       ask persons [
@@ -38,7 +38,7 @@ to createCompleteGraph
 end
 
 to createUDG
-  clear-links
+  ask comm-links [die]
   foreach sort persons[
     if [state] of ? != "DEAD" [      
       ask persons [

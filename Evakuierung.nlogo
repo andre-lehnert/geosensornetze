@@ -48,6 +48,8 @@ to go
   
   create-graph
   
+  connect-exit
+  
   ask-concurrent persons [    
     
     if state = "INIT" [
@@ -86,6 +88,8 @@ to go
     patch-gassing
     
   ]  
+  
+  locate-persons
   
   tick
   
@@ -465,7 +469,7 @@ number-of-exits
 number-of-exits
 1
 5
-4
+5
 1
 1
 NIL

@@ -36,7 +36,7 @@ to connect-exit
   foreach sort exits [
     let exit ?
     foreach filter [[distance exit] of ? <= person-detection-radius] sort persons [
-      ask exit [create-est-link-with ?]
+      ask exit [create-comm-link-with ?]
     ]
     set exit-n (exit-n + 1)
   ]
@@ -56,6 +56,7 @@ to visualize-est-pos
         setxy (item 0 [est-pos] of person) (item 1 [est-pos] of person)
         create-est-link-with person [
           set shape "est"
+          set color red
         ]
       ]
     ]
