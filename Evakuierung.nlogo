@@ -139,10 +139,10 @@ to-report dist [coords.a coords.b]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-354
-21
-995
-636
+321
+15
+962
+630
 -1
 -1
 1.013
@@ -167,9 +167,9 @@ ticks
 
 BUTTON
 179
-20
+15
 245
-53
+61
 NIL
 setup
 NIL
@@ -189,29 +189,29 @@ CHOOSER
 60
 inputFile
 inputFile
-"Abstract.png" "Abstract_static.png" "Simple.png" "Raumplan.png" "ikg.png"
-1
+"Abstract.png" "Abstract_static.png" "Simple.png" "Raumplan.png"
+3
 
 SLIDER
 14
-113
+121
 174
-146
+154
 personCount
 personCount
 1
 300
-152
+200
 1
 1
 NIL
 HORIZONTAL
 
 BUTTON
-241
-582
-304
-615
+14
+667
+80
+713
 NIL
 go
 T
@@ -226,14 +226,14 @@ NIL
 
 SLIDER
 14
-314
+322
 186
-347
+355
 eventCount
 eventCount
 0
 20
-12
+13
 1
 1
 bombs
@@ -241,14 +241,14 @@ HORIZONTAL
 
 SLIDER
 32
-351
+357
 204
-384
+390
 minCountdown
 minCountdown
 1
 maxCountdown
-6
+10
 1
 1
 ticks
@@ -256,39 +256,39 @@ HORIZONTAL
 
 SLIDER
 32
-388
+392
 204
-421
+425
 maxCountdown
 maxCountdown
 minCountdown
 100
-15
+60
 1
 1
 ticks
 HORIZONTAL
 
 SLIDER
-15
-500
-187
-533
+30
+542
+202
+575
 exitLimit
 exitLimit
 1
-20
+300
+30
 1
 1
-1
-NIL
+persons
 HORIZONTAL
 
 BUTTON
-200
-538
-349
-571
+322
+673
+480
+706
 Delete signalcolour
 hide-signal-spreading
 NIL
@@ -302,10 +302,10 @@ NIL
 1
 
 SWITCH
-16
-538
-187
-571
+322
+635
+478
+668
 show-signal-spreading
 show-signal-spreading
 1
@@ -313,30 +313,30 @@ show-signal-spreading
 -1000
 
 SLIDER
-15
-463
-187
-496
+30
+507
+202
+540
 exit-signal-strength
 exit-signal-strength
 1
 1000
-611
-10
+700
+1
 1
 NIL
 HORIZONTAL
 
 SLIDER
 32
-148
-214
-181
+156
+230
+189
 walk-propability
 walk-propability
 0
 100
-100
+90
 1
 1
 %
@@ -344,14 +344,14 @@ HORIZONTAL
 
 SLIDER
 31
-425
+427
 205
-458
+460
 gas-expansion-propability
 gas-expansion-propability
 0
 100
-14
+10
 1
 1
 %
@@ -359,14 +359,14 @@ HORIZONTAL
 
 SLIDER
 33
-265
+273
 230
-298
+306
 person-detection-radius
 person-detection-radius
 1
-1000
-94
+700
+1
 1
 1
 patches
@@ -383,10 +383,10 @@ graph-type
 1
 
 BUTTON
-17
-735
-130
-768
+623
+635
+736
+668
 NIL
 locate-persons
 NIL
@@ -411,9 +411,9 @@ orientation-algorithm
 
 BUTTON
 253
-20
+15
 316
-53
+61
 NIL
 reset
 NIL
@@ -428,9 +428,9 @@ NIL
 
 CHOOSER
 32
-183
-214
-228
+191
+230
+236
 walk-strategy
 walk-strategy
 "Complete random" "Straight with collision detection" "Straight with probability"
@@ -438,24 +438,24 @@ walk-strategy
 
 SLIDER
 32
+238
 230
-230
-263
+271
 random-walk-probability
 random-walk-probability
 0
 100
-100
+25
 1
 1
 %
 HORIZONTAL
 
 SLIDER
-19
-643
-191
-676
+14
+622
+186
+655
 approx-dist
 approx-dist
 0
@@ -463,14 +463,14 @@ approx-dist
 89
 1
 1
-NIL
+patches
 HORIZONTAL
 
 SLIDER
-19
-599
-191
-632
+14
+472
+186
+505
 number-of-exits
 number-of-exits
 1
@@ -478,14 +478,14 @@ number-of-exits
 5
 1
 1
-NIL
+exits
 HORIZONTAL
 
 BUTTON
-18
-693
-116
-726
+623
+674
+736
+707
 NIL
 reset-locate
 NIL
@@ -499,10 +499,10 @@ NIL
 1
 
 SLIDER
-295
-695
-467
-728
+13
+587
+185
+620
 locate-iterations
 locate-iterations
 0
@@ -514,10 +514,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-210
-313
-341
-346
+485
+635
+616
+668
 NIL
 block-random-exit
 NIL
@@ -581,6 +581,20 @@ arrow
 true
 0
 Polygon -7500403 true true 150 0 0 150 105 150 105 293 195 293 195 150 300 150
+
+bomb
+true
+0
+Circle -7500403 true true 90 90 120
+Rectangle -7500403 true true 135 75 165 105
+Line -7500403 true 150 75 150 45
+Line -1184463 false 150 45 135 30
+Line -1184463 false 150 45 165 30
+Line -1184463 false 150 45 135 45
+Line -1184463 false 150 45 165 45
+Line -1184463 false 150 45 165 60
+Line -1184463 false 150 45 135 60
+Line -1184463 false 150 45 150 30
 
 box
 false
@@ -811,6 +825,7 @@ square
 false
 0
 Rectangle -7500403 true true 30 30 270 270
+Polygon -1 true false 60 150 120 225 120 180 240 180 240 120 120 120 120 75 60 150
 
 square 2
 false
@@ -905,7 +920,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0.3
+NetLogo 5.0.4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

@@ -12,8 +12,8 @@ to event-state [newstate]
   
   set state newstate
   
-  set size 15
-  set shape "x"  
+  set size 25
+  set shape "bomb"  
   set heading 0 
   set label-color black 
   
@@ -30,7 +30,7 @@ to event-state [newstate]
   
   ;; Gas entlassen
   if state = "GASSING" [
-    set color red
+    set color 78
     set label "gassing"
   ]   
   
