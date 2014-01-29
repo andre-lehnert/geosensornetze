@@ -190,17 +190,7 @@ to random-move
     stop
   ]
   
-  ;; Erhalten der Broadcast Meldung, dass ein Exit blockiert ist
-  let exit_msg received "EXIT_BLOCKED"
-  if exit_msg != [] [
-    let blocked_exit item 1 exit_msg
-    if array:item exit-stati blocked_exit = 1 [
-      array:set exit-stati blocked_exit 0
-      broadcast exit_msg
-    ]
-    
-    stop
-  ]
+  
   
   
   let g random-float 1.00000001 ;; Wahrscheinlichkeit g
@@ -426,4 +416,16 @@ to person-reach-exit
     
   ]
   
+end
+
+to person-broadcast-exit-messages
+  ;; Erhalten der Broadcast Meldung, dass ein Exit blockiert ist
+  let exit_msg received "EXIT_BLOCKED"
+  if exit_msg != [] [
+    let blocked_exit item 1 exit_msg
+    if array:item exit-stati blocked_exit = 1 [
+      array:set exit-stati blocked_exit 0
+      broadcast exit_msg
+    ]
+  ]
 end

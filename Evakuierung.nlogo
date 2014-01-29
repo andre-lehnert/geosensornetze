@@ -68,6 +68,7 @@ to go
       
       person-reach-exit
         
+      person-broadcast-exit-messages
     ]
     
   ]
@@ -88,6 +89,10 @@ to go
     patch-gassing
     
   ]  
+  
+  ask exits [
+    exit-blocked
+  ]
   
   locate-persons
   
@@ -120,6 +125,7 @@ to reset
   reset-exits
   reset-persons
   reset-events
+  reset-locate
   
 end
 
@@ -184,7 +190,7 @@ CHOOSER
 inputFile
 inputFile
 "Abstract.png" "Abstract_static.png" "Simple.png" "Raumplan.png" "ikg.png"
-3
+1
 
 SLIDER
 14
@@ -227,7 +233,7 @@ eventCount
 eventCount
 0
 20
-1
+12
 1
 1
 bombs
@@ -241,8 +247,8 @@ SLIDER
 minCountdown
 minCountdown
 1
-100
-5
+maxCountdown
+6
 1
 1
 ticks
@@ -255,9 +261,9 @@ SLIDER
 421
 maxCountdown
 maxCountdown
-2
+minCountdown
 100
-19
+15
 1
 1
 ticks
@@ -345,7 +351,7 @@ gas-expansion-propability
 gas-expansion-propability
 0
 100
-0
+14
 1
 1
 %
@@ -899,7 +905,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0.4
+NetLogo 5.0.3
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

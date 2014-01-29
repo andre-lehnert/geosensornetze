@@ -14,8 +14,14 @@ exits-own [
 ]
 
 to block-random-exit
-  ask one-of exits [
-    exit-state "BLOCKED"
+  let proceed true
+  while [proceed] [
+    ask one-of exits [
+      if state != "BLOCKED" [
+        exit-state "BLOCKED"
+        set proceed false
+      ]
+    ]
   ]
 end
 
@@ -50,7 +56,6 @@ to exit-state [newstate]
     set color red ;; Falls negotiable = false
     set heading 0
     set label-color black
-    broadcast (list "EXIT_BLOCKED" who)
   ] 
   
 end
@@ -223,8 +228,9 @@ end
 
 
 to reset-exits
-  
-  
+  ask exits [    
+    exit-state "NEGOTIABLE"
+  ]
 end
 
 
@@ -443,5 +449,23 @@ to-report is-wall [x y x0 y0]
 end
 
 
+to exit-blocked
+  if state = "BLOCKED" [
+    broadcast (list "EXIT_BLOCKED" who)
+  ]
+end
 
+to connect-exit
+  let exit-n 0
+  let nearest-neighbor 0
+  foreach sort exits [
+    let exit ?
+    foreach filter [[distance exit] of ? <= person-detection-radius] sort persons [
+      if [state] of ? != "DEAD" [
+        ask exit [create-comm-link-with ?]
+      ]
+    ]
+    set exit-n (exit-n + 1)
+  ]
+end
 

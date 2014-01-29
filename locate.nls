@@ -30,17 +30,7 @@ to locate-persons
   visualize-est-pos
 end
 
-to connect-exit
-  let exit-n 0
-  let nearest-neighbor 0
-  foreach sort exits [
-    let exit ?
-    foreach filter [[distance exit] of ? <= person-detection-radius] sort persons [
-      ask exit [create-comm-link-with ?]
-    ]
-    set exit-n (exit-n + 1)
-  ]
-end
+
 
 to visualize-est-pos
   foreach sort persons [
