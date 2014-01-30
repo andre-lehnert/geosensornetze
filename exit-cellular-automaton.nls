@@ -1,0 +1,131 @@
+to init-decentral-signal-spreading  
+  
+  ask exits [    
+    
+    let exit-id who
+    
+    ask patch-here [ ;; Initialisierung des Patches unter einem exit
+      
+      if (patch-state = "NONE") [ 
+        
+        set patch-state "SPREADING"   
+        set nearest-exit myself
+        array:set exits-in-range exit-id myself
+        array:set signal-noises exit-id 0
+        set signal-noise 0
+        if (show-signal-spreading) [ 
+          let patch-color 0 
+          ask array:item exits-in-range exit-id [ set patch-color signal-color ]
+          set pcolor patch-color
+        ]
+        
+      ]      
+    ]    
+  ]
+  
+  
+end
+
+to-report nearest-exit-signal [noises]
+  
+  let i 0
+  let exit-id -1
+  let min-exit-signal 10000
+ 
+  while [i < array:length noises] [
+    
+    if array:item signal-noises i != -1 and array:item signal-noises i < min-exit-signal [
+      set min-exit-signal array:item noises i
+      set exit-id i
+    ]   
+    set i (i + 1)
+  ]
+  
+  report exit-id
+  
+end
+
+to decentral-signal-spreading
+  let i 0
+  
+  while [i < exit-signal-strength] [
+    ask patches [
+      
+      ;; spread-signal-to-neighbors4 ;; 4 Nachbarn (Nord, Ost, Süd, West)
+      if patch-state = "SPREADING" [; and signal-noise = i [ 
+        
+        
+        let parent-exit array:item exits-in-range nearest-exit-signal signal-noises 
+        let parent-exit-id nearest-exit-signal signal-noises
+        
+        ;let signal-noise-here signal-noise + 1
+        let signal-noise-here ( array:item signal-noises ( nearest-exit-signal signal-noises ) ) + 1 
+
+        ask neighbors4 [
+          
+          if (patch-state = "NONE") [ 
+            
+            set patch-state "SPREADING"
+            set nearest-exit parent-exit 
+            set signal-noise signal-noise-here            
+          
+            array:set signal-noises  parent-exit-id   signal-noise-here 
+            array:set exits-in-range parent-exit-id   parent-exit 
+    
+            print-signal-spreading
+            
+            let noise 0
+            ask nearest-exit [ set noise max-noise ]
+            if (signal-noise >= noise) [
+              set patch-state "DONE"
+            ]   
+          ]
+          
+          if (patch-state = "SPREADING") [            
+            
+            if (signal-noise > signal-noise-here) [
+              if (nearest-exit != parent-exit) [
+                
+                set nearest-exit parent-exit 
+                set signal-noise signal-noise-here 
+                
+                if (show-signal-spreading) [  
+                  ;set pcolor red                  
+                ] 
+              ] 
+              set patch-state "IDLE"              
+            ]    
+            
+            
+          ]
+          
+          if (patch-state = "IDLE") [            
+            
+            if (signal-noise > signal-noise-here) [
+              if (nearest-exit != parent-exit) [
+                show self
+                set nearest-exit parent-exit 
+                set signal-noise signal-noise-here
+                if (show-signal-spreading) [        
+                  ;set pcolor blue
+                ] 
+              ]             
+            ]              
+            set patch-state "DONE"           
+          ]
+          
+        ]    
+        set patch-state "DONE"  
+      ]
+      
+      if (patch-state = "IDLE") [
+        if (show-signal-spreading) [        
+          set pcolor white
+        ]
+      ]  
+    ]
+    set i (i + 1)
+  ]
+  
+  
+end

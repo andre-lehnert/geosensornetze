@@ -8,13 +8,13 @@ to patch-become [newstate]
   
   if state = "NONE" [
     set pcolor white
-    set nearest-exit 0
-    set signal-noise -1
+    set exits-in-range array:from-list n-values number-of-exits [-1]
+    set signal-noises array:from-list n-values number-of-exits [-1]
   ]  
   
   if state = "WALL" [ ;; do nothing
     set pcolor black
-    set signal-noise 10000
+    set signal-noises array:from-list n-values number-of-exits [10000]
   ]
   
   if state = "SPREADING" [
@@ -44,18 +44,27 @@ to setup-patches
     
     if (pcolor = white) [
       set patch-state "NONE"
-      set signal-noise random -1
+      set signal-noises array:from-list n-values number-of-exits [-1]
+      set exits-in-range array:from-list n-values number-of-exits [-1]
+      set signal-noise -1
+      set nearest-exit -1
     ]
     
     if (pcolor = black) [
       set patch-state "WALL"
+      set signal-noises array:from-list n-values number-of-exits [10000]
+      set exits-in-range array:from-list n-values number-of-exits [-1]
       set signal-noise 10000
+      set nearest-exit -1
     ]
     
     if (pcolor != black and pcolor != white) [
       set pcolor black
       set patch-state "WALL"
+      set signal-noises array:from-list n-values number-of-exits [10000]
+      set exits-in-range array:from-list n-values number-of-exits [-1]
       set signal-noise 10000
+       set nearest-exit -1
     ]
     
   ]

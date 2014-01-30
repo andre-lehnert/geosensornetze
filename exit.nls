@@ -1,6 +1,6 @@
 ;; Exit
 
-__includes["decentral_signal_spreading.nls" "default_signal_spreading.nls" "bresenham_signal_spreading.nls"]
+__includes["exit-cellular-automaton.nls"]
 
 exits-own [
   messages
@@ -246,7 +246,7 @@ to init-orientation-algorithm
   ]
   
   ask exits [    
-   exit-state "NEGOTIABLE"
+    exit-state "NEGOTIABLE"
   ]
   
 end
@@ -265,141 +265,6 @@ to hide-signal-spreading
 end
 
 
-to init-decentral-signal-spreading  
-  
-  ask exits [    
-    
-    ask patch-here [ ;; Initialisierung des Patches unter einem exit
-      
-      if (patch-state = "NONE") [ 
-        
-        set patch-state "SPREADING"   
-        set nearest-exit myself
-        set signal-noise 0
-        if (show-signal-spreading) [ 
-          let patch-color 0 
-          ask nearest-exit [ set patch-color signal-color ]
-          set pcolor patch-color
-        ]
-        
-      ]      
-    ]    
-  ]
-  
-  
-end
-
-to decentral-signal-spreading
-  let i 0
-  
-  while [i < exit-signal-strength] [
-    ask patches [
-      
-      ;; spread-signal-to-neighbors4 ;; 4 Nachbarn (Nord, Ost, Süd, West)
-      if patch-state = "SPREADING" [; and signal-noise = i [ 
-        
-        
-        let parent-exit nearest-exit
-        let signal-noise-here signal-noise + 1
-        
-        ask neighbors4 [
-          
-          if (patch-state = "NONE") [ 
-            
-            set patch-state "SPREADING"
-            set nearest-exit parent-exit 
-            set signal-noise signal-noise-here
-            
-            if (show-signal-spreading) [ 
-              let patch-color 0 
-              ask nearest-exit [ set patch-color signal-color ]
-              ;set pcolor patch-color  ;; <- Farbwahl 1: Zugehörigkeit
-              
-              ;; Farbwahl 2: Abstand
-              if (signal-noise > 0) [
-                set pcolor 56
-              ]
-              if (signal-noise > 50) [
-                set pcolor 65
-              ]
-              if (signal-noise > 100) [
-                set pcolor 46
-              ]
-              if (signal-noise > 150) [
-                set pcolor 44
-              ]
-              if (signal-noise > 200) [
-                set pcolor 26
-              ]
-              if (signal-noise > 250) [
-                set pcolor 16
-              ]
-              if (signal-noise > 300) [
-                set pcolor 15
-              ]
-              if (signal-noise > 350) [
-                set pcolor 14
-              ]
-              if (signal-noise > 400) [
-                set pcolor 13
-              ]
-            ]
-            
-            let noise 0
-            ask nearest-exit [ set noise max-noise ]
-            if (signal-noise >= noise) [
-              set patch-state "DONE"
-            ]   
-          ]
-          
-          if (patch-state = "SPREADING") [            
-            
-            if (signal-noise > signal-noise-here) [
-              if (nearest-exit != parent-exit) [
-                
-                set nearest-exit parent-exit 
-                set signal-noise signal-noise-here 
-                
-                if (show-signal-spreading) [  
-                  ;set pcolor red                  
-                ] 
-              ] 
-              set patch-state "IDLE"              
-            ]    
-            
-            
-          ]
-          
-          if (patch-state = "IDLE") [            
-            
-            if (signal-noise > signal-noise-here) [
-              if (nearest-exit != parent-exit) [
-                show self
-                set nearest-exit parent-exit 
-                set signal-noise signal-noise-here
-                if (show-signal-spreading) [        
-                  ;set pcolor blue
-                ] 
-              ]             
-            ]              
-            set patch-state "DONE"           
-          ]
-          
-        ]    
-        set patch-state "DONE"  
-      ]
-      
-      if (patch-state = "IDLE") [
-        if (show-signal-spreading) [        
-          set pcolor white
-        ]
-      ]  
-    ]
-    set i (i + 1)
-  ]
-  
-  
-end
 
 
 
@@ -417,6 +282,55 @@ to-report is-available [x y x0 y0]
   ]
   
   report false
+  
+end
+
+to print-signal-spreading
+  
+  if (show-signal-spreading) [ 
+    ;let patch-color 0 
+    ;ask nearest-exit [ set patch-color signal-color ]
+    ;set pcolor patch-color  ;; <- Farbwahl 1: Zugehörigkeit
+    
+    ;; Farbwahl 2: Abstand
+    if (signal-noise > 0) [
+      set pcolor 54
+    ]
+    if (signal-noise > 100) [
+      set pcolor 56
+    ]
+    if (signal-noise > 200) [
+      set pcolor 65
+    ]
+    if (signal-noise > 300) [
+      set pcolor 46
+    ]
+    if (signal-noise > 400) [
+      set pcolor 44
+    ]
+    if (signal-noise > 500) [
+      set pcolor 26
+    ]
+    if (signal-noise > 600) [
+      set pcolor 16
+    ]
+    if (signal-noise > 700) [
+      set pcolor 15
+    ]
+    if (signal-noise > 800) [
+      set pcolor 14
+    ]
+    if (signal-noise > 900) [
+      set pcolor 13
+    ]
+    if (signal-noise > 1000) [
+      set pcolor 12
+    ]
+    if (signal-noise > 1100) [
+      set pcolor 11
+    ]
+    
+  ]
   
 end
 

@@ -13,7 +13,9 @@ globals [
 
 patches-own[
   nearest-exit
-  signal-noise
+  exits-in-range
+  signal-noises
+  signal-noise 
   patch-state
 ]
 
@@ -190,7 +192,7 @@ CHOOSER
 inputFile
 inputFile
 "Abstract.png" "Abstract_static.png" "Simple.png" "Raumplan.png"
-3
+1
 
 SLIDER
 14
@@ -201,7 +203,7 @@ personCount
 personCount
 1
 300
-200
+1
 1
 1
 NIL
@@ -308,7 +310,7 @@ SWITCH
 668
 show-signal-spreading
 show-signal-spreading
-1
+0
 1
 -1000
 
@@ -320,8 +322,8 @@ SLIDER
 exit-signal-strength
 exit-signal-strength
 1
-1000
-700
+1200
+322
 1
 1
 NIL
@@ -407,7 +409,7 @@ CHOOSER
 orientation-algorithm
 orientation-algorithm
 "Cellular automaton" "Gradient localization"
-1
+0
 
 BUTTON
 253
@@ -475,7 +477,7 @@ number-of-exits
 number-of-exits
 1
 5
-5
+3
 1
 1
 exits

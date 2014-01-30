@@ -315,6 +315,12 @@ to person-flee
   
 end
 
+to-report min-noise [noises]
+  
+  
+  
+end
+
 
 to person-move-to-exit
   
