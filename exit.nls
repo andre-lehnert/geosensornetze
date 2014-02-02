@@ -32,7 +32,7 @@ to exit-state [newstate]
   
   ;; Start
   if state = "INIT" [    
-    set size 20
+    set size 5
     set shape "square"
     set color yellow
     set heading 0
@@ -43,7 +43,7 @@ to exit-state [newstate]
   ;; Passierbar
   if state = "NEGOTIABLE" [
     set negotiable true
-    set size 20
+    set size 5
     set shape "square"
     set color green ;; Falls negotiable = true
     set heading 0
@@ -54,7 +54,7 @@ to exit-state [newstate]
   ;; Nicht passierbar
   if state = "BLOCKED" [
     set negotiable false
-    set size 20
+    set size 5
     set shape "square"
     set color red ;; Falls negotiable = false
     set heading 0
@@ -207,40 +207,40 @@ to setup-exits
   
   if inputFile = "Raumplan.png" [ ;; Statische Platzierung
     if number-of-exits >= 1 [
-      set x1 18
-      set y1 60
+      set x1 7
+      set y1 5
     ]
     if number-of-exits >= 2 [
-      set x2 5
-      set y2 364
+      set x2 2
+      set y2 180
     ]
     if number-of-exits >= 3 [
-      set x3 390
-      set y3 364
+      set x3 max-pxcor - 4
+      set y3 145
     ]   
     if number-of-exits >= 4 [
-      set x4 390
+      set x4 max-pxcor - 4
       set y4 60
     ]   
     if number-of-exits >= 5 [
-      set x5 170
-      set y5 196
+      set x5 max-pxcor - 4
+      set y5 max-pycor - 3
     ]
      if number-of-exits >= 6 [
-      set x6 182
-      set y6 390
+      set x6 87
+      set y6 100
     ]
       if number-of-exits >= 7 [
-      set x7 213
+      set x7 max-pxcor - 3
       set y7 10
     ]
        if number-of-exits >= 8 [
-      set x8 155
-      set y8 10
+      set x8 110
+      set y8 3
     ]
         if number-of-exits >= 9 [
-      set x9 234
-      set y9 196
+      set x9 98
+      set y9 max-pycor - 3
     ]   
   ]
   
@@ -345,18 +345,6 @@ to init-orientation-algorithm
 end
 
 
-to hide-signal-spreading
-  
-  ask patches [
-    
-    if ( pcolor = orange or pcolor = cyan or pcolor = blue ) [
-      set pcolor white 
-    ]  
-    
-  ]
-  
-end
-
 
 
 
@@ -378,54 +366,6 @@ to-report is-available [x y x0 y0]
   
 end
 
-to print-signal-spreading
-  
-  if (show-signal-spreading) [ 
-    ;let patch-color 0 
-    ;ask nearest-exit [ set patch-color signal-color ]
-    ;set pcolor patch-color  ;; <- Farbwahl 1: Zugehörigkeit
-    
-    ;; Farbwahl 2: Abstand
-    if (signal-noise > 0) [
-      set pcolor 54
-    ]
-    if (signal-noise > 100) [
-      set pcolor 56
-    ]
-    if (signal-noise > 200) [
-      set pcolor 65
-    ]
-    if (signal-noise > 300) [
-      set pcolor 46
-    ]
-    if (signal-noise > 400) [
-      set pcolor 44
-    ]
-    if (signal-noise > 500) [
-      set pcolor 26
-    ]
-    if (signal-noise > 600) [
-      set pcolor 16
-    ]
-    if (signal-noise > 700) [
-      set pcolor 15
-    ]
-    if (signal-noise > 800) [
-      set pcolor 14
-    ]
-    if (signal-noise > 900) [
-      set pcolor 13
-    ]
-    if (signal-noise > 1000) [
-      set pcolor 12
-    ]
-    if (signal-noise > 1100) [
-      set pcolor 11
-    ]
-    
-  ]
-  
-end
 
 
 to-report is-world [x y x0 y0]

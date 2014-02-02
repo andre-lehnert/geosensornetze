@@ -29,7 +29,17 @@ to createCompleteGraph
     if [state] of ? != "DEAD" [      
       ask persons [
         if state != "DEAD" [                  
-          if distance ? > 0 [create-comm-link-with ? ]   
+          if distance ? > 0 [
+            create-comm-link-with ? [
+              
+              ifelse hide-communication-links [
+                set shape "hidden" ;; hidden shape
+              ]
+              [
+                set shape "communication"
+              ]              
+            ]
+          ]   
           
         ]
       ]
@@ -43,10 +53,21 @@ to createUDG
     if [state] of ? != "DEAD" [      
       ask persons [
         if state != "DEAD" [ 
-          if distance ? < person-detection-radius and distance ? > 0 [create-comm-link-with ?]
+          if distance ? < person-detection-radius and distance ? > 0 [
+            create-comm-link-with ? [
+              
+              ifelse hide-communication-links [
+                set shape "hidden" ;; hidden shape
+              ]
+              [
+                set shape "communication"
+              ]              
+            ]
+          ]
         ]
       ]
     ]
+  
   ] 
 end
 

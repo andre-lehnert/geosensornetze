@@ -37,15 +37,27 @@ to visualize-est-pos
     let person ?
     if (item 0 [est-pos] of person) >= 0 AND (item 0 [est-pos] of person) <= max-pxcor AND (item 1 [est-pos] of person) >= 0 AND (item 1 [est-pos] of person) <= max-pycor [
       create-ests 1 [
-        set size 15
-        set shape "person"
+        set size 5        
+        ifelse hide-approx-persons [
+          set shape "person-hidden"
+        ]
+        [
+          set shape "person"
+        ] 
         set color red
         set heading 0
         set label-color black
         set label ""
         setxy (item 0 [est-pos] of person) (item 1 [est-pos] of person)
         create-est-link-with person [
-          set shape "est"
+          
+          ifelse hide-approx-persons [
+            set shape "est-hidden"
+          ]
+          [
+            set shape "est"
+          ] 
+          
           set color red
         ]
       ]

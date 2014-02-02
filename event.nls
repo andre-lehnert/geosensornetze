@@ -12,7 +12,7 @@ to event-state [newstate]
   
   set state newstate
   
-  set size 25
+  set size 8
   set shape "bomb"  
   set heading 0 
   set label-color black 

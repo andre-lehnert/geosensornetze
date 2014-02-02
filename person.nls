@@ -22,7 +22,7 @@ to person-state [newstate]
   
   ;; Start
   if state = "INIT" [
-    set size 15
+    set size 5
     set shape "person"
     set color brown
     set heading 0
@@ -430,7 +430,7 @@ to person-move-to-available-exit
   
   foreach sort neighbors [    
         
-      if [patch-state] of ? != "WALL" and [patch-state] of ? != "EVENT" and [patch-state] of ? != "EVENT_DONE" [  
+      if [patch-state] of ? != "WALL" and [patch-state] of ? != "EVENT" and [patch-state] of ? != "EVENT-DONE" [  
         
         let available-exits [exits-in-range] of ?
         let available-signals [signal-noises] of ?

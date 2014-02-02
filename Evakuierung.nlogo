@@ -12,11 +12,9 @@ globals [
   rescued-persons-counter
 ]
 
-patches-own[
-  nearest-exit
+patches-own[  
   exits-in-range
-  signal-noises
-  signal-noise 
+  signal-noises 
   patch-state
 ]
 
@@ -24,7 +22,12 @@ to setup
   clear-all
   reset-ticks
   
-  set-default-shape links "communication" ;; hidden shape
+  ifelse hide-communication-links [
+    set-default-shape links "hidden" ;; hidden shape
+  ]
+  [
+    set-default-shape links "communication"
+  ]
   
   setup-world
   
@@ -35,7 +38,7 @@ end
 
 to setup-world
   
-  resize-world 0 400 0 400
+  resize-world 0 200 0 200
   import-pcolors inputFile
   setup-patches
   setup-exits
@@ -169,7 +172,7 @@ GRAPHICS-WINDOW
 629
 -1
 -1
-1.454
+2.9005
 1
 10
 1
@@ -180,9 +183,9 @@ GRAPHICS-WINDOW
 0
 1
 0
-400
+200
 0
-400
+200
 0
 0
 1
@@ -214,7 +217,7 @@ CHOOSER
 inputFile
 inputFile
 "Abstract.png" "Abstract_static.png" "Simple.png" "Raumplan.png"
-2
+3
 
 SLIDER
 14
@@ -225,7 +228,7 @@ personCount
 personCount
 1
 300
-129
+300
 1
 1
 NIL
@@ -257,7 +260,7 @@ eventCount
 eventCount
 0
 20
-15
+20
 1
 1
 bombs
@@ -311,10 +314,10 @@ HORIZONTAL
 SWITCH
 322
 635
-478
+495
 668
-show-signal-spreading
-show-signal-spreading
+hide-signal-spreading
+hide-signal-spreading
 0
 1
 -1000
@@ -328,7 +331,7 @@ exit-signal-strength
 exit-signal-strength
 1
 1200
-121
+284
 1
 1
 NIL
@@ -358,7 +361,7 @@ gas-expansion-propability
 gas-expansion-propability
 0
 100
-1
+0
 1
 1
 %
@@ -373,7 +376,7 @@ person-detection-radius
 person-detection-radius
 0
 700
-104
+25
 1
 1
 patches
@@ -441,7 +444,7 @@ CHOOSER
 walk-strategy
 walk-strategy
 "Complete random" "Straight with collision detection" "Straight with probability"
-1
+2
 
 SLIDER
 32
@@ -452,7 +455,7 @@ random-walk-probability
 random-walk-probability
 0
 100
-0
+83
 1
 1
 %
@@ -558,6 +561,28 @@ rescued-persons-counter-reporter / personCount
 17
 1
 11
+
+SWITCH
+322
+671
+501
+704
+hide-communication-links
+hide-communication-links
+0
+1
+-1000
+
+SWITCH
+321
+706
+492
+739
+hide-approx-persons
+hide-approx-persons
+0
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -813,6 +838,10 @@ Rectangle -7500403 true true 127 79 172 94
 Polygon -7500403 true true 195 90 240 150 225 180 165 105
 Polygon -7500403 true true 105 90 60 150 75 180 135 105
 
+person-hidden
+false
+0
+
 person_dead
 true
 0
@@ -988,6 +1017,24 @@ est
 0.0
 -0.2 0 0.0 1.0
 0.0 1 1.0 0.0
+0.2 0 0.0 1.0
+link direction
+true
+0
+
+est-hidden
+0.0
+-0.2 0 0.0 1.0
+0.0 0 0.0 1.0
+0.2 0 0.0 1.0
+link direction
+true
+0
+
+hidden
+0.0
+-0.2 0 0.0 1.0
+0.0 0 0.0 1.0
 0.2 0 0.0 1.0
 link direction
 true

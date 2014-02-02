@@ -94,8 +94,7 @@ to decentral-signal-spreading
             ]
             
             if not is-done [
-              set patch-state "SPREADING"
-              set pcolor blue
+              set patch-state "SPREADING"         
             ]
           ]
           
@@ -114,7 +113,7 @@ to decentral-signal-spreading
             array:set exits-in-range parent-pointer parent-nearest-exit
             array:set signal-noises parent-pointer parent-min-noise + 1
             
-            set pcolor 68
+            print-signal-spreading
           ]   
           
           
@@ -137,8 +136,7 @@ to decentral-signal-spreading
         ]
         
         if all-done [
-          set patch-state "IDLE"
-          set pcolor black
+          set patch-state "IDLE"          
         ]       
       ]
       
@@ -211,8 +209,7 @@ to decentral-signal-spreading
             ]
             
             if is-done [
-              set patch-state "IDLE"
-              set pcolor red
+              set patch-state "IDLE"              
             ]
           ]
           
@@ -220,8 +217,7 @@ to decentral-signal-spreading
         ]
         
         if all-done [
-          set patch-state "DONE"
-          set pcolor white
+          set patch-state "DONE"         
         ]
         if not all-done [
           set patch-state "SPREADING"
@@ -240,4 +236,43 @@ to decentral-signal-spreading
      set pcolor white 
    ]
   ]
+end
+
+
+to-report nearest-exit [this-patch]
+  
+  let noises [signal-noises] of this-patch
+  let this-exits [exits-in-range] of this-patch
+  
+  let pointer -1        
+  let j 0  
+  let this-noise 10000 
+  let this-exit -1
+  
+  while [j < array:length noises] [
+    
+    if array:item noises j != -1 and this-noise > array:item noises j [
+      
+      set this-noise array:item noises j
+      set this-exit array:item this-exits j
+      set pointer j
+      
+    ]        
+    
+    set j (j + 1)
+  ]
+  
+  report this-exit
+  
+end
+
+
+to print-signal-spreading
+  
+  if (hide-signal-spreading) [ 
+    let patch-color 0 
+    ask nearest-exit self [ set patch-color signal-color ]
+    set pcolor patch-color  
+  ]
+  
 end

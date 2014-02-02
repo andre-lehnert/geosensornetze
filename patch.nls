@@ -46,16 +46,14 @@ to setup-patches
       set patch-state "NONE"
       set signal-noises array:from-list n-values number-of-exits [-1]
       set exits-in-range array:from-list n-values number-of-exits [-1]
-      set signal-noise -1
-      set nearest-exit -1    
+    
     ]
     
     if (pcolor = black) [
       set patch-state "WALL"
       set signal-noises array:from-list n-values number-of-exits [10000]
       set exits-in-range array:from-list n-values number-of-exits [-1]
-      set signal-noise 10000
-      set nearest-exit -1
+     
     ]
     
     if (pcolor != black and pcolor != white) [
@@ -63,8 +61,7 @@ to setup-patches
       set patch-state "WALL"
       set signal-noises array:from-list n-values number-of-exits [10000]
       set exits-in-range array:from-list n-values number-of-exits [-1]
-      set signal-noise 10000
-       set nearest-exit -1
+     
     ]
     
   ]
