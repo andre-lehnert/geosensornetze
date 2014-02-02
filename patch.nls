@@ -47,7 +47,7 @@ to setup-patches
       set signal-noises array:from-list n-values number-of-exits [-1]
       set exits-in-range array:from-list n-values number-of-exits [-1]
       set signal-noise -1
-      set nearest-exit -1
+      set nearest-exit -1    
     ]
     
     if (pcolor = black) [

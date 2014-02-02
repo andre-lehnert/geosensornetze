@@ -35,7 +35,7 @@ end
 to visualize-est-pos
   foreach sort persons [
     let person ?
-    if (item 0 [est-pos] of person) >= 0 AND (item 0 [est-pos] of person) <= 622 AND (item 1 [est-pos] of person) >= 0 AND (item 1 [est-pos] of person) <= 576[
+    if (item 0 [est-pos] of person) >= 0 AND (item 0 [est-pos] of person) <= max-pxcor AND (item 1 [est-pos] of person) >= 0 AND (item 1 [est-pos] of person) <= max-pycor [
       create-ests 1 [
         set size 15
         set shape "person"

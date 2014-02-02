@@ -9,15 +9,12 @@ to init-decentral-signal-spreading
       if (patch-state = "NONE") [ 
         
         set patch-state "SPREADING"   
-        set nearest-exit myself
+        
         array:set exits-in-range exit-id myself
         array:set signal-noises exit-id 0
-        set signal-noise 0
-        if (show-signal-spreading) [ 
-          let patch-color 0 
-          ask array:item exits-in-range exit-id [ set patch-color signal-color ]
-          set pcolor patch-color
-        ]
+        
+        
+        
         
       ]      
     ]    
@@ -31,7 +28,7 @@ to-report nearest-exit-signal [noises]
   let i 0
   let exit-id -1
   let min-exit-signal 10000
- 
+  
   while [i < array:length noises] [
     
     if array:item signal-noises i != -1 and array:item signal-noises i < min-exit-signal [
@@ -49,83 +46,198 @@ to decentral-signal-spreading
   let i 0
   
   while [i < exit-signal-strength] [
+    
     ask patches [
       
       ;; spread-signal-to-neighbors4 ;; 4 Nachbarn (Nord, Ost, Süd, West)
-      if patch-state = "SPREADING" [; and signal-noise = i [ 
+      if patch-state = "SPREADING"  [         
         
+        let parent-min-noise -1
+        let parent-nearest-exit -1
+        let parent-pointer -1
         
-        let parent-exit array:item exits-in-range nearest-exit-signal signal-noises 
-        let parent-exit-id nearest-exit-signal signal-noises
-        
-        ;let signal-noise-here signal-noise + 1
-        let signal-noise-here ( array:item signal-noises ( nearest-exit-signal signal-noises ) ) + 1 
-
-        ask neighbors4 [
+        let j 0        
+        while [j < array:length signal-noises] [
           
-          if (patch-state = "NONE") [ 
+          if parent-min-noise <= array:item signal-noises j [
+            
+            set parent-min-noise array:item signal-noises j
+            set parent-nearest-exit array:item exits-in-range j
+            set parent-pointer j
+            
+          ]        
+          
+          set j (j + 1)
+        ]
+        
+        let all-done true
+        
+        ask neighbors4 [         
+          
+          if (patch-state = "IDLE") [ 
+            
+            if array:item signal-noises parent-pointer = -1 [
+              array:set exits-in-range parent-pointer parent-nearest-exit
+              array:set signal-noises parent-pointer parent-min-noise + 1                
+            ] 
+            
+            set j 0  
+            let is-done true     
+            while [j < array:length signal-noises] [
+              
+              if array:item signal-noises j = -1 [
+                set is-done false 
+                set all-done false                 
+              ]        
+              
+              set j (j + 1)
+            ]
+            
+            if not is-done [
+              set patch-state "SPREADING"
+              set pcolor blue
+            ]
+          ]
+          
+          if (patch-state = "SPREADING") [ 
+            
+            if array:item signal-noises parent-pointer = -1 [
+              array:set exits-in-range parent-pointer parent-nearest-exit
+              array:set signal-noises parent-pointer parent-min-noise + 1                
+            ] 
+          ]
+          
+          if (patch-state = "NONE") [             
             
             set patch-state "SPREADING"
-            set nearest-exit parent-exit 
-            set signal-noise signal-noise-here            
-          
-            array:set signal-noises  parent-exit-id   signal-noise-here 
-            array:set exits-in-range parent-exit-id   parent-exit 
-    
-            print-signal-spreading
             
-            let noise 0
-            ask nearest-exit [ set noise max-noise ]
-            if (signal-noise >= noise) [
-              set patch-state "DONE"
-            ]   
+            array:set exits-in-range parent-pointer parent-nearest-exit
+            array:set signal-noises parent-pointer parent-min-noise + 1
+            
+            set pcolor 68
+          ]   
+          
+          
+          set j 0  
+          let is-done true     
+          while [j < array:length signal-noises] [
+            
+            if array:item signal-noises j = -1 [
+              set is-done false 
+              set all-done false                 
+            ]        
+            
+            set j (j + 1)
           ]
           
-          if (patch-state = "SPREADING") [            
-            
-            if (signal-noise > signal-noise-here) [
-              if (nearest-exit != parent-exit) [
-                
-                set nearest-exit parent-exit 
-                set signal-noise signal-noise-here 
-                
-                if (show-signal-spreading) [  
-                  ;set pcolor red                  
-                ] 
-              ] 
-              set patch-state "IDLE"              
-            ]    
-            
-            
+          if is-done [
+            ; set patch-state "IDLE"
+            ;set pcolor blue
           ]
-          
-          if (patch-state = "IDLE") [            
-            
-            if (signal-noise > signal-noise-here) [
-              if (nearest-exit != parent-exit) [
-                show self
-                set nearest-exit parent-exit 
-                set signal-noise signal-noise-here
-                if (show-signal-spreading) [        
-                  ;set pcolor blue
-                ] 
-              ]             
-            ]              
-            set patch-state "DONE"           
-          ]
-          
-        ]    
-        set patch-state "DONE"  
+        ]
+        
+        if all-done [
+          set patch-state "IDLE"
+          set pcolor black
+        ]       
       ]
       
-      if (patch-state = "IDLE") [
-        if (show-signal-spreading) [        
+      ;;------------------------------------------------------------------------
+      
+      
+      if patch-state = "IDLE" [
+        
+        let parent-min-noise -1
+        let parent-nearest-exit -1
+        let parent-pointer -1
+        
+        let j 0        
+        while [j < array:length signal-noises] [
+          
+          if parent-min-noise <= array:item signal-noises j [
+            
+            set parent-min-noise array:item signal-noises j
+            set parent-nearest-exit array:item exits-in-range j
+            set parent-pointer j
+            
+          ]        
+          
+          set j (j + 1)
+        ]
+        
+        let all-done true
+        
+        ask neighbors4 [
+          
+          if (patch-state = "IDLE") [ 
+            
+            if array:item signal-noises parent-pointer = -1 [
+              array:set exits-in-range parent-pointer parent-nearest-exit
+              array:set signal-noises parent-pointer parent-min-noise + 1                
+            ] 
+            
+            set j 0  
+            let is-done true     
+            while [j < array:length signal-noises] [
+              
+              if array:item signal-noises j = -1 [
+                set is-done false 
+                set all-done false                 
+              ]        
+              
+              set j (j + 1)
+            ]
+            
+          ]
+          
+          
+          if (patch-state = "SPREADING") [ 
+            
+            if array:item signal-noises parent-pointer = -1 [
+              array:set exits-in-range parent-pointer parent-nearest-exit
+              array:set signal-noises parent-pointer parent-min-noise + 1                
+            ] 
+            
+            set j 0  
+            let is-done true     
+            while [j < array:length signal-noises] [
+              
+              if array:item signal-noises j = -1 [
+                set is-done false 
+                set all-done false                 
+              ]        
+              
+              set j (j + 1)
+            ]
+            
+            if is-done [
+              set patch-state "IDLE"
+              set pcolor red
+            ]
+          ]
+          
+          
+        ]
+        
+        if all-done [
+          set patch-state "DONE"
           set pcolor white
         ]
-      ]  
+        if not all-done [
+          set patch-state "SPREADING"
+        ]
+      ]
+      ;;------------------------------------------------------------------------
+      
     ]
     set i (i + 1)
   ]
   
   
+  ask patches [
+   if patch-state != "WALL" [
+     set patch-state "DONE"
+     set pcolor white 
+   ]
+  ]
 end

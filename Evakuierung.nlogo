@@ -1,7 +1,7 @@
 extensions [array table]
 
 ;;__includes["gsn.nls"]
-__includes["person.nls" "person-linking.nls" "person-gsn.nls" "exit.nls" "event.nls" "gas.nls" "patch.nls" "locate.nls"]
+__includes["person.nls" "person-linking.nls" "person-gsn.nls" "exit.nls" "event.nls" "patch.nls" "locate.nls"]
 
 breed[exits exit]
 breed[persons person]
@@ -9,6 +9,7 @@ breed[events event]
 
 globals [
   reset-params
+  rescued-persons-counter
 ]
 
 patches-own[
@@ -34,7 +35,7 @@ end
 
 to setup-world
   
-  resize-world 0 622 0 576
+  resize-world 0 400 0 400
   import-pcolors inputFile
   setup-patches
   setup-exits
@@ -93,7 +94,14 @@ to go
   ]  
   
   ask exits [
-    exit-blocked
+    
+    exit-check-state
+    
+    exit-broadcast-negotiable
+    
+    exit-broadcast-blocked
+    
+    exit-reset-limit
   ]
   
   locate-persons
@@ -129,6 +137,8 @@ to reset
   reset-events
   reset-locate
   
+  reset-monitors
+  
 end
 
 
@@ -139,15 +149,27 @@ to-report dist [coords.a coords.b]
   let y2 item 1 coords.b  
   report sqrt ((x2 - x1) ^ 2 + (y2 - y1) ^ 2)
 end
+
+to reset-monitors
+  
+  set rescued-persons-counter 0
+  
+end
+
+to-report rescued-persons-counter-reporter
+  
+  report rescued-persons-counter
+  
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
 321
 15
-962
-630
+914
+629
 -1
 -1
-1.013
+1.454
 1
 10
 1
@@ -158,9 +180,9 @@ GRAPHICS-WINDOW
 0
 1
 0
-622
+400
 0
-576
+400
 0
 0
 1
@@ -192,7 +214,7 @@ CHOOSER
 inputFile
 inputFile
 "Abstract.png" "Abstract_static.png" "Simple.png" "Raumplan.png"
-1
+2
 
 SLIDER
 14
@@ -203,7 +225,7 @@ personCount
 personCount
 1
 300
-1
+129
 1
 1
 NIL
@@ -235,7 +257,7 @@ eventCount
 eventCount
 0
 20
-13
+15
 1
 1
 bombs
@@ -276,32 +298,15 @@ SLIDER
 542
 202
 575
-exitLimit
-exitLimit
+exit-limit
+exit-limit
 1
 300
-30
+10
 1
 1
 persons
 HORIZONTAL
-
-BUTTON
-322
-673
-480
-706
-Delete signalcolour
-hide-signal-spreading
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
 
 SWITCH
 322
@@ -323,7 +328,7 @@ exit-signal-strength
 exit-signal-strength
 1
 1200
-322
+121
 1
 1
 NIL
@@ -338,7 +343,7 @@ walk-propability
 walk-propability
 0
 100
-90
+100
 1
 1
 %
@@ -353,7 +358,7 @@ gas-expansion-propability
 gas-expansion-propability
 0
 100
-10
+1
 1
 1
 %
@@ -366,9 +371,9 @@ SLIDER
 306
 person-detection-radius
 person-detection-radius
-1
+0
 700
-1
+104
 1
 1
 patches
@@ -436,7 +441,7 @@ CHOOSER
 walk-strategy
 walk-strategy
 "Complete random" "Straight with collision detection" "Straight with probability"
-2
+1
 
 SLIDER
 32
@@ -447,7 +452,7 @@ random-walk-probability
 random-walk-probability
 0
 100
-25
+0
 1
 1
 %
@@ -462,7 +467,7 @@ approx-dist
 approx-dist
 0
 200
-89
+76
 1
 1
 patches
@@ -476,8 +481,8 @@ SLIDER
 number-of-exits
 number-of-exits
 1
-5
-3
+9
+9
 1
 1
 exits
@@ -516,12 +521,12 @@ NIL
 HORIZONTAL
 
 BUTTON
-485
-635
-616
-668
+224
+659
+287
+692
 NIL
-block-random-exit
+go
 NIL
 1
 T
@@ -530,7 +535,29 @@ NIL
 NIL
 NIL
 NIL
-0
+1
+
+MONITOR
+749
+636
+799
+681
+NIL
+rescued-persons-counter-reporter
+17
+1
+11
+
+MONITOR
+750
+684
+801
+729
+NIL
+rescued-persons-counter-reporter / personCount
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?

@@ -11,6 +11,7 @@ exits-own [
   limit ;; Limitierung der möglichen Personen, die zeitgleich den Ausgang benutzen können
   signal-color
   max-noise
+  rescued-persons
 ]
 
 to block-random-exit
@@ -36,6 +37,7 @@ to exit-state [newstate]
     set color yellow
     set heading 0
     set label-color black
+    set rescued-persons 0 
   ]
   
   ;; Passierbar
@@ -46,6 +48,7 @@ to exit-state [newstate]
     set color green ;; Falls negotiable = true
     set heading 0
     set label-color black
+    set rescued-persons 0  
   ]  
   
   ;; Nicht passierbar
@@ -55,7 +58,7 @@ to exit-state [newstate]
     set shape "square"
     set color red ;; Falls negotiable = false
     set heading 0
-    set label-color black
+    set label-color black 
   ] 
   
 end
@@ -70,11 +73,20 @@ to setup-exits
   let x3 0
   let x4 0
   let x5 0
+  let x6 0
+  let x7 0
+  let x8 0
+  let x9 0  
+  
   let y1 0
   let y2 0
   let y3 0
   let y4 0
   let y5 0
+  let y6 0
+  let y7 0
+  let y8 0
+  let y9 0
   
   if inputFile = "Abstract.png" [ ;; Zufällige Platzierung
     if number-of-exits >= 1 [
@@ -97,33 +109,27 @@ to setup-exits
       set x5 random-pxcor
       set y5 random-pycor
     ]
+     if number-of-exits >= 6 [
+      set x6 random-pxcor
+      set y6 random-pycor
+    ]
+      if number-of-exits >= 7 [
+      set x7 random-pxcor
+      set y7 random-pycor
+    ]
+       if number-of-exits >= 8 [
+      set x8 random-pxcor
+      set y8 random-pycor
+    ]
+        if number-of-exits >= 9 [
+      set x9 random-pxcor
+      set y9 random-pycor
+    ]
   ]
   if inputFile = "Abstract_static.png" [
     if number-of-exits >= 1 [
-      set x1 10
-      set y1 10
-    ]
-    if number-of-exits >= 2 [
-      set x2 max-pxcor - 10
-      set y2 max-pycor - 10
-    ]
-    if number-of-exits >= 3 [
-      set x3 max-pxcor / 2
-      set y3 max-pycor / 2
-    ]
-    if number-of-exits >= 4 [
-      set x4 10
-      set y4 max-pycor - 10
-    ]
-    if number-of-exits >= 5 [
-      set x5 max-pxcor - 10
-      set y5 10
-    ]
-  ]
-  if inputFile = "Simple.png" [ ;; Statische Platzierung
-    if number-of-exits >= 1 [
       set x1 20
-      set y1 max-pycor - 20
+      set y1 20
     ]
     if number-of-exits >= 2 [
       set x2 max-pxcor - 20
@@ -134,50 +140,113 @@ to setup-exits
       set y3 20
     ]    
     if number-of-exits >= 4 [
-      set x4 20
-      set y4 20
+      set x4 max-pxcor / 2
+      set y4 max-pycor - 20
     ]    
     if number-of-exits >= 5 [
-      set x5 260
+      set x5 max-pxcor / 2
       set y5 20
-    ]    
+    ] 
+     if number-of-exits >= 6 [
+      set x6 20
+      set y6 max-pycor / 2
+    ]
+      if number-of-exits >= 7 [
+      set x7 max-pxcor - 20
+      set y7 max-pycor / 2
+    ]
+       if number-of-exits >= 8 [
+      set x8 20
+      set y8 max-pycor - 20
+    ]
+        if number-of-exits >= 9 [
+      set x9 max-pxcor / 2
+      set y9 max-pycor / 2
+    ]      
   ]
-  if inputFile = "ikg.png" [ ;; Statische Platzierung
-    if number-of-exits >= 1 [
-      set x1 290
-      set y1 330
+  if inputFile = "Simple.png" [ ;; Statische Platzierung
+   if number-of-exits >= 1 [
+      set x1 20
+      set y1 20
     ]
     if number-of-exits >= 2 [
-      set x2 40
-      set y2 510
+      set x2 max-pxcor - 20
+      set y2 max-pycor - 20
     ]
     if number-of-exits >= 3 [
-      set x3 40
-      set y3 510
-    ]   
+      set x3 max-pxcor - 20
+      set y3 20
+    ]    
+    if number-of-exits >= 4 [
+      set x4 max-pxcor / 2
+      set y4 max-pycor - 20
+    ]    
+    if number-of-exits >= 5 [
+      set x5 max-pxcor / 2
+      set y5 20
+    ] 
+     if number-of-exits >= 6 [
+      set x6 20
+      set y6 max-pycor / 2
+    ]
+      if number-of-exits >= 7 [
+      set x7 max-pxcor - 20
+      set y7 max-pycor / 2
+    ]
+       if number-of-exits >= 8 [
+      set x8 20
+      set y8 max-pycor - 20
+    ]
+        if number-of-exits >= 9 [
+      set x9 max-pxcor / 2
+      set y9 max-pycor / 2
+    ]      
   ]
+ 
+  
+  
   if inputFile = "Raumplan.png" [ ;; Statische Platzierung
     if number-of-exits >= 1 [
-      set x1 290
-      set y1 330
+      set x1 18
+      set y1 60
     ]
     if number-of-exits >= 2 [
-      set x2 0
-      set y2 510
+      set x2 5
+      set y2 364
     ]
     if number-of-exits >= 3 [
-      set x3 610
-      set y3 510
+      set x3 390
+      set y3 364
     ]   
     if number-of-exits >= 4 [
-      set x4 22
-      set y4 26
+      set x4 390
+      set y4 60
     ]   
     if number-of-exits >= 5 [
-      set x5 max-pxcor - 30
-      set y5 26
+      set x5 170
+      set y5 196
+    ]
+     if number-of-exits >= 6 [
+      set x6 182
+      set y6 390
+    ]
+      if number-of-exits >= 7 [
+      set x7 213
+      set y7 10
+    ]
+       if number-of-exits >= 8 [
+      set x8 155
+      set y8 10
+    ]
+        if number-of-exits >= 9 [
+      set x9 234
+      set y9 196
     ]   
   ]
+  
+  
+  
+  
   
   if number-of-exits >= 1 [
     create-exits 1 [
@@ -200,22 +269,46 @@ to setup-exits
   if number-of-exits >= 4 [
     create-exits 1 [
       setxy x4 y4
-      set signal-color black
+      set signal-color 87
     ]
   ]   
   if number-of-exits >= 5 [
     create-exits 1 [
       setxy x5 y5
-      set signal-color grey
+      set signal-color 97
+    ]
+  ]
+  if number-of-exits >= 6 [
+    create-exits 1 [
+      setxy x6 y6
+      set signal-color 78
     ]
   ]   
+  if number-of-exits >= 7 [
+    create-exits 1 [
+      setxy x7 y7
+      set signal-color 68
+    ]
+  ]   
+  if number-of-exits >= 8 [
+    create-exits 1 [
+      setxy x8 y8
+      set signal-color 58
+    ]
+  ]   
+  if number-of-exits >= 9 [
+    create-exits 1 [
+      setxy x9 y9
+      set signal-color 48
+    ]
+  ]      
   
   
   ask exits [    
     exit-state("INIT")
     
     set messages []
-    set limit exitLimit
+    set limit exit-limit
     
     set radius 600 
     set inner-radius 1 
@@ -363,10 +456,55 @@ to-report is-wall [x y x0 y0]
 end
 
 
-to exit-blocked
+to exit-check-state
+  
+  if rescued-persons < limit [
+    exit-state "NEGOTIALBE"
+    set negotiable true
+    set color green ;; Falls negotiable = true
+    set rescued-persons 0 
+  ]  
+  
+  if rescued-persons >= limit [
+    
+    exit-state "BLOCKED"
+    set negotiable false
+    set color red
+    set rescued-persons 0 
+    
+  ]
+  
+  if [patch-state] of patch-here = "EVENT" or [patch-state] of patch-here = "EVENT-DONE" [
+    
+    exit-state "BLOCKED"
+    set negotiable false
+    set color red
+    set rescued-persons 0 
+    
+  ]
+  
+end
+
+to exit-broadcast-negotiable
+  
+  if state = "NEGOTIALBE" [
+    broadcast (list "EXIT_NEGOTIABLE" who)
+  ]
+  
+end
+
+to exit-broadcast-blocked
+  
   if state = "BLOCKED" [
     broadcast (list "EXIT_BLOCKED" who)
   ]
+  
+end
+
+to exit-reset-limit  
+
+   set rescued-persons 0     
+  
 end
 
 to connect-exit

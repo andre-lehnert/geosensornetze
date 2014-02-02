@@ -13,6 +13,7 @@ persons-own [
   exit-stati ;; array of status of all exits 1 = passable 0 = blocked
   est-pos
   last-random-heading
+  facing-exit
 ]
 
 to person-state [newstate]
@@ -315,12 +316,43 @@ to person-flee
   
 end
 
-to-report min-noise [noises]
+to-report min-noise [noises available-exits]
   
+  let j 0    
+  let minimal-noise 10000    
+  while [j < array:length noises] [
+    
+    if array:item available-exits j = 1 [
+      if minimal-noise > array:item noises j [              
+        set minimal-noise array:item noises j               
+      ]        
+    ]
+    
+    set j (j + 1)
+  ]
   
-  
+  report minimal-noise
+
 end
 
+to-report min-noise-exit [noises exits-of-patch]
+  
+  let j 0    
+  let minimal-noise 10000  
+  let run-to-exit -1  
+  while [j < array:length noises] [
+    
+    if array:item noises j != -1 and minimal-noise > array:item noises j [              
+      set minimal-noise array:item noises j  
+      set run-to-exit array:item exits-of-patch j       
+    ]        
+    
+    set j (j + 1)
+  ]
+  
+  report run-to-exit
+
+end
 
 to person-move-to-exit
   
@@ -331,21 +363,13 @@ to person-move-to-exit
   if g <= probability [
     
     let direction one-of neighbors   
-    let this-noise [signal-noise] of patch-here    
+    let this-noise ( min-noise ( [signal-noises] of patch-here ) exit-stati )
+    let run-to-exit 0
+    let min-neighbor-noise 10000
     
     ifelse this-noise != 0 [ ;; Fallunterscheidung: Zellulärer Automat (Patches mit signal-noise != -1) ?
       
-      foreach sort neighbors [
-        
-        if [patch-state] of ? != "WALL" and [patch-state] of ? != "EVENT" and [patch-state] of ? != "EVENT_DONE" [
-          
-          if [signal-noise] of ? < this-noise [          
-            set direction ?
-            face direction           
-          ]
-          
-        ]      
-      ] 
+      person-move-to-available-exit
       
     ][ ;; Keine Patchinformation    
     
@@ -397,6 +421,47 @@ to person-move-to-exit
 end
 
 
+
+to person-move-to-available-exit
+  
+  let best-exit -1
+  let best-signal 10000
+  let direction one-of neighbors
+  
+  foreach sort neighbors [    
+        
+      if [patch-state] of ? != "WALL" and [patch-state] of ? != "EVENT" and [patch-state] of ? != "EVENT_DONE" [  
+        
+        let available-exits [exits-in-range] of ?
+        let available-signals [signal-noises] of ?
+        
+        let j 0
+        while [j < array:length available-signals] [
+          
+          if array:item exit-stati j = 1 [
+            
+            if array:item available-signals j != -1 and best-signal > array:item available-signals j [
+              
+              set best-signal array:item available-signals j
+              set best-exit array:item available-exits j
+              face ?
+              set facing-exit best-exit
+   
+            ]
+            
+          ]
+          
+          set j j + 1
+        ]
+        
+      ]
+  ]
+  
+  
+  
+end
+
+
 to person-reach-exit
   
   let rescue false
@@ -408,8 +473,10 @@ to person-reach-exit
     
     ask exits [
       
-      if (my-x = xcor and my-y = ycor) [
+      if (my-x = xcor and my-y = ycor) and state = "NEGOTIALBE" [
         set rescue true
+        set rescued-persons rescued-persons + 1
+        set rescued-persons-counter rescued-persons-counter + 1
       ]
       
     ]
@@ -425,6 +492,7 @@ to person-reach-exit
 end
 
 to person-broadcast-exit-messages
+  
   ;; Erhalten der Broadcast Meldung, dass ein Exit blockiert ist
   let exit_msg received "EXIT_BLOCKED"
   if exit_msg != [] [
@@ -434,4 +502,14 @@ to person-broadcast-exit-messages
       broadcast exit_msg
     ]
   ]
+  
+  set exit_msg received "EXIT_NEGOTIABLE"
+  if exit_msg != [] [
+    let blocked_exit item 1 exit_msg
+    if array:item exit-stati blocked_exit = 0 [
+      array:set exit-stati blocked_exit 1
+      broadcast exit_msg
+    ]
+  ]
+  
 end
