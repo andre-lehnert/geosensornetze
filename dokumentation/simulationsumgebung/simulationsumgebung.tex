@@ -362,9 +362,16 @@ Allerdings wird in den meisten Fällen keine statische Knoten-Positionierung vor
 
 Zur visuellen Unterstützung erhalten Personen im Zustand \verb|EVENT_DETECTED| das Label \glqq !{\grqq}. Der initiale Broadcast zur Warnung anderer Personen wird mit orange gefärbten Kanten und der Zustand \verb|FLEEING| mit dem Label \glqq *{\grqq} ausgedrückt.
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Notausgänge}
 \label{sec:notausgaenge}
 %Notausgänge: Notausgänge sollen als statische Sensorknoten modelliert werden, die ihre Po-sition sowie Information zu ihrer Passierbarkeit im Netz verteilen. Die Positionen dieser sog. anchor nodes sollen zur Positionierung der mobilen Sensorknoten verwendet werden (Algorithmik). Während einer Simulation sollte der Ausfall einzelner Notausgänge simuliert werden.
+
+Notausgänge sind statische Agenten, für die eine eigene \emph{breed} analog zu den Personen angelegt wurde. Die Notausgänge verfügen über einen Lebenszyklus und ein Kommunikationsmodell zur Übermittlung ihrer Zustandsinformationen an nahe Personen. 
 
 %Lifecycle
 \subsection{Lebenszyklus}
@@ -372,7 +379,11 @@ Zur visuellen Unterstützung erhalten Personen im Zustand \verb|EVENT_DETECTED| 
 % INIT, NEGOTIABLE
 % INIT, NEGOTIABLE, BLOCKED
 
-\begin{figure}
+Der Lebenszyklus eines Notausgangs ist in drei Zustände unterteilt. Im Zustand \verb|INIT| befinden sich alle Notausgänge nach der Platzierung auf der Welt. Während des Zustandsübergangs zu \verb|NEGOTIABLE| wird die Logik für den gewählten Orientierungsalgorithmus ausgeführt. In der Regel wird die Welt mit Signalinformationen ausgehend von jedem Notausgang geflutet. Der Algorithmus wird in Kapitel \ref{cha:algorithmik} vorgestellt. Die Ausführung dauert entsprechend der (Patch-)Auflösung lange.
+
+Ist ein Notausgang im Zustand \verb|NEGOTIABLE|, bestehen zwei Möglichkeiten in den Zustand \verb|BLOCKED| zu gelangen. Temporär blockiert ist ein Notausgang, wenn zu viele Personen gleichzeitig versuchen das Gebäude zu verlassen. Der Parameter \verb|exit-limit| definiert die Obergrenze. Nach einem Tick wird der Notausgang wieder zurückgesetzt. Erreicht das Giftgas bzw. die Gefahrensituation einen Notausgang, so wird dieser permanent in den Zustand \verb|BLOCKED| über.
+
+\begin{figure}[!ht]
 \centering
 \includegraphics[height=0.6\textwidth]{simulationsumgebung/exit.eps}
 \caption{Zustandsdiagramm der Notausgänge}
@@ -425,7 +436,60 @@ Zur visuellen Unterstützung erhalten Personen im Zustand \verb|EVENT_DETECTED| 
 \subsection{Kommunikationsmodell}
 \label{sec:notausgaenge_kommunikation}
 
+Die Notausgänge befinden sich im gleichen Kommunikationsnetzwerk, wie die Personen. Eine Unterscheidung zu anderen Netzwerken bzw. Links wird über Typ-Definitionen und visuell über den Shape durchgeführt.
 
+Für die Verbreitung der Passierbarkeit wird das \emph{Basic Flooding} implementiert. Algorithmus \ref{alg:exit_status} zeigt das eingebettete Protokoll innerhalb des Lebenszyklus von Notausgängen. 
+
+Die Notausgänge broadcasten bei Statuswechsel eine positive oder negative Passierbarkeitsmeldung und ihren Identifier im Netzwerk. Personen in Reichweite empfangen die Meldung \verb|exit-blocked| oder \verb|exit-negotiable|, speichern die Information lokal in einem binären Array ab und broadcasten die Meldung an die benachbarten Personen. Bei n = 3 Notausgängen verfügt jede Person über ein n-äres Array mit Nullen oder Einsen. Null steht für blockiert, Eins für passierbar.
+
+\floatname{algorithm}{Algorithmus} 
+\begin{algorithm}
+\caption{Passierbarkeitsmeldungen der Notausgänge}
+\label{alg:exit_status}
+\begin{algorithmic} 
+\STATE \textit{State Trans. Sys.:} $\langle\{$INIT, NEGOTIABLE, BLOCKED$\}, \{$NEGOTIABLE, BLOCKED$\}, \{$BLOCKED, NEGOTIABLE$\}\rangle$
+\STATE \textit{Initialization:} All notes in state INIT
+\STATE \textit{Restrictions:} Reliable communication; connected, bidirected communication graph $G = (V,E)$, neighborhoodfunction nbr: $V \rightarrow 2^{V}$
+\STATE \textit{Local data: current-persons, exit-limit}
+
+\STATE $ $
+\STATE \textbf{INIT}
+\STATE ...\hfill\emph{; init-orientation-algorithm}
+\STATE become NEGOTIABLE
+
+\STATE $ $
+\STATE \textbf{NEGOTIABLE}
+\STATE negotiable $\leftarrow$ true
+\WHILE{$negotiable$}
+\STATE broadcast(\textit{exit-negotiable})\hfill\emph{; continious broadcast}
+\IF{$current$-$persons > exit$-$limit$}
+\STATE negotiable $\leftarrow$ false
+\ENDIF
+\IF{$gas$-$reached$-$exit$}
+\STATE negotiable $\leftarrow$ false
+\ENDIF
+\ENDWHILE
+\STATE become BLOCKED
+
+
+\STATE $ $
+\STATE \textbf{BLOCKED}
+\STATE negotiable $\leftarrow$ false
+\WHILE{$not negotiable$}
+\STATE broadcast(\textit{exit-blocked})\hfill\emph{; continious broadcast}
+\IF{$current$-$persons <= exit$-$limit$}
+\STATE negotiable $\leftarrow$ true
+\ENDIF
+\ENDWHILE
+\STATE become NEGOTIABLE
+
+\end{algorithmic}
+\end{algorithm}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Gefahrensituationen}
 \label{sec:gefahrensituationen}
@@ -477,6 +541,8 @@ Zur visuellen Unterstützung erhalten Personen im Zustand \verb|EVENT_DETECTED| 
 \end{algorithmic}
 \end{algorithm}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Patches}
 \label{sec:patches}
@@ -514,6 +580,9 @@ Zur visuellen Unterstützung erhalten Personen im Zustand \verb|EVENT_DETECTED| 
 \caption{Zustandsdiagramm der Patches}
 \label{fig:patch}
 \end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Ressourcen der Simulationsumgebung}
 \label{sec:ressourcen}
