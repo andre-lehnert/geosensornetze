@@ -186,11 +186,24 @@ TODO: Marcell Beschreibung der Parameter, Bedeutung\\
 \section{Personen}
 \label{sec:personen}
 
+Personen sind Agenten, die mit NetLogo als \emph{breed} modelliert werden. Mit einem \emph{breed} kann das Konzept der Kapselung aus der Objektorientierung realisiert werden. Im Kontext einer Person können lokale Variablen deklariert werden, die von den abstrakten Variablen des \emph{breeds} vererbt werden. 
 
-
+Mit diesem Konzept wird ein Lebenszyklus mit verschiedenen Zuständen und Zustandsübergängen für die Personen modelliert. 
 
 % Lifecycle
-\subsection{Zustände}
+\subsection{Lebenszyklus}
+
+Der Lebenszyklus bestimmt das Verhalten der Personen. Die Zustände und die Zustandsübergänge werden in Abbildung \ref{fig:person} mittels eines Zustandsdiagramms beschrieben. 
+
+Nach der Platzierung in der simulierten Welt befinden sich alle Personen im Zustand \verb|INIT|. In diesem Zustand wird ein \emph{random walk} ausgeführt. Die verschiedenen Typen werden im Abschnitt \ref{sec:bewegungsmodell} näher erläutert.
+
+Nimmt eine Person in ihrem Sichtradius \verb|person-detection-radius| ein Gefahrenevent war, geht die Person in den Zustand \verb|EVENT_DETECTED| über. Hier versucht die Person andere Personen in der Umgebung zu warnen. Näheres ist dem Kommunikationsmodell im Abschnitt \ref{sec:kommunikationsmodell} zu entnehmen.
+
+Nach dem Benachrichtigungsversuch wechselt die Person in den Zustand \verb|FLEEING|, bei dem die Person vor der Gefahrensituation flüchtet und versucht einen Notausgang zu erreichen. Zur Flucht wird ein anderes Bewegungsmodell verwendet, welches im Abschnitt \ref{sec:bewegungsmodell} beschrieben wird. Während der Flucht kann die Person weitere Gefahrensituation detektieren.
+
+Erreicht die Person einen nicht blockierten Notausgang, ist sie gerettet und im Zustand \verb|RESCUED|. Die Person wird aus der Simulationsumgebung entfernt.
+
+Bei einer Berührung mit dem Giftgas stirbt eine Person jedoch immer. Sie ist dann im Zustand \verb|DEAD|. Eine Interaktion ist mit ihr nicht mehr möglich. 
 
 % INIT
 % INIT, DEAD
@@ -210,11 +223,20 @@ TODO: Marcell Beschreibung der Parameter, Bedeutung\\
 \label{sec:bewegungsmodell}
 %Bewegungsmodell: Die Agenten sollen sich nach einem „Random Walk“ Modell bewegen. Agenten können Gefahren in ihrer Umgebung wahrnehmen und die Information an ihre nächs-ten Nachbarn weitergeben. Sobald ein Agent Informationen über eine Gefahrensituation hat, soll er sich auf dem kürzesten Weg zum nächsten Notausgang bewegen.  Hat ein Agent die Umgebung eines Notausgangs erreicht, soll er aus der Simulation genommen werden.
 
-Dieser Abschnitt beschreibt zunächst das Bewegungsmodell der Personen ohne aktive Gefahrensituation.
+Für die Personen existieren zwei unterschiedliche Bewegungsmodelle, zum einen für Personen im \verb|INIT| Zustand und zum anderen für Personen im \verb|FLEEING| Zustand. Beide Modelle werden folgend erklärt.
+
+\subsubsection{Initiales Bewegungsmodell}
+\label{sec:init_walk}
+
+%\verb|walk-strategy| $\in \{Complete$ $random, Straight$ $with$ $collision$ $detection,$\\\hspace*{3.2cm}$Straight$ $with$ $probability\}$
+
+Für das initiale Bewegungsmodell kann der Nutzer zwischen drei Arten eines \emph{random walks} wählen. Der rudimentäre \emph{random walk} wird in Algorithmus \ref{alg:random_walk} beschrieben. Dieser dient als Grundlage für die weiteren Arten.
+
 
 \floatname{algorithm}{Algorithmus} 
 \begin{algorithm}
 \caption{random-walk}
+\label{alg:random_walk}
 \begin{algorithmic} 
 \STATE nb $\leftarrow$ one-of neighbors
 \WHILE{\textit{[patch-state] of nb = WALL}}
@@ -225,16 +247,67 @@ Dieser Abschnitt beschreibt zunächst das Bewegungsmodell der Personen ohne akti
 \end{algorithmic}
 \end{algorithm}
 
+Algorithmus \ref{alg:random_walk} beschreibt die Wahl eines benachbarten Patches, welche als Wahl einer von acht neuen Richtungen interpretiert werden kann. Bei dem Algorithmus wird lediglich auf eine Wand-Kollision geprüft und solange eine Wand in der beabsichtigten Richtung steht, wird eine neue Richtung gesucht.
+
+Eine weitere Strategie für den \emph{random walk} ist \verb|straight with collision detection|. Dabei speichert eine Person lokal die letzte Orientierung, das sogenannte \verb|heading|, und bewegt sich in diese Richtung bis zu einer Wand-Detektion. An dieser Stelle wird Algorithmus \ref{alg:random_walk} ausgeführt und die neue Orientierung gespeichert.
+
+Bei der letzten Strategie \verb|straight with probability| wird auch die letzte Orientierung lokal gespeichert, hier bestimmt jedoch der \verb|random-walk-probability|-Parameter die Wahrscheinlichkeit der Ausführung von Algorithmus \ref{alg:random_walk}. Eine Wand-Detektion wird zusätzlich durchgeführt.
+
+\subsubsection{Bewegungsmodell bei der Flucht}
+\label{sec:move_to_exit}
+
+Nachdem eine Person ein Gefahrenevent wahrgenommen hat, flieht sie zu dem nächsten verfügbaren Notausgang. Der optimale Fluchtweg wird über Informationen der Signal-Stärke von Notausgängen von den Personen lokal ermittelt. Abbildung \ref{fig:fleeing} zeigt exemplarisch den Fluchtweg einer Person. Für die Algorithmik zur Wertevergabe auf den Patches sei auf Kapitel \ref{cha:algorithmik} verwiesen. 
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[height=0.55\textwidth]{simulationsumgebung/fleeing}
+\caption{Fluchtwegermittlung}
+\label{fig:fleeing}
+\end{figure}
+
+Der Algorithmus für die Fluchtwegbestimmung wird auf Grund der hohen Komplexität an dieser Stelle nicht komplett vorgestellt. Da zum Beispiel die Verfügbarkeit von Notausgängen oder Ausnahmebehandlungen berücksichtigt werden müssen. Das Prinzip verdeutlicht Algorithmus \ref{alg:fleeing}. Bei dem die Person in der lokalen Umgebung nach dem Patch mit der geringsten Zahl bzw. der geringsten Dämpfung des Signals eines Notausgangs sucht. 
+
+\floatname{algorithm}{Algorithmus} 
+\begin{algorithm}
+\caption{person-move-to-exit}
+\label{alg:fleeing}
+\begin{algorithmic} 
+\STATE nb $\leftarrow$ -1
+\STATE min-noise $\leftarrow$ $\infty$
+\STATE ask neighbors [\hfill\emph{; iterate all 8 neighbors}
+\IF{$min$-$noise > signal$-$noise$}
+\STATE min-noise $\leftarrow$ signal-noise\hfill\emph{; define best signal and direction}
+\STATE nb $\leftarrow$ self
+\ENDIF 
+\STATE ]
+\STATE face nb
+\STATE forward 1
+\end{algorithmic}
+\end{algorithm}
+
+
+
+
+Die Information über die Verfügbarkeit eines Notausganges wird von diesem durch das Kommunikationsnetzwerk der Personen gebroadcastet. Eine Beschreibung dazu ist dem Abschnitt \ref{sec:notausgaenge_kommunikation} Kommunikationsmodell der Notausgänge zu entnehmen.
 
 \subsection{Kommunikationsmodell}
 \label{sec:kommunikationsmodell}
 %Kommunikationsmodell: Als Kommunikationsmodell können beliebige Modelle der Vorlesung implementiert werden. Dabei sollte insbesondere auf die dynamische Netzwerktopologie geach-tet werden. 
 
-\floatname{algorithm}{Protokoll} 
+Für die Warnung anderer Personen wird das Kommunikationsmodell \emph{Basic Flooding} aus der Vorlesung implementiert. Die identifizierende Meldung lautet hier \verb|event-detected| und die beiden Zustände für das \emph{Basic Flooding} werden mit \verb|EVENT_DETECTED| und \verb|FLEEING| ausgedrückt. 
+
+Algorithmus \ref{alg:event_detected} zeigt, zur besseren Einordnung, die Einbettung des Kommunkationsprotokolls in den Lebenszyklus der Person. Es sei darauf hingewiesen, dass auf eine spontane Zustandsänderung einer Person, wie es in dem \emph{Basic Flooding}-Protokoll angegeben ist, verzichtet wird. Die Detektion einer Gefahrensituation präzisiert diesen Zustandsübergang in diesem Fall präziser.
+
+Das Fluten mit Meldungen ist jedoch ohne eine sinnvolle Netzwerktopologie nicht möglich. Mit dem Parameter \verb|graph-type| hat der Nutzer die Möglichkeit den Graph-Typen des Kommunikationsnetzwerks anzupassen. 
+
+Allerdings wird in den meisten Fällen keine statische Knoten-Positionierung vorliegen\footnote{Eine statische Knoten-Positionierung wird mit $walk$-$probability = 0$ erzielt.}. Es wird daher nach jedem Tick der gesamte Kommunikationsgraph neu aufgebaut. Auf eine Ausnahmebehandlung für Personen ohne Positionsänderung wird verzichtet.
+
+%\floatname{algorithm}{Protokoll} 
 \begin{algorithm}
 \caption{Warnung vor Gefahrensituationen}
+\label{alg:event_detected}
 \begin{algorithmic} 
-\STATE \textit{State Trans. Sys.:} $\langle\{$INIT, EVENT{\_}DETECTED, FLEEING, RESCUED, DEAD$\}\rangle$
+\STATE \textit{State Trans. Sys.:} $\langle\{$INIT, EVENT{\_}DETECTED, FLEEING, RESCUED$\}, \{$INIT, DEAD$\}, \{$INIT, EVENT{\_}DETECTED, DEAD$\}, \{$INIT, EVENT{\_}DETECTED, FLEEING, DEAD$\}, \{$FLEEING, EVENT{\_}DETECTED$\}\rangle$
 \STATE \textit{Initialization:} All notes in state INIT
 \STATE \textit{Restrictions:} Reliable communication; connected, bidirected communication graph $G = (V,E)$, neighborhoodfunction nbr: $V \rightarrow 2^{V}$
 \STATE \textit{Local data:}
@@ -247,19 +320,29 @@ Dieser Abschnitt beschreibt zunächst das Bewegungsmodell der Personen ohne akti
 \STATE create-graph($G$)\hfill\emph{; generate complete new graph}
 \ENDWHILE
 \STATE become EVENT{\_}DETECTED
-
+\IF{touching-gas}
+\STATE become DEAD
+\ENDIF
 
 \STATE $ $
 \STATE \textbf{EVENT{\_}DETECTED}
 \STATE broadcast(\textit{event{\_}detected})\hfill\emph{; broadcast event detection to linked neighbors}
 \STATE become FLEEING
+\IF{touching-gas}
+\STATE become DEAD
+\ENDIF
 
 \STATE $ $
 \STATE \textbf{FLEEING}
-\STATE broadcast(\textit{event{\_}detected})\hfill\emph{; rebroadcast event detection to linked neighbors}
+\IF{msg = event-detected}
+\STATE broadcast(\textit{event{\_}detected})\hfill\emph{; forwarding event detection msg to linked neighbors}
+\ENDIF
 \WHILE{\textit{not person-reach-exit}}
 \STATE person-move-to-exit\hfill\emph{; using orientation-algorithm}
 \STATE create-graph($G$)\hfill\emph{; generate complete new graph}
+\IF{event{\_}detected}
+\STATE become EVENT{\_}DETECTED
+\ENDIF
 \IF{touching-gas}
 \STATE become DEAD
 \ENDIF
@@ -277,12 +360,14 @@ Dieser Abschnitt beschreibt zunächst das Bewegungsmodell der Personen ohne akti
 \end{algorithmic}
 \end{algorithm}
 
+Zur visuellen Unterstützung erhalten Personen im Zustand \verb|EVENT_DETECTED| das Label \glqq !{\grqq}. Der initiale Broadcast zur Warnung anderer Personen wird mit orange gefärbten Kanten und der Zustand \verb|FLEEING| mit dem Label \glqq *{\grqq} ausgedrückt.
+
 \section{Notausgänge}
 \label{sec:notausgaenge}
 %Notausgänge: Notausgänge sollen als statische Sensorknoten modelliert werden, die ihre Po-sition sowie Information zu ihrer Passierbarkeit im Netz verteilen. Die Positionen dieser sog. anchor nodes sollen zur Positionierung der mobilen Sensorknoten verwendet werden (Algorithmik). Während einer Simulation sollte der Ausfall einzelner Notausgänge simuliert werden.
 
 %Lifecycle
-\subsection{Zustände}
+\subsection{Lebenszyklus}
 
 % INIT, NEGOTIABLE
 % INIT, NEGOTIABLE, BLOCKED
@@ -336,6 +421,10 @@ Dieser Abschnitt beschreibt zunächst das Bewegungsmodell der Personen ohne akti
 %
 %\end{algorithmic}
 %\end{algorithm}
+
+\subsection{Kommunikationsmodell}
+\label{sec:notausgaenge_kommunikation}
+
 
 
 \section{Gefahrensituationen}
