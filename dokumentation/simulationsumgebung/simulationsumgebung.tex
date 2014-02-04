@@ -260,7 +260,7 @@ Nachdem eine Person ein Gefahrenevent wahrgenommen hat, flieht sie zu dem nächs
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[height=0.55\textwidth]{simulationsumgebung/fleeing}
+\includegraphics[height=0.65\textwidth]{simulationsumgebung/fleeing}
 \caption{Fluchtwegermittlung}
 \label{fig:fleeing}
 \end{figure}
@@ -297,10 +297,6 @@ Die Information über die Verfügbarkeit eines Notausganges wird von diesem durc
 Für die Warnung anderer Personen wird das Kommunikationsmodell \emph{Basic Flooding} aus der Vorlesung implementiert. Die identifizierende Meldung lautet hier \verb|event-detected| und die beiden Zustände für das \emph{Basic Flooding} werden mit \verb|EVENT_DETECTED| und \verb|FLEEING| ausgedrückt. 
 
 Algorithmus \ref{alg:event_detected} zeigt, zur besseren Einordnung, die Einbettung des Kommunkationsprotokolls in den Lebenszyklus der Person. Es sei darauf hingewiesen, dass auf eine spontane Zustandsänderung einer Person, wie es in dem \emph{Basic Flooding}-Protokoll angegeben ist, verzichtet wird. Die Detektion einer Gefahrensituation präzisiert diesen Zustandsübergang in diesem Fall präziser.
-
-Das Fluten mit Meldungen ist jedoch ohne eine sinnvolle Netzwerktopologie nicht möglich. Mit dem Parameter \verb|graph-type| hat der Nutzer die Möglichkeit den Graph-Typen des Kommunikationsnetzwerks anzupassen. 
-
-Allerdings wird in den meisten Fällen keine statische Knoten-Positionierung vorliegen\footnote{Eine statische Knoten-Positionierung wird mit $walk$-$probability = 0$ erzielt.}. Es wird daher nach jedem Tick der gesamte Kommunikationsgraph neu aufgebaut. Auf eine Ausnahmebehandlung für Personen ohne Positionsänderung wird verzichtet.
 
 %\floatname{algorithm}{Protokoll} 
 \begin{algorithm}
@@ -359,6 +355,10 @@ Allerdings wird in den meisten Fällen keine statische Knoten-Positionierung vor
 
 \end{algorithmic}
 \end{algorithm}
+
+Das Fluten mit Meldungen ist jedoch ohne eine sinnvolle Netzwerktopologie nicht möglich. Mit dem Parameter \verb|graph-type| hat der Nutzer die Möglichkeit den Graph-Typen des Kommunikationsnetzwerks anzupassen. 
+
+Allerdings wird in den meisten Fällen keine statische Knoten-Positionierung vorliegen\footnote{Eine statische Knoten-Positionierung wird mit $walk$-$probability = 0$ erzielt.}. Es wird daher nach jedem Tick der gesamte Kommunikationsgraph neu aufgebaut. Auf eine Ausnahmebehandlung für Personen ohne Positionsänderung wird verzichtet.
 
 Zur visuellen Unterstützung erhalten Personen im Zustand \verb|EVENT_DETECTED| das Label \glqq !{\grqq}. Der initiale Broadcast zur Warnung anderer Personen wird mit orange gefärbten Kanten und der Zustand \verb|FLEEING| mit dem Label \glqq *{\grqq} ausgedrückt.
 
@@ -438,10 +438,6 @@ Ist ein Notausgang im Zustand \verb|NEGOTIABLE|, bestehen zwei Möglichkeiten in
 
 Die Notausgänge befinden sich im gleichen Kommunikationsnetzwerk, wie die Personen. Eine Unterscheidung zu anderen Netzwerken bzw. Links wird über Typ-Definitionen und visuell über den Shape durchgeführt.
 
-Für die Verbreitung der Passierbarkeit wird das \emph{Basic Flooding} implementiert. Algorithmus \ref{alg:exit_status} zeigt das eingebettete Protokoll innerhalb des Lebenszyklus von Notausgängen. 
-
-Die Notausgänge broadcasten bei Statuswechsel eine positive oder negative Passierbarkeitsmeldung und ihren Identifier im Netzwerk. Personen in Reichweite empfangen die Meldung \verb|exit-blocked| oder \verb|exit-negotiable|, speichern die Information lokal in einem binären Array ab und broadcasten die Meldung an die benachbarten Personen. Bei n = 3 Notausgängen verfügt jede Person über ein n-äres Array mit Nullen oder Einsen. Null steht für blockiert, Eins für passierbar.
-
 \floatname{algorithm}{Algorithmus} 
 \begin{algorithm}
 \caption{Passierbarkeitsmeldungen der Notausgänge}
@@ -486,6 +482,12 @@ Die Notausgänge broadcasten bei Statuswechsel eine positive oder negative Passi
 \end{algorithmic}
 \end{algorithm}
 
+Für die Verbreitung der Passierbarkeit wird das \emph{Basic Flooding} implementiert. Algorithmus \ref{alg:exit_status} zeigt das eingebettete Protokoll innerhalb des Lebenszyklus von Notausgängen. 
+
+Die Notausgänge broadcasten bei Statuswechsel eine positive oder negative Passierbarkeitsmeldung und ihren Identifier im Netzwerk. Personen in Reichweite empfangen die Meldung \verb|exit-blocked| oder \verb|exit-negotiable|, speichern die Information lokal in einem binären Array ab und broadcasten die Meldung an die benachbarten Personen. Bei n = 3 Notausgängen verfügt jede Person über ein n-äres Array mit Nullen oder Einsen. Null steht für blockiert, Eins für passierbar.
+
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -495,51 +497,60 @@ Die Notausgänge broadcasten bei Statuswechsel eine positive oder negative Passi
 \label{sec:gefahrensituationen}
 %Gefahrenevents: Gefahrenevents erscheinen an zufälligen Orten im Grundriss. Ihr Erscheinen sollte zur vollständigen Evakuierung des Areals führen.
 
+Eine Gefahrensituation liegt vor, wenn nur ein Gefahrenevent aktiviert wurde. Die Gefahrenevents werden als \emph{breed} modelliert. 
+
 %Lifecyle
-\subsection{Zustände}
+\subsection{Lebenszyklus}
 
 % INIT, COUNTDOWN, GASSING, DONE
 
-\begin{figure}
+Die Zustandsübergänge von Gefahrenevents verlaufen sequentiell. Alle Events beginnen nach der Platzierung im Zustand \verb|INIT| und enden im Zustand \verb|DONE|. Abbildung \ref{fig:event} zeigt ebenfalls die beiden weiteren Zustände \verb|COUNTDOWN| und \verb|GASSING|.
+
+\begin{figure}[!ht]
 \centering
-\includegraphics[height=0.6\textwidth]{simulationsumgebung/event.eps}
+\includegraphics[height=0.5\textwidth]{simulationsumgebung/event.eps}
 \caption{Zustandsdiagramm der Gefahrenevents}
 \label{fig:event}
 \end{figure}
 
-\floatname{algorithm}{Protokoll} 
-\begin{algorithm}
-\caption{Gefahrensituation}
-\begin{algorithmic} 
-\STATE \textit{State Trans. Sys.:} $\langle\{$INIT, COUNTDOWN, GASSING, DONE$\}\rangle$
-\STATE \textit{Initialization:} All notes in state INIT
-\STATE \textit{Restrictions:} All patches in state $\{$NONE, DONE$\}$
-\STATE \textit{Local data:} countdown $\in \mathbb{N}_{\geq0}$ 
-\STATE $ $
-\STATE \textbf{INIT}
-\STATE \textit{Spontaneously}
+Mit dem Start der Simulation gehen alle Events in den Zustand \verb|COUNTDOWN| über, in der lokal vorgehaltene zufällige Countdown pro Tick herunter gezählt wird. Steht der Countdown bei Null, geht das Gefahrenevent in den Zustand \verb|GASSING| über.
 
-\STATE countdown $\leftarrow$ minCountdown + (random (maxCountdown - minCountdown))
-\STATE become COUNTDOWN
+In diesem Zustand wird die Freisetzung des Gases initiiert. Die Ausbreitung des Gases ähnelt dem Fluten mit Signal-Informationen auf Kapitel \ref{cha:algorithmik}. 
+%Der Algorithmus \ref{alg:event} liefert detailierte Informationen zur Bestimmung des zufälligen Countdowns und der Gasfreisetzung, die im folgenden Abschnitt zu den Patches noch einmal angesprochen wird.
 
-
-\STATE $ $
-\STATE \textbf{COUNTDOWN}
-\STATE countdown $\leftarrow$ countdown - 1
-\IF{$countdown = 0$}
-\STATE become GASSING
-\ENDIF
-
-\STATE $ $
-\STATE \textbf{GASSING}
-\STATE ask patch-here $[$ patch-state $\leftarrow$ EVENT $]$ 
-\STATE become DONE
-
-\STATE $ $
-\STATE \textbf{DONE}
-
-\end{algorithmic}
-\end{algorithm}
+%\begin{algorithm}
+%\caption{Gefahrensituation}
+%\label{alg:event}
+%\begin{algorithmic} 
+%\STATE \textit{State Trans. Sys.:} $\langle\{$INIT, COUNTDOWN, GASSING, DONE$\}\rangle$
+%\STATE \textit{Initialization:} All notes in state INIT
+%\STATE \textit{Restrictions:} All patches in state $\{$NONE, DONE$\}$
+%\STATE \textit{Local data:} countdown $\in \mathbb{N}_{\geq0}$ 
+%\STATE $ $
+%\STATE \textbf{INIT}
+%\STATE \textit{Spontaneously}
+%
+%\STATE countdown $\leftarrow$ minCountdown + (random (maxCountdown - minCountdown))
+%\STATE become COUNTDOWN
+%
+%
+%\STATE $ $
+%\STATE \textbf{COUNTDOWN}
+%\STATE countdown $\leftarrow$ countdown - 1
+%\IF{$countdown = 0$}
+%\STATE become GASSING
+%\ENDIF
+%
+%\STATE $ $
+%\STATE \textbf{GASSING}
+%\STATE ask patch-here $[$ patch-state $\leftarrow$ EVENT $]$ 
+%\STATE become DONE
+%
+%\STATE $ $
+%\STATE \textbf{DONE}
+%
+%\end{algorithmic}
+%\end{algorithm}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -574,7 +585,7 @@ Die Notausgänge broadcasten bei Statuswechsel eine positive oder negative Passi
 % DONE, EVENT
 % DONE, EVENT, EVENT_DONE
 
-\begin{figure}
+\begin{figure}[!ht]
 \centering
 \includegraphics[height=0.6\textwidth]{simulationsumgebung/patch.eps}
 \caption{Zustandsdiagramm der Patches}
