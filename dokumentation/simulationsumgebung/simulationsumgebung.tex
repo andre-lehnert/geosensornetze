@@ -558,13 +558,7 @@ In diesem Zustand wird die Freisetzung des Gases initiiert. Die Ausbreitung des 
 \section{Patches}
 \label{sec:patches}
 
-- Initialisierung der Patches setup-patches
- - Zustandsfestlegung für alle Patches 
-  - white -> NONE
-  - black -> WALL
-  - rest -> WALL
- - Initialisierung der lokalen Daten \verb|signal-noise| abhängig vom Zustand: leerer Raum -> -1, Wand -> sehr hohe Dämpfung \ref{sec:gui_exit} 
-
+Die Patches können in NetLogo nicht als \emph{breed} modelliert werden. Die Funktionsaufrufe aus dem Kontext eines Patches sind daher problematisch. Es können keine Kontrollstrukturen oder ordentliche Zustandsübergänge zentral erstellt werden. Es wird daher von impliziten Zuständen von Patches die Rede sein.
 
 %Lifecyle
 \subsection{Implizite Zustände}
@@ -585,12 +579,30 @@ In diesem Zustand wird die Freisetzung des Gases initiiert. Die Ausbreitung des 
 % DONE, EVENT
 % DONE, EVENT, EVENT_DONE
 
+Mit der Initialisierung aller der Patches nach dem Einbinden eines Grundrisses passiert die Zustandsfestlegung anhand der Farbe eines Patches. Für diesen Schritt kann generell zwischen zwei Zuständen unterschieden werden. \verb|NONE| wird als leerer Raum angenommen, in dem sich Signal mit geringer Dämpfung ausbreiten können, Personen sich bewegen können ebenso wie das Giftgas. Der leere Raum wird im Grundriss über die Farbe \verb|white| ausgedrückt.
+
+Patches mit der Farbe \verb|black| oder alle anderen Farben werden als Wände und Materialien mit hoher Dämpfung interpretiert. Die Patches gehen in den Zustand \verb|WALL| über. Dieser Zustand ist statisch.
+
 \begin{figure}[!ht]
 \centering
 \includegraphics[height=0.6\textwidth]{simulationsumgebung/patch.eps}
 \caption{Zustandsdiagramm der Patches}
 \label{fig:patch}
 \end{figure}
+
+Auf Patches im Zustand \verb|NONE| werden die Personen, die Notausgänge und die Gefahrenevents platziert. Außerdem werden nur diese Patches mit Signal-Informationen geflutet. Ist dies der Fall, so nehmen die Patches die Zustände \verb|SPREADING|, \verb|IDLE| und \verb|DONE| an.
+
+Patches im Zustand \verb|SPREADING| sind erstmalig von einem Notausgang mit Signalinformationen versehen worden. Patches in diesem Zustand verteilen die Signalstärke bzw. die Dämpfung an ihre benachbarten Patches, bei jedem Schritt wird die Dämpfung inkrementiert. Die Patches direkt unter einem Notausgang sind dabei die Ausgangspunkte für das Fluten.
+
+Sobald ein Patch die Signal-Informationen von allen Notausgängen lokal gespeichert hat, wechselt es in den Zustand \verb|IDLE|. Hier wird auf ein besseres Signal eines jeden Notausgangs gewartet. Dies ist der Fall bei anderen Lauf- bzw. Ausbreitungswegen der Signalen insbesondere bei Grundrissen mit vielen punktuellen Wandfragmenten der Fall. Wird ein besseres Signal festgestellt, wird es verständlicherweise an die benachbarten Patches gemeldet.
+
+Haben alle Patches in der Nachbarschaft einen optimalen Signalwert, geht dieses Patch in den Zustand \verb|DONE| über. Allerdings wird dieser Idealzustand nicht für alle Patches erreicht, insbesondere bei einem niedrigen \verb|exit-signal-strength|-Parameter. Eine Überlappung von zwei bis drei Signalen von Notausgängen ist in fast allen Fällen ausreichend für eine intelligente Flucht. Ist der nächstgelegene Notausgang blockiert, wird der zweitbeste Notausgang von der Person zur Evakuierung genutzt. Mit der Fortbewegung erhält sie permanent neue Informationen zu nahe gelegene oder blockierte Notausgänge.
+
+Nach Abschluss der Signal-Flutung befinden sich die Patches entweder im Zustand \verb|NONE|, sofern die Signalreichweite aller Notausgänge zu gering ist, oder in \verb|DONE| mit Signalinformationen.
+
+Analog zum Fluten mit Signal-Informationen initiieren Gefahrenevents direkt unter sich ein Patch im Zustand \verb|EVENT|. Diese Gasfreisetzung bereitet sich genau wie die Signale aus, es wird jedoch nur der Zustand der Patches angepasst. Außerdem ist die Gasausbreitung an Nachbarn als einmalig initial und darauf folgend als kontinuierlich anzusehen. Patches, die die Event-Information an ihre Nachbarn weitergegeben haben, wechseln in den Zustand \verb|EVENT_DONE|. Die Patches werden programmatisch bei der weiteren Ausbreitung ausgeschlossen. Es ist eine Laufzeitreduzierung festzustellen.
+
+Personen detektieren Patches im Zustand \verb|EVENT| und \verb|EVENT_DONE| als Gefahrensituation.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
