@@ -58,7 +58,7 @@ Schließlich kann die Simulation mit dem \verb|go|-Button gestartet und pausiert
 Der Parameter \verb|input-file| erlaubt die Definition des Grundrisses der Simulationsumgebung. Während des Setups wird der Parameter zur Pfadauflösung für eine Bild-Datei verwendet. Diese wird mit dem Befehl \verb|import-pcolors inputFile| auf die Simulationswelt gemappt.
 
 \begin{quote}
-\verb|input-file| $\in \{Abstract.png, Abstract\_static.png, Simple.png, Raumplan.png\}$
+\verb|input-file| $\in \{Abstract.png, Abstract\_static.png, Simple.png,$ \\\hspace*{2.6cm}$Raumplan.png\}$
 \end{quote}
 
 Der nächste generelle Parameter ist \verb|orientation-algorithm|. Dieser dient der Auswahl eines Algorithmus zur Orientierung und Lokalisierung der Personen. Detaillierte Informationen sind im Kapitel \ref{cha:algorithmik} aufgeführt.
@@ -111,30 +111,23 @@ Der \verb|person-detection-radius|-Parameter ist einer der entscheidendsten bei 
 \subsection{Event--Parameter}
 \label{sec:gui_event}
 
-
-\verb|event-count|
+Mit dem Parameter \verb|event-count| wird die Anzahl der zu platzierenden Gefahrenevents festgelegt. Bei \verb|event-count|$ = 0$ wird es zu keiner Gefahrensituation kommen, sodass der random-walk getestet werden kann.
 
 \begin{quote}
 \verb|event-count| $\in [0, 20]$
 \end{quote}
 
-
-\verb|min-countdown|
+In der Aufgabenstellung wird ein zufälliges Auslösen von Gefahrensituationen gefordert, die beiden Parameter \verb|min-countdown| und \verb|max-countdown| bewerkstelligen dies. Jedes einzelne Gefahrenevent erhält zufällig einen initialen Countdown im Intervall $[$\verb|min-countdown|, \verb|max-countdown|$]$. Die obere bzw. untere Intervallgrenze der Parameter wird durch den jeweils anderen Parameter eingeschränkt.  
 
 \begin{quote}
 \verb|min-countdown| $\in [1, $\textit{max-countdown}$]$
 \end{quote}
 
-
-
-\verb|max-countdown|
-
 \begin{quote}
 \verb|max-countdown| $\in [$\textit{min-countdown}$, 100]$
 \end{quote}
 
-
-\verb|gas-expansion-probability|
+Der Parameter \verb|gas-expansion-probability| legt für alle Gefahrenevents die Ausbreitungswahrscheinlichkeit und somit die Ausbreitungsgeschwindigkeit fest. Bei $0 \%$ wird nur genau ein Patch unter dem jeweiligen Gefahrenevent zu einer Bedrohung für die Personen. Personen können die Gefahrensituationen somit wahrnehmen, die Wahrscheinlichkeit das Personen sterben ist jedoch sehr gering. 
 
 \begin{quote}
 \verb|gas-expansion-probability| $\in [0, 100]$
@@ -144,19 +137,21 @@ Der \verb|person-detection-radius|-Parameter ist einer der entscheidendsten bei 
 \subsection{Notausgang--Parameter}
 \label{sec:gui_exit}
 
-\verb|number-of-exits|
+Der Parameter zur Einstellung der verfügbaren Notausgänge in der simulierten Welt, 
+\verb|number-of-exits| ist sehr bedeutsam bei der Lokalisierungsgenauigkeit und dem Fluchtverhalten der Personen.
 
 \begin{quote}
-\verb|number-of-exits| $\in [1, 5]$
+\verb|number-of-exits| $\in [1, 9]$
 \end{quote}
 
-\verb|exit-signal-strength|
+Zur dezentralen Orientierung der Personen und Schaffung eines optimalen Fluchtweges, wird auf den Zellulären Automaten zurückgegriffen und die Patches mit Informationen zur Signalstärke jedes Notausganges versehen.\par
+Der Parameter \verb|exit-signal-strength| bildet die maximale Signalstärke bzw. Reichweite der Notausgänge ab. Es ist möglich, dass nicht jedes Patch mit allen Signalinformationen versehen ist, da die Reichweite eines Notausganges zu gering war.
 
 \begin{quote}
 \verb|exit-signal-strength| $\in [0, 1000]$
 \end{quote}
 
-\verb|exit-limit|
+Die Aufgabenstellung fordert eine Limitierung Fluchtkapazitäten von Notausgängen. D.h. Notausgänge können maximal \verb|exit-limit| Personen pro Tick evakuieren, sonst werden sie blockiert.
 
 \begin{quote}
 \verb|exit-limit| $\in [1, 300]$
@@ -164,6 +159,10 @@ Der \verb|person-detection-radius|-Parameter ist einer der entscheidendsten bei 
 
 \subsection{Gradient localization--Parameter}
 \label{sec:gui_localization}
+
+- - - - - - - - - - - - - - - - - - - - - \\
+TODO: Marcell Beschreibung der Parameter, Bedeutung\\
+- - - - - - - - - - - - - - - - - - - - - \\
 
 \verb|locate-iterations|
 
@@ -186,6 +185,9 @@ Der \verb|person-detection-radius|-Parameter ist einer der entscheidendsten bei 
 
 \section{Personen}
 \label{sec:personen}
+
+
+
 
 % Lifecycle
 \subsection{Zustände}
