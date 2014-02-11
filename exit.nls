@@ -1,7 +1,5 @@
 ;; Exit
 
-__includes["exit-cellular-automaton.nls"]
-
 exits-own [
   messages
   radius

@@ -1,7 +1,7 @@
 extensions [array table]
 
 ;;__includes["gsn.nls"]
-__includes["person.nls" "person-linking.nls" "person-gsn.nls" "exit.nls" "event.nls" "patch.nls" "locate.nls"]
+__includes["person.nls" "person-linking.nls" "person-gsn.nls" "exit.nls" "event.nls" "patch.nls" "locate.nls" "exit-cellular-automaton.nls"]
 
 breed[exits exit]
 breed[persons person]

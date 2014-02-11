@@ -269,7 +269,7 @@ end
 
 to print-signal-spreading
   
-  if (hide-signal-spreading) [ 
+  if (not hide-signal-spreading) [ 
     let patch-color 0 
     ask nearest-exit self [ set patch-color signal-color ]
     set pcolor patch-color  
