@@ -3,7 +3,7 @@
 
 %Damit die mobilen Geräten den Nutzern Hinweise zum nächsten Notausgang geben können, müssen sie ihre eigene Position kennen. Daher soll ein dezentraler Lokalisierungsalgorithmus implementiert werden (siehe [2]). Beispielweise kann der minimale Nachrichten Hop-Count zu einem Notausgang im Zusammenhang mit der maximalen Kommunikationsreichweite zur Ap-proximation der Distanz des Knotens zum Ausgang dienen (siehe [1], gradient algorithm). Meh-rere (>=3) dieser Distanzen können wiederum zur Positionierung verwendet werden (Stichwort: Lateration. Siehe multilateration algorithm in [1] oder Bogenschnitt). In der Visualisierung sollte die Qualität der Positionierung erkennbar sein, d.h. es sollte zusätzlich zur wahren Position des Sensorknotens die errechnete Position erkennbar sein
 
-Die mobilen Geräte bestimmen über die \emph{Gradienten Lokalisierung} die approximierte Position der Personen. Daraus wird die Entfernung zu den Notausgängen geschätzt. Im Falle einer Gefahrensituation flüchten die Personen zu dem nächst gelegenen und verfügbaren Notausgang.
+Die mobilen Geräte bestimmen über die \emph{Multilateration Lokalisierung} die approximierte Position der Personen. Daraus wird die Entfernung zu den Notausgängen geschätzt. Im Falle einer Gefahrensituation flüchten die Personen zu dem nächst gelegenen und verfügbaren Notausgang.
 
 Für die Orientierung während der Flucht steuert die Umgebung (Zelluläre Automaten) die Bewegung der Person.
 
@@ -51,7 +51,7 @@ Die Signalausbreitung unterliegt dem lokalen Verhalten der zellulären Automaten
 
 Nachdem die Signalausbreitung abgeschlossen ist, orientiert sich eine Person bei der Flucht anhand der lokalen Signal-Dämpfungswerten der aktuellen Zelle und der benachbarten Zellen. Das Bewegungsmodell wurde bereits in Abschnitt \ref{sec:bewegungsmodell} angeschnitten. Abbildung \ref{fig:fleeing} dient daher als visuelle Unterstützung der Fluchtwegbestimmung.
 
-Zum Zeitpunkt $t_{-1}$ detektiert die Person eine Gefahrensituation. Die Person hat, über die \emph{Gradienten Lokalisierung} und der Kommunikation der Notausgänge, den Notausgang auf  $z_{exit} \in Z$ als nächstes verfügbares Evakuierungsziel bestimmt.
+Zum Zeitpunkt $t_{-1}$ detektiert die Person eine Gefahrensituation. Die Person hat, über die \emph{Multilateration Lokalisierung} und der Kommunikation der Notausgänge, den Notausgang auf  $z_{exit} \in Z$ als nächstes verfügbares Evakuierungsziel bestimmt.
 
 Die Person sei bei $t_{0}$ auf Zelle $z_{0} \in Z$ positioniert. Die Nachbarschaft sei mit $N_{Moore}(z_{0}) = Z_{z_{0}}$ gegeben. Anders als bei der Signalausbreitung bestimmt die Person den Fluchtweg über die Moore-Nachbarschaft. Der Vorteil liegt in der Möglichkeit diagonale Bewegungen auszuführen.
 
