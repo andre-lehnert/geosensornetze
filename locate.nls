@@ -14,7 +14,7 @@ to reset-locate
   
   set average-estimated-distance 0
   set calculated-estimated-distances 0
-  set max-estimated-distance 0
+    set max-estimated-distance 0
   set min-estimated-distance 0
 end
 
@@ -41,30 +41,37 @@ to locate-persons
 end
 
 to-report calculate-average-distance
-  if count est-links > 0 [
-    let s 0
-    ask est-links [
-      set s (s + link-length)
-    ]
-    report s / count est-links
+  let s 0
+  ask est-links [
+    set s (s + link-length)
   ]
-  report "-"
+  ifelse count est-links != 0 
+  [
+    report s / count est-links
+  ] 
+  [
+    report 0
+  ]
 end
 
 to-report calculate-min-distance
-  let len [link-length] of est-links
-  if len != (list ) [
-    report max len
+  ifelse count est-links != 0 
+  [
+    report max [link-length] of est-links
+  ] 
+  [
+    report 0
   ]
-  report "-"
 end
 
 to-report calculate-max-distance
-  let len [link-length] of est-links
-  if len != (list ) [
-    report min len
+    ifelse count est-links != 0 
+  [
+    report min [link-length] of est-links
+  ] 
+  [
+    report 0
   ]
-  report "-"
 end
 
 
