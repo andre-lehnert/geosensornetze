@@ -10,6 +10,10 @@ breed[events event]
 globals [
   reset-params
   rescued-persons-counter
+  average-estimated-distance
+  calculated-estimated-distances
+  min-estimated-distance
+  max-estimated-distance
 ]
 
 patches-own[  
@@ -157,6 +161,8 @@ to reset-monitors
   
   set rescued-persons-counter 0
   
+  set average-estimated-distance 0
+  
 end
 
 to-report rescued-persons-counter-reporter
@@ -228,7 +234,7 @@ personCount
 personCount
 1
 300
-300
+207
 1
 1
 NIL
@@ -318,7 +324,7 @@ SWITCH
 668
 hide-signal-spreading
 hide-signal-spreading
-0
+1
 1
 -1000
 
@@ -331,7 +337,7 @@ exit-signal-strength
 exit-signal-strength
 1
 1200
-284
+200
 1
 1
 NIL
@@ -470,7 +476,7 @@ approx-dist
 approx-dist
 0
 200
-76
+16
 1
 1
 patches
@@ -524,11 +530,11 @@ NIL
 HORIZONTAL
 
 BUTTON
-224
-659
-287
-692
-NIL
+103
+673
+204
+706
+go (one tick)
 go
 NIL
 1
@@ -569,7 +575,7 @@ SWITCH
 704
 hide-communication-links
 hide-communication-links
-0
+1
 1
 -1000
 
@@ -580,9 +586,53 @@ SWITCH
 739
 hide-approx-persons
 hide-approx-persons
-0
+1
 1
 -1000
+
+MONITOR
+825
+635
+976
+680
+NIL
+average-estimated-distance
+17
+1
+11
+
+MONITOR
+825
+688
+1009
+733
+NIL
+calculated-estimated-distances
+17
+1
+11
+
+MONITOR
+1027
+634
+1173
+679
+NIL
+max-estimated-distance
+17
+1
+11
+
+MONITOR
+1032
+687
+1173
+732
+NIL
+min-estimated-distance
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
