@@ -2,34 +2,9 @@
 \label{cha:evaluation}
 %Eine Evaluation bzgl. Kommunikationsreichweiten, Anzahl „Agenten“ im Gebäude, oder Zeit bis zu vollständiger Evakuierung, etc. soll durchgeführt werden. Insbesondere sollte in der Evaluie-rung auf die Qualität der Lokalisierung in Abhängigkeit der Anzahl Notausgänge / Anchor Nodes, Anzahl Sensorknoten und der Kommunikationsreichweite eingegangen werden. 
 
-\subsection{Lokalisierung}
+\input{evaluation/lokalisierung}
 
-Um die beste Lokalisierung mit dem Algorithmus zu erreichen, spielen die Parameter die größte Rolle. In den folgenden Tabellen und Analysen wird deutlich, wie groß die Unterschiede zwischen den verschiedenen Ausführungen sein kann, wenn man einen Parameter ein wenig verschiebt.
-
-\paragraph{Beschreibung der Parameter und Tabellenspalten}
-
-
-
-\begin{table}[h]
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
-\hline
-\textbf{No} & \textbf{\#Exits} & \textbf{\#Person} & \textbf{detRad} & \textbf{\#iter} & \textbf{~dist} & \textbf{avgDist} & \textbf{minDist} & \textbf{maxDist} \\ \hline
-1           & 3                & 100               & 50              & 5               & 15             & 52               & 10               & 126              \\ \hline
-2           & 3                & 100               & 50              & 5               & 30             & 35               & 3                & 115              \\ \hline
-3           & 3                & 100               & 50              & 5               & 35             & 38               & 3                & 121              \\ \hline
-4           & 3                & 100               & 50              & 10              & 15             & 52               & 10               & 126              \\ \hline
-5           & 3                & 100               & 50              & 10              & 30             & 34               & 4                & 105              \\ \hline
-6           & 3                & 100               & 50              & 10              & 35             & 28               & 1                & 109              \\ \hline
-7           & 3                & 100               & 50              & 20              & 15             & 52               & 10               & 126              \\ \hline
-8           & 3                & 100               & 50              & 20              & 30             & 33               & 4                & 90               \\ \hline
-9           & 3                & 100               & 50              & 20              & 35             & 22               & 1                & 82               \\ \hline
-10          & 3                & 100               & 50              & 30              & 15             & 52               & 10               & 126              \\ \hline
-11          & 3                & 100               & 50              & 30              & 30             & 33               & 4                & 80               \\ \hline
-12          & 3                & 100               & 50              & 30              & 35             & 20               & 1                & 66               \\ \hline
-\end{tabular}
-\end{table}
-
-\subsection{Evakuierungsdauer}
+\section{Evakuierungsdauer}
 
 Anzahl Notausgänge\\
 20 Durchläufe\\
