@@ -418,11 +418,11 @@ NIL
 CHOOSER
 14
 64
-173
+167
 109
 orientation-algorithm
 orientation-algorithm
-"Cellular automaton" "Gradient localization"
+"Cellular automaton" "Multilateration localization"
 0
 
 BUTTON

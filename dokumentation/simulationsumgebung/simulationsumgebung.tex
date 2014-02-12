@@ -157,20 +157,16 @@ Die Aufgabenstellung fordert eine Limitierung Fluchtkapazitäten von Notausgäng
 \verb|exit-limit| $\in [1, 300]$
 \end{quote}
 
-\subsection{Gradient localization--Parameter}
+\subsection{Multilateration localization--Parameter}
 \label{sec:gui_localization}
 
-- - - - - - - - - - - - - - - - - - - - - \\
-TODO: Marcell Beschreibung der Parameter, Bedeutung\\
-- - - - - - - - - - - - - - - - - - - - - \\
-
-\verb|locate-iterations|
+Der Parameter \verb|locate-iterations| bestimmt, wieviele Iterationen der Algorithmus durchführen soll. Je höher diese Zahl ist, desto genauer wird die lokalisierung mit dem Algorithmus, jedoch erfordert er dann auch mehr Rechenzeit. Dieser Parameter ist für die Evaluierung des Multilateration Algorithmus nötig, da man so bestimmen kann, ab wievielen Iterationen bereits vernünftige Ergebnisse herauskommen und ab wann es sich nicht mehr lohnt in Relation mit der Rechenzeit.
 
 \begin{quote}
 \verb|locate-iterations| $\in [0, 100]$
 \end{quote}
 
-\verb|approx-dist|
+Da der Algorithmus den \emph{Hop Count} (vorgestellt in \ref{sec:gradient_localization}) benutzt um die Distanz zu den Bezugspunkten (in diesem Fall die Notausgänge) zu bestimmen, braucht der Algorithmus auch eine Abschätzung, wieviele Patches ein hop zu einer Person repräsentiert. Das heißt, eine Person mit einem hop count n zum Notausgang x hat eine geschätzte Distanz zu x von n * approx-dist. Für die Evaluation müssen verschiedene Werte ausprobiert werden, abhängig davon, wie der Baum aufgebaut wird und wieviele Personen in der Simulation leben.
 
 \begin{quote}
 \verb|approx-dist| $\in [0, 200]$
