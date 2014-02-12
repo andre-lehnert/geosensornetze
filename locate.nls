@@ -45,15 +45,33 @@ to-report calculate-average-distance
   ask est-links [
     set s (s + link-length)
   ]
-  report s / count est-links
+  ifelse count est-links != 0 
+  [
+    report s / count est-links
+  ] 
+  [
+    report 0
+  ]
 end
 
 to-report calculate-min-distance
-  report max [link-length] of est-links
+  ifelse count est-links != 0 
+  [
+    report max [link-length] of est-links
+  ] 
+  [
+    report 0
+  ]
 end
 
 to-report calculate-max-distance
-  report min [link-length] of est-links
+    ifelse count est-links != 0 
+  [
+    report min [link-length] of est-links
+  ] 
+  [
+    report 0
+  ]
 end
 
 

@@ -234,7 +234,7 @@ personCount
 personCount
 1
 300
-207
+200
 1
 1
 NIL
@@ -423,7 +423,7 @@ CHOOSER
 orientation-algorithm
 orientation-algorithm
 "Cellular automaton" "Multilateration localization"
-0
+1
 
 BUTTON
 253
@@ -476,7 +476,7 @@ approx-dist
 approx-dist
 0
 200
-16
+25
 1
 1
 patches
@@ -523,7 +523,7 @@ locate-iterations
 locate-iterations
 0
 100
-8
+5
 1
 1
 NIL
