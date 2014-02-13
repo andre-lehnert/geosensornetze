@@ -1,0 +1,106 @@
+\section{Lokalisierung}
+
+Um die beste Lokalisierung mit dem Algorithmus zu erreichen, spielen die Parameter die größte Rolle. In den folgenden Tabellen und Analysen wird deutlich, wie groß die Unterschiede zwischen den verschiedenen Ausführungen sein kann, wenn man einen Parameter verändert. Zwischen den Lokalisierungen in einer Tabelle werden die Personen nicht neu generiert, die Werte in einer Tabelle sind also vergleichbar. Zwischen verschiedenen Tabellen werden die Personen jedoch neu generiert, also kann es zu generellen Abweichungen kommen, da die Verteilung der Personen auch eine Rolle in der Genauigkeit spielt.
+
+\paragraph{Beschreibung der Parameter und Tabellenspalten}
+
+\begin{description}
+   \item[number-of-exits] (Tabellenspalte \emph{\#Exits}) \hfill \\
+	Anzahl der Ausgänge und Sensorpunkte für den Algorithmus. Der Algorithmus soll mit mehr Sensorpunkten besser approxmieren, ab 3 ist eine realistische Berechnung überhaupt erst möglich.
+   \item[personCount] (Tabellenspalte \emph{\#Person}) \hfill \\
+	Anzahl der Personen in der Simulation. Eine Mindestanzahl ist nötig, um das Kommunikationsnetz aufzubauen. Mehr Personen bedeutet eine genauere Abschätzung der Distanzen zu den Sensorpunkten, da der Hop Counts zuverlässiger ist. Das ist durch die Verteilung der Personen gegeben, bei sehr vielen Personen ist die Chance höher, das die Hop Counts \emph{normaler} verteilt sind.
+   \item[detection-radius] (Tabellenspalte \emph{detRad}) \hfill \\
+	Radius mit dem der UDG bestimmt wird. Das Attribut ist auch für den Hop Count verantwortlich, wenn man ihn höher wählt, dann ist der Hop Count für weiterstehende Personen kleiner, da der Kommunikationsradius höher ist. Ein kleinerer Wert könnte dazu führen, dass das Netz nicht vollständig alle Notausgänge und Personen verbindet, zu groß führt zu einem ungenauen Hop Count.
+   \item[locate-iterations] (Tabellenspalte \emph{\#iter}) \hfill \\
+	Wieviele Iterationen der Algorithmus durchläuft. Mehr Iterationen bedeutet höhere Genauigkeit, aber auch höherer Rechenaufwand.
+   \item[approx-dist] (Tabellenspalte \emph{~dist}) \hfill \\
+	Die Distanz die der Algorithmus zu jedem Hop Count annimmt. Die Zahl ist abhängig von der Personendichte und dem detection-radius.
+   \item[average-estimated-distance] (Tabellenspalte \emph{avgDist}) \hfill \\
+	Durchschnittlicher Abstand aller geschätzten Positionen zu der tatsächlichen Position. 
+   \item[min-estimated-distance] (Tabellenspalte \emph{minDist}) \hfill \\
+	Kleinste Distanz von einer geschätzten Position zu einer genauen Position, d.h. die am besten geschätzte Position.
+   \item[max-estimated-distance] (Tabellenspalte \emph{maxDist}) \hfill \\
+	Größte Distanz von einer geschätzten Position zu einer genauen Position, d.h. die am schlechtesten geschätzte Position.
+\end{description}
+
+\begin{table}[h]
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|}
+\hline
+No & \#Exits & \#Person & detRad & \#iter & ~dist & avgDist & minDist & maxDist \\ \hline
+1  & 3       & 100      & 50     & 5      & 15    & 52,13   & 10,22   & 126,51  \\ \hline
+2  & 3       & 100      & 50     & 5      & 30    & 35,23   & 3,33    & 115,85  \\ \hline
+3  & 3       & 100      & 50     & 5      & 35    & 38,65   & 3,24    & 121,78  \\ \hline
+4  & 3       & 100      & 50     & 10     & 15    & 52,87   & 10,56   & 126,47  \\ \hline
+5  & 3       & 100      & 50     & 10     & 30    & 34,44   & 4,69    & 105,88  \\ \hline
+6  & 3       & 100      & 50     & 10     & 35    & 28,18   & 1,84    & 109,89  \\ \hline
+7  & 3       & 100      & 50     & 20     & 15    & 52,49   & 10,96   & 126,95  \\ \hline
+8  & 3       & 100      & 50     & 20     & 30    & 33,75   & 4,44    & 90,54   \\ \hline
+9  & 3       & 100      & 50     & 20     & 35    & 22,95   & 1,81    & 82,22   \\ \hline
+10 & 3       & 100      & 50     & 30     & 15    & 52,82   & 10,91   & 126,36  \\ \hline
+11 & 3       & 100      & 50     & 30     & 30    & 33,21   & 4,45    & 80,27   \\ \hline
+12 & 3       & 100      & 50     & 30     & 35    & 20,1    & 1,17    & 66,19   \\ \hline
+\end{tabular}
+\caption{Evaluierung für raumplan.png mit 3 Exits und 100 Personen}
+\label{fig:eva01}
+\end{table}
+
+An der Tabelle \ref{fig:eva01} kann man bei den Anzahl der Iterationen sehen, wie die Genauigkeit des Algorithmus mit der Anzahl der Iterationen steigt. Zwischen 5 und 20 Iterationen ist eine Verbesserung von 50\% zu sehen, wenn die approx-dist dementsprechend gewählt wurde. Von 20 auf 30 Iterationen ist die Verbesserung in Relation mit dem Rechenaufwand wohl irrelevant. In den zukünfiigen Experimenten sei die Anzahl der Iterationen stets 20.
+
+
+\begin{table}[h]
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|}
+\hline
+No & \#Exits & \#Person & detRad & \#iter & ~dist & avgDist & minDist & maxDist \\ \hline
+13 & 3       & 150      & 30     & 20     & 15    & 41,15   & 2,57    & 88,11   \\ \hline
+14 & 3       & 150      & 30     & 20     & 17    & 35,55   & 4,45    & 72,51   \\ \hline
+15 & 3       & 150      & 30     & 20     & 19    & 27,51   & 4,23    & 52,65   \\ \hline
+16 & 3       & 150      & 30     & 20     & 20    & 23,46   & 2,37    & 58,46   \\ \hline
+\end{tabular}
+\caption{Evaluierung für raumplan.png mit 3 Exits und 150 Personen}
+\label{fig:eva02}
+\end{table}
+
+An der Tabelle \ref{fig:eva02} wird der Effekt von verschiedenen approx-dist Werten veranschaulicht. Man findet eine gute Approximation bei \( \frac{2}{3} \) vom Detection Radius. Wenn ie approx-dist noch höher gewählt wird, fallen zuviele geschätzte Position außerhalb der Simulationsumgebung an und das Ergebnis wird verfälscht. Dabei muss noch beachtet werden, dass der detection-radius gesenkt werden konnte, da nun mehr Personen vorhanden sind, die im Kommunikationsnetz den Hop Count genauer weiterreichen und repräsentieren können.
+
+
+\begin{table}[h]
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|}
+\hline
+No & \#Exits & \#Person & detRad & \#iter & ~dist & avgDist & minDist & maxDist \\ \hline
+17 & 3       & 200      & 25     & 20     & 15    & 21,56   & 1,25    & 62,25   \\ \hline
+18 & 3       & 200      & 25     & 20     & 17    & 14,59   & 1,64    & 36,32   \\ \hline
+19 & 3       & 200      & 25     & 20     & 19    & 22,14   & 2,31    & 66,81   \\ \hline
+\end{tabular}
+\caption{Evaluierung für raumplan.png mit 3 Exits und 200 Personen}
+\label{fig:eva03}
+\end{table}
+
+Bei der Tabelle \ref{fig:eva03} ist verdeutlicht, dass bei einer größeren Anzahl von Personen eine höhere Dichte entsteht und durch einen kleineren detection-radius zusammen mit einem passenden approx-dist wesentlich genauere Positionen gefunden werden können. Hier ist auch erneut zu sehen, dass \( \frac{2}{3} \) vom Detection Radius wohl ein sinnvoller Wert ist, gegeben einem sinnvollen detection-radius, der nicht viel zu hoch ist, für die vorliegende Dichte der Personen. In den folgenden Experimenten bleiben wir bei 200 Personen mit einem detection-radius von 25.
+
+\begin{table}[h]
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|}
+\hline
+No & \#Exits & \#Person & detRad & \#iter & ~dist & avgDist & minDist & maxDist \\ \hline
+20 & 6       & 200      & 25     & 20     & 15    & 21,72   & 0,65    & 48,62   \\ \hline
+21 & 6       & 200      & 25     & 20     & 17    & 12,78   & 1,14    & 35,02   \\ \hline
+22 & 6       & 200      & 25     & 20     & 19    & 10,17   & 0,76    & 57,57   \\ \hline
+\end{tabular}
+\caption{Evaluierung für raumplan.png mit 6 Exits und 200 Personen}
+\label{fig:eva04}
+\end{table}
+
+In Tabelle \ref{fig:eva04} wird deutlich, wie wichtig es ist viele gleichverteilte Orientierungspunkte zu haben für den Algorithmus. Die Genauigkeit ist deutlich höher im Mittel, insbesondere der kleinste und größte Abstand ist wesentlich besser.
+
+\begin{table}[h]
+\begin{tabular}{l|l|l|l|l|l|l|l|l|}
+\cline{2-9}
+No & \#Exits & \#Person & detRad & \#iter & ~dist & avgDist & minDist & maxDist \\ \cline{2-9} 
+23 & 9       & 200      & 25     & 20     & 15    & 18,35   & 1,64    & 42,25   \\ \cline{2-9} 
+24 & 9       & 200      & 25     & 20     & 17    & 11,08   & 0,78    & 28,35   \\ \cline{2-9} 
+25 & 9       & 200      & 25     & 20     & 19    & 18,03   & 1,25    & 41,47   \\ \cline{2-9} 
+\end{tabular}
+\caption{Evaluierung für raumplan.png mit 9 Exits und 200 Personen}
+\label{fig:eva05}
+\end{table}
+
+Bei Tabelle \ref{fig:eva05} mit 9 Exits ist noch eine Verbesserung zu sehen, inbesondere wieder in der min und max distance. Bei mehr Orientierungspunkten, einem dichteren Netzwerk und mehr Personen wäre eine Genauigkeit auf wenige Patches genau problemlos möglich.
