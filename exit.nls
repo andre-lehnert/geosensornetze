@@ -332,7 +332,9 @@ to init-orientation-algorithm
     decentral-signal-spreading
   ]
   
-  if orientation-algorithm = "Gradient localization" [
+  if orientation-algorithm = "Multilateration localization" [
+    init-decentral-signal-spreading
+    decentral-signal-spreading
     locate-persons
   ]
   

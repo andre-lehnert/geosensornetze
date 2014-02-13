@@ -369,7 +369,7 @@ gas-expansion-propability
 gas-expansion-propability
 0
 100
-0
+11
 1
 1
 %
@@ -425,7 +425,7 @@ CHOOSER
 orientation-algorithm
 orientation-algorithm
 "Cellular automaton" "Multilateration localization"
-0
+1
 
 BUTTON
 253

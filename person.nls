@@ -373,7 +373,7 @@ to person-move-to-exit
       
     ][ ;; Keine Patchinformation    
     
-    ifelse orientation-algorithm = "Gradient localization" [ ;; Orientierung über die "Gradient localization" ?      
+    ifelse orientation-algorithm = "Multilateration localization" [ ;; Orientierung über die "Gradient localization" ?      
        
       ifelse [patch-state] of patch-here != "WALL" [
         
@@ -430,7 +430,7 @@ to person-move-to-available-exit
   
   foreach sort neighbors [    
         
-      if [patch-state] of ? != "WALL" and [patch-state] of ? != "EVENT" and [patch-state] of ? != "EVENT-DONE" [  
+      if [patch-state] of ? != "WALL" [;and [patch-state] of ? != "EVENT" and [patch-state] of ? != "EVENT-DONE" [  
         
         let available-exits [exits-in-range] of ?
         let available-signals [signal-noises] of ?
