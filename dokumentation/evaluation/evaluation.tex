@@ -5,19 +5,40 @@
 \input{evaluation/lokalisierung}
 
 \section{Evakuierungsdauer}
+Um die Evakuierungsdauer zu evaluieren wird ein Szenario erstellt, bei dem sich 100 oder 200 Personen auf der IKG Etage befinden mit 20 Gasbomben. Diese Gasbomben sind alle nicht tötlich, aber sie sind sichtbar, das heißt die Personen wissen, wenn sie losgegangen sind. Wir schauen, wie schnell die Personen von der Etage flüchten können. Die Vorrausetzungen sind, dass ein vollständiger UDG gegeben ist, das heißt bei 100 Personen wird ein detection-radius von 35 angenommen, bei 200 einer von 25, weil der in ausreichend Fällen einen vollständigen Graphen im Ausgangszustand erzeugt. Es wird mit 3, 6 und 9 Notausgängen geprüft. Es soll dabei überprüft, wie schnell die Personen sich mit Hilfe des Kommunikationsnetzes, dem Zellulären Automaten und der Notausgänge retten können. Die verschiedenen Personen und Notausgänge sowie die verschiedenen Anordnungen der Personen stellen dabei den natürlich Arbeitsablauf in einem Bürogebäude dar und machen die Evaluierungsergebnisse interessant und relevant.
 
-Anzahl Notausgänge\\
-20 Durchläufe\\
-Zeit bis erste Person evakuiert\\
-Zeit bis letzte Person evakuiert\\
+\begin{table}[h]
+\begin{tabular}{c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\cline{2-13}
+                           & \multicolumn{6}{|c}{100 Personen}                                                          & \multicolumn{6}{|c|}{200 Personen}                                                          \\ \cline{2-13} 
+                           & \multicolumn{2}{|c}{3 Exits} & \multicolumn{2}{|c}{6 Exits} & \multicolumn{2}{|c}{9 Exits} & \multicolumn{2}{|c}{3 Exits} & \multicolumn{2}{|c}{6 Exits} & \multicolumn{2}{|c|}{9 Exits} \\ \hline
+\multicolumn{1}{|c|}{\#1}  & 44           & 298           & 18           & 174           & 15           & 166           & 19           & 226           & 18           & 171           & 16            & 160           \\ \hline
+\multicolumn{1}{|c|}{\#2}  & 40           & 217           & 16           & 146           & 20           & 140           & 20           & 209           & 13           & 130           & 13            & 142           \\ \hline
+\multicolumn{1}{|c|}{\#3}  & 45           & 246           & 18           & 143           & 14           & 138           & 18           & 207           & 16           & 163           & 10            & 122           \\ \hline
+\multicolumn{1}{|c|}{\#4}  & 56           & 232           & 15           & 152           & 13           & 144           & 20           & 213           & 15           & 128           & 14            & 169           \\ \hline
+\multicolumn{1}{|c|}{\#5}  & 35           & 305           & 16           & 135           & 16           & 180           & 22           & 206           & 13           & 140           & 14            & 135           \\ \hline
+\multicolumn{1}{|c|}{\#6}  & 41           & 301           & 18           & 145           & 18           & 126           & 17           & 203           & 14           & 150           & 17            & 120           \\ \hline
+\multicolumn{1}{|c|}{\#7}  & 36           & 205           & 19           & 185           & 24           & 153           & 16           & 218           & 15           & 141           & 12            & 134           \\ \hline
+\multicolumn{1}{|c|}{\#8}  & 39           & 190           & 15           & 165           & 12           & 137           & 16           & 191           & 14           & 130           & 13            & 147           \\ \hline
+\multicolumn{1}{|c|}{\#9}  & 49           & 260           & 16           & 135           & 16           & 155           & 22           & 223           & 11           & 168           & 10            & 150           \\ \hline
+\multicolumn{1}{|c|}{\#10} & 51           & 240           & 18           & 175           & 18           & 165           & 15           & 250           & 18           & 151           & 9             & 147           \\ \hline
+\multicolumn{1}{|c|}{avg}  & 43,6         & 249,4         & 16,9         & 155,5         & 16,6         & 150,4         & 18,5         & 214,6         & 14,7         & 147,2         & 12,8          & 142,6         \\ \hline
+\end{tabular}
+\end{table}
 
+Die Tabelle \ref{fig:data} zeigt die Ergebnisse der Simulation unter den gegeben Randbedingungen. Dabei ist die linke Spalte unter jeder Angabe der Anzahl der Exits die Ticks bis zur ersten geretteten Person, die rechte Spalte die Anzahl der vergangenen Ticks bis alle Personen gerettet wurden.
 
-\section{Effizienz}
+Besonders interessant an den Daten ist der Unterschied zwischen den Personen, obwohl die Anzahl der Personen verdoppelt wird, wird die Flucht aller Personen im Mittel schneller, da die Warnung im Netz schneller verbreitet wird. Das mehr Notausgänge bei einer Flucht helfen ist gegeben, jedoch ist anzumerken, das der Unterschied zwischen 6 und 9 Notausgänge nicht sehr hoch ist. Auch interessant ist bei wenigen Notausgängen und wenigen Personen die stärkeren Schwankungen zwischen maximaldauer und minimaldauer der Evakuierungen, die auf die Gegebenheit der zufälligen Bewegungen der Personen sowie des Netzen zurückzuführen sind.
 
 \section{Fazit}
 
+Vor der Implementierung der Simulation stellten sich einige Fragen um das Thema: Kann mit einem Geosensornetz die Evakuierung eines Gebäudes beschleunigt werden? Welche Faktoren spielen da eine Rolle? Was passiert, wenn Ereignisse über ein Netzwerk dezentral verschickt werden, kann zuverlässig sichergestellt werden, das eine sichere Evakuierung trotzdem möglich ist? Ist es möglich anhand von Orientierungspunkten eine Position von Personen mit einem mobilen Gerät zuverlässig zu bestimmen? Diese Fragen wurden von der Simulation beantwortet; das Geosensornetz zeigte, das selbst Personen die nicht unmittelbar in Gefahr schwebten durch das Netz gerettet werden konnten.
+
+Leider stellten sich aber auch viele Probleme auf, man benötigt sehr viele Personen und Orientierungspunkte um eine sichere und zuverlässige Lokalisierung klarzustellten und selbst dann können soetwas wie Sammelplätze und Leerräume diese ermittelten Positionen verschlechtern oder gar unnütz machen. Aber es gebe einige Szenarien, wie eine Messe, wo Menschen verteilt genug wären so das eine Lokalisierung sowie ein dichtes Netzwerk gegeben wären. Somit hat die Simulation ihre Aufgabe erfüllt und das Szenario realistisch widergegeben.
+
 \section{Ausblick}
+Es gibt einige Verbesserungsmöglichkeiten und Erweiterungen, die die Simulation realistischer und Aussagekräftiger gestalten würde. Andere Algorithmen zur Flucht und Lokalisierung wäre möglich, neue Szenarien wie die Cebit wäre sinnvoll um verschiedene Gegebenheiten der Gelände zu simulieren. Man könnte anhand von echten Evakuierungsdaten das Verhalten der Personen realistischer gestalten und andere Gefahrenszenarios einführen. Im Folgenden wird eine weitere Idee für einen Orientierungsalgorithmus demonstriet.
 
 \subsubsection{Alternativer Orientierungsalgorithmus}
 \label{sec:bug-0}
-\include{evaluation/bug_0_algorithmus}
+\input{evaluation/bug_0_algorithmus}

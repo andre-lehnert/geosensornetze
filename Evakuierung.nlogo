@@ -138,6 +138,8 @@ end
 
 to reset
   
+  reset-ticks
+  
   reset-patches
   reset-exits
   reset-persons
@@ -324,7 +326,7 @@ SWITCH
 668
 hide-signal-spreading
 hide-signal-spreading
-1
+0
 1
 -1000
 
@@ -423,7 +425,7 @@ CHOOSER
 orientation-algorithm
 orientation-algorithm
 "Cellular automaton" "Multilateration localization"
-1
+0
 
 BUTTON
 253
@@ -476,7 +478,7 @@ approx-dist
 approx-dist
 0
 200
-25
+70
 1
 1
 patches
@@ -523,7 +525,7 @@ locate-iterations
 locate-iterations
 0
 100
-5
+3
 1
 1
 NIL
@@ -575,7 +577,7 @@ SWITCH
 704
 hide-communication-links
 hide-communication-links
-1
+0
 1
 -1000
 
@@ -586,7 +588,7 @@ SWITCH
 739
 hide-approx-persons
 hide-approx-persons
-1
+0
 1
 -1000
 
