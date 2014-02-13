@@ -1,7 +1,7 @@
 \chapter{Simulationsumgebung}
 \label{cha:simulationsumgebung}
 
-Das Kapitel der Simulationsumgebung befasst sich mit den Eingabemöglichkeiten zur Anpassung der Simulationsparameter, sowie der konkreten Umsetzung der simulierten Welt, mit der Logik für die Notausgänge, der Personen, der Gefahrensituationen und dem Kommunikationsmodell.
+Das Kapitel der Simulationsumgebung befasst sich mit den Eingabemöglichkeiten zur Anpassung der Simulationsparameter, sowie der konkreten Umsetzung der simulierten Welt, mit der Logik für die Notausgänge, der Personen, der Gefahrensituationen und den jeweiligen Kommunikationsmodellen.
 
 Die Ausgangsbasis für die verwendeten Modelle und Protokolle stammen aus den erstellten Übungen zur Vorlesung Gensensornetze, sie wurden jedoch auf die Anforderungen der Hausarbeit adaptiert.
 
@@ -31,9 +31,9 @@ Zum Auslösen von Benutzerevents werden Buttons verwendet. Zu diesen zählen \ve
 
 Die Betätigung des \verb|setup|-Buttons ruft eine Folge von Setup und Initialisierungsschritten auf. Zu Beginn wird die Simulationswelt erstellt. Dazu wird der Parameter \verb|inputFile| (siehe Abschnitt \ref{sec:gui_general}) zum Einbinden einer Bild-Datei und das Mapping der Pixel-Farbwerte auf die passend skalierte NetLogo-Welt gemappt. Das Ergebnis ist der gewählte Grundriss, bei dem jedes Patch einen Farbwert erhalten hat.
 
-Dieser Farbwert ist essentiell für den nachfolgenden Schritt in der \verb|setup-patches|-Methode. Diese legt den Initialzustand jedes Patches fest (siehe Abschnitt \ref{sec:patches}). Generell wird auf Grund des Grundrisses zwischen leerem Raum (weiß) und einer Wand unterschieden (schwarz). 
+Dieser Farbwert ist essentiell für den nachfolgenden Schritt in der \verb|setup-patches|-Funktion. Diese legt den Initialzustand jedes Patches fest (siehe Abschnitt \ref{sec:patches}). Generell wird auf Grund des Grundrisses zwischen leerem Raum (weiß) und einer Wand unterschieden (schwarz). 
 
-Wände spielen auch bei der Initialisierung und Platzierung der Notausgänge eine wichtige Rolle, die mit der \verb|setup-exits|-Methode realisiert sind. Entsprechend der Aufgabenstellung werden Notausgänge auf einem abstrakten Grundriss, ohne Wände, zufällig in der Welt platziert. Für alle anderen Grundrisse mit Wänden wurde auf statische vordefinierte Positionen für Notausgänge gesetzt.\par
+Wände spielen auch bei der Initialisierung und Platzierung der Notausgänge eine wichtige Rolle, die mit der \verb|setup-exits|-Funktion realisiert sind. Entsprechend der Aufgabenstellung werden Notausgänge auf einem abstrakten Grundriss, ohne Wände, zufällig in der Welt platziert. Für alle anderen Grundrisse mit Wänden wird auf statische vordefinierte Positionen für Notausgänge gesetzt.\par
 Bei der Initialisierung wird zudem die lokale Konstante der maximalen Signalreichweite für den Orientierungsalgorithmus \emph{cellular automaton} mit dem Parameter \verb|exit-signal-strength| aus Abschnitt \ref{sec:gui_exit} gesetzt und alle Notausgänge in den Zustand \emph{INIT} versetzt (vgl. Abschnitt \ref{sec:notausgaenge}).\par
 Im Anschluss wird der \emph{cellular automaton}-Algorithmus (siehe Abschnitt \ref{sec:cellular_automaton}) ausgeführt, um die Patches mit Signalqualitätsinformationen auszustatten, damit die Personen den optimalen Fluchtweg bei einer Gefahrensituation nutzen.
 
@@ -45,7 +45,7 @@ Als letzter Schritt folgt die Initialisierung und Platzierung der Gefahrenevents
 \subsubsection*{reset-Button}
 
 Mit dem \verb|reset|-Button werden alle definierten Parameter des letzten Setups wiederhergestellt und die Personen auf ihre ursprüngliche Position zurückgesetzt.
-Ein fluten des Grundrisses ist nicht erforderlich und beschleunigt das durchführen von Messreihenreihen.
+Ein fluten des Grundrisses ist nicht erneut erforderlich und beschleunigt das Durchführen von Messreihen.
 Zudem bietet es die Möglichkeit den Kommunikationsgraphen der Personen auszublenden, dies ist unter anderem nützlich bei der Darstellung der initial approximierten Positionen der Personen.
 
 \subsubsection*{go-Button}
@@ -64,7 +64,7 @@ Der Parameter \verb|input-file| erlaubt die Definition des Grundrisses der Simul
 Der nächste generelle Parameter ist \verb|orientation-algorithm|. Dieser dient der Auswahl eines Algorithmus zur Orientierung und Lokalisierung der Personen. Detaillierte Informationen sind im Kapitel \ref{cha:algorithmik} aufgeführt.
 
 \begin{quote}
-\verb|orientation-algorithm| $\in \{Cellular$ $automaton, Multilateration$ $localization\}$
+\verb|orientation-algorithm| $\in \{Cellular$ $automaton,$\\\hspace*{4.9cm}$Multilateration$ $localization\}$
 \end{quote}
 
 Mit dem \verb|graph-type|-Parameter hat der Nutzer die Wahl zwischen den Graphtypen, die in der Vorlesung vorgestellt wurden. Sofern \emph{UDG} gewählt ist, wird der \verb|person-detection-radius|-Parameter des folgenden Abschnitts für den Disk-Radius verwendet.
@@ -100,10 +100,10 @@ Analog zur \verb|walk-probability| kann der Nutzer den \verb|random-walk-probabi
 \verb|random-walk-probability| $\in [0, 100]$
 \end{quote}
 
-Der \verb|person-detection-radius|-Parameter ist einer der entscheidendsten bei der Simulation. Hiermit wird der Radius definiert in dem eine Person eine Gefahrensituation wahrnehmen kann, sowie die Kommunikationsreichweite bei dem UDG-Graphen bestimmt. Zudem wird damit der Abstand zu einem Notausgang bestimmt (siehe Kapitel \ref{cha:algorithmik}.
+Der \verb|person-detection-radius|-Parameter ist einer der entscheidendsten bei der Simulation. Hiermit wird der Radius definiert in dem eine Person eine Gefahrensituation wahrnehmen kann, sowie die Kommunikationsreichweite bei dem UDG-Graphen bestimmt.
 
 \begin{quote}
-\verb|person-detection-radius| $\in [0, 700]$
+\verb|person-detection-radius| $\in [0, 300]$
 \end{quote}
 
 
@@ -111,7 +111,7 @@ Der \verb|person-detection-radius|-Parameter ist einer der entscheidendsten bei 
 \subsection{Event--Parameter}
 \label{sec:gui_event}
 
-Mit dem Parameter \verb|event-count| wird die Anzahl der zu platzierenden Gefahrenevents festgelegt. Bei \verb|event-count|$ = 0$ wird es zu keiner Gefahrensituation kommen, sodass der random-walk getestet werden kann.
+Mit dem Parameter \verb|event-count| wird die Anzahl der zu platzierenden Gefahrenevents festgelegt. Bei \verb|event-count| $ = 0$ wird es zu keiner Gefahrensituation kommen, sodass der \emph{random walk} getestet werden kann.
 
 \begin{quote}
 \verb|event-count| $\in [0, 20]$
@@ -144,11 +144,11 @@ Der Parameter zur Einstellung der verfügbaren Notausgänge in der simulierten W
 \verb|number-of-exits| $\in [1, 9]$
 \end{quote}
 
-Zur dezentralen Orientierung der Personen und Schaffung eines optimalen Fluchtweges, wird auf den Zellulären Automaten zurückgegriffen und die Patches mit Informationen zur Signalstärke jedes Notausganges versehen.\par
+Zur dezentralen Orientierung der Personen und Schaffung eines optimalen Fluchtweges, wird auf zelluläre Automaten zurückgegriffen und die Patches mit Informationen zur Signalstärke jedes Notausganges versehen.\par
 Der Parameter \verb|exit-signal-strength| bildet die maximale Signalstärke bzw. Reichweite der Notausgänge ab. Es ist möglich, dass nicht jedes Patch mit allen Signalinformationen versehen ist, da die Reichweite eines Notausganges zu gering war.
 
 \begin{quote}
-\verb|exit-signal-strength| $\in [0, 1000]$
+\verb|exit-signal-strength| $\in [0, 400]$
 \end{quote}
 
 Die Aufgabenstellung fordert eine Limitierung Fluchtkapazitäten von Notausgängen. D.h. Notausgänge können maximal \verb|exit-limit| Personen pro Tick evakuieren, sonst werden sie blockiert.
@@ -160,13 +160,13 @@ Die Aufgabenstellung fordert eine Limitierung Fluchtkapazitäten von Notausgäng
 \subsection{Multilateration localization--Parameter}
 \label{sec:gui_localization}
 
-Der Parameter \verb|locate-iterations| bestimmt, wieviele Iterationen der Algorithmus durchführen soll. Je höher diese Zahl ist, desto genauer wird die lokalisierung mit dem Algorithmus, jedoch erfordert er dann auch mehr Rechenzeit. Dieser Parameter ist für die Evaluierung des Multilateration Algorithmus nötig, da man so bestimmen kann, ab wievielen Iterationen bereits vernünftige Ergebnisse herauskommen und ab wann es sich nicht mehr lohnt in Relation mit der Rechenzeit.
+Der Parameter \verb|locate-iterations| bestimmt, wie viele Iterationen der Algorithmus durchführen soll. Je höher diese Zahl ist, desto genauer wird die Lokalisierung mit dem Algorithmus. Jedoch erfordert dies mehr Rechenzeit. Dieser Parameter ist für die Evaluierung mit dem  \emph{Multilateration Algorithmus} nötig, da man so bestimmen kann, ab wie vielen Iterationen bereits vernünftige Ergebnisse herauskommen und ab wann es sich nicht mehr lohnt in Relation mit der Rechenzeit.
 
 \begin{quote}
 \verb|locate-iterations| $\in [0, 100]$
 \end{quote}
 
-Da der Algorithmus den \emph{Hop Count} (vorgestellt in \ref{sec:gradient_localization}) benutzt um die Distanz zu den Bezugspunkten (in diesem Fall die Notausgänge) zu bestimmen, braucht der Algorithmus auch eine Abschätzung, wieviele Patches ein hop zu einer Person repräsentiert. Das heißt, eine Person mit einem hop count n zum Notausgang x hat eine geschätzte Distanz zu x von n * approx-dist. Für die Evaluation müssen verschiedene Werte ausprobiert werden, abhängig davon, wie der Baum aufgebaut wird und wieviele Personen in der Simulation leben.
+Da der Algorithmus den \emph{Hop Count} (vorgestellt in \ref{sec:gradient_localization}) benutzt um die Distanz zu den Bezugspunkten (in diesem Fall die Notausgänge) zu bestimmen, braucht der Algorithmus auch eine Abschätzung, wie viele Patches ein hop zu einer Person repräsentiert. Das heißt, eine Person mit einem hop count n zum Notausgang x hat eine geschätzte Distanz zu x von n * approx-dist. Für die Evaluation müssen verschiedene Werte ausprobiert werden, abhängig davon, wie der Kommunikationsgraph aufgebaut wird und wie viele Personen in der Simulation leben.
 
 \begin{quote}
 \verb|approx-dist| $\in [0, 200]$
@@ -199,7 +199,7 @@ Nach dem Benachrichtigungsversuch wechselt die Person in den Zustand \verb|FLEEI
 
 Erreicht die Person einen nicht blockierten Notausgang, ist sie gerettet und im Zustand \verb|RESCUED|. Die Person wird aus der Simulationsumgebung entfernt.
 
-Bei einer Berührung mit dem Giftgas stirbt eine Person jedoch immer. Sie ist dann im Zustand \verb|DEAD|. Eine Interaktion ist mit ihr nicht mehr möglich. 
+Bei einer Berührung mit dem Giftgas stirbt eine Person jedoch immer. Sie ist dann im Zustand \verb|DEAD|. Eine Interaktion mit ihr ist nicht mehr möglich. 
 
 % INIT
 % INIT, DEAD
@@ -493,7 +493,7 @@ Die Notausgänge broadcasten bei Statuswechsel eine positive oder negative Passi
 \label{sec:gefahrensituationen}
 %Gefahrenevents: Gefahrenevents erscheinen an zufälligen Orten im Grundriss. Ihr Erscheinen sollte zur vollständigen Evakuierung des Areals führen.
 
-Eine Gefahrensituation liegt vor, wenn nur ein Gefahrenevent aktiviert wurde. Die Gefahrenevents werden als \emph{breed} modelliert. 
+Eine Gefahrensituation liegt vor, wenn mindestens ein Gefahrenevent aktiviert wurde. Die Gefahrenevents werden als \emph{breed} modelliert. 
 
 %Lifecyle
 \subsection{Lebenszyklus}
@@ -575,7 +575,7 @@ Die Patches können in NetLogo nicht als \emph{breed} modelliert werden. Die Fun
 % DONE, EVENT
 % DONE, EVENT, EVENT_DONE
 
-Mit der Initialisierung aller der Patches nach dem Einbinden eines Grundrisses passiert die Zustandsfestlegung anhand der Farbe eines Patches. Für diesen Schritt kann generell zwischen zwei Zuständen unterschieden werden. \verb|NONE| wird als leerer Raum angenommen, in dem sich Signal mit geringer Dämpfung ausbreiten können, Personen sich bewegen können ebenso wie das Giftgas. Der leere Raum wird im Grundriss über die Farbe \verb|white| ausgedrückt.
+Mit der Initialisierung aller Patches nach dem Einbinden eines Grundrisses passiert die Zustandsfestlegung anhand der Farbe eines Patches. Für diesen Schritt kann generell zwischen zwei Zuständen unterschieden werden. \verb|NONE| wird als leerer Raum angenommen, in dem sich Signal mit geringer Dämpfung ausbreiten können, Personen sich bewegen können ebenso wie das Giftgas. Der leere Raum wird im Grundriss über die Farbe \verb|white| ausgedrückt.
 
 Patches mit der Farbe \verb|black| oder alle anderen Farben werden als Wände und Materialien mit hoher Dämpfung interpretiert. Die Patches gehen in den Zustand \verb|WALL| über. Dieser Zustand ist statisch.
 
@@ -612,10 +612,9 @@ Die Simulationsumgebung wird über die Datei \verb|Evakuierung.nlogo| gestartet.
 
 \begin{verbatim}
 event.nls
-event-gassing.nls
 \end{verbatim}
 
-Die Quellcode-Datei \verb|event.nls| beinhaltet den Lebenszyklus der Gefahrenevents und deren Zustandsübergangsprotokoll. Mittels \verb|event-gassing.nls| wird die Ausbreitung des Giftgases implementiert, die größtenteils den Patch-Lebenszyklus manipuliert.
+Die Quellcode-Datei \verb|event.nls| beinhaltet den Lebenszyklus der Gefahrenevents und deren Zustandsübergangsprotokoll. 
 
 \paragraph{Lokalisierung}
 
@@ -623,17 +622,16 @@ Die Quellcode-Datei \verb|event.nls| beinhaltet den Lebenszyklus der Gefahreneve
 locate.nls
 \end{verbatim}
 
-In dieser Datei wird der Algorithmus zur Lokalisierung aus dem Paper \cite{Jonathan.2004} implementiert.
+In dieser Datei wird der \emph{Multilateration Algorithmus} zur Lokalisierung aus dem Paper \cite{Jonathan.2004} implementiert.
 
 \paragraph{Notausgänge}
 
 \begin{verbatim}
 exit.nls
 exit-cellular-automaton.nls
-exit-gsn.nls
 \end{verbatim}
 
-Die Quellcode-Datei \verb|event.nls| steuert den Setup und den Lebenszyklus der Notausgänge. Mittels \verb|exit-cellular-automaton.nls| wird der Orientierungsalgorithmus auf Basis des zellulären Automats realisiert. Letztlich definiert die Datei \verb|exit-gsn.nls| das Kommunikationsmodell zur Übermittlung der Statusinformationen.
+Die Quellcode-Datei \verb|event.nls| steuert den Setup und den Lebenszyklus der Notausgänge. Mittels \verb|exit-cellular-automaton.nls| wird der Orientierungsalgorithmus auf Basis des zellulären Automats realisiert.
 
 \paragraph{Personen}
 

@@ -1,7 +1,7 @@
 \chapter{Einf\"uhrung}
 \setcounter{page}{1}
 
-Mit Hilfe der NetLogo-Simulationsumgebung \cite{Netlogo.1999} wird eine dynamische Evakuierung von Gebäuden implementiert. Dazu werden die Grundrisse der Gebäude oder Etage in die Simulationsumgebung geladen. Diese dient als Grundlage für die Platzierung von Personen, Gefahrenevents und Notausgängen. 
+Mit Hilfe der NetLogo-Simulationsumgebung \cite{Netlogo.1999} wird eine dynamische Evakuierung von Personen in Gebäuden implementiert. Dazu werden die Grundrisse der Gebäude oder Etage in die Simulationsumgebung geladen. Diese dient als Grundlage für die Platzierung von Personen, Gefahrenevents und Notausgängen. 
 
 Auf der Flucht vor Gefahrenevents werden die Personen von mobilen Geräten unterstützt, die zur Warnung anderer Personen und zur Lokalisierung der Notausgänge dienen.
 
@@ -17,14 +17,14 @@ Auf der Flucht vor Gefahrenevents werden die Personen von mobilen Geräten unter
 
 \section{Aufgabenbeschreibung}
 
-Die Aufgabe besteht in der Umsetzung einer geeigneten Simulationsumgebung (siehe Kapitel \ref{cha:simulationsumgebung}). Auf deren Basis Algorithmen zur Lokalisierung und Bestimmung eines Fluchtweges zu den Notausgängen entwickelt werden (siehe Kapitel \ref{cha:algorithmik}). Schließlich wird eine Evaluation der der Algorithmen in Punkto Effizienz und Zuverlässigkeit durchgeführt und Reflektiert (siehe Kapitel \ref{cha:evaluation}).
+Die Aufgabe besteht in der Umsetzung einer geeigneten Simulationsumgebung (siehe Kapitel \ref{cha:simulationsumgebung}). Auf deren Basis Algorithmen zur Lokalisierung und der Bestimmung eines Fluchtweges zu den Notausgängen entwickelt werden (siehe Kapitel \ref{cha:algorithmik}). Schließlich wird eine Evaluation der Algorithmen in Punkto Effizienz und Zuverlässigkeit durchgeführt und Reflektiert (siehe Kapitel \ref{cha:evaluation}).
 
-Personen werden in der NetLogo-Umgebung als Agenten realisiert, die sich nach dem Bewegungsmodell (siehe Abschnitt \ref{sec:bewegungsmodell}) innerhalb des Grundrisses bewegen. Die initiale Platzierung geschieht zufällig, analog zu der Platzierung der Gefahrenevents.\\
+Personen werden in der NetLogo-Umgebung als Agenten realisiert, die sich entsprechend eines Bewegungsmodells (siehe Abschnitt \ref{sec:bewegungsmodell}) innerhalb des Grundrisses bewegen. Die initiale Platzierung geschieht zufällig, analog zur Platzierung der Gefahrenevents.\\
 Personen besitzen die Fähigkeit diese Gefahrenevents in ihrer Umgebung wahrzunehmen und als Gefahrensituation zu deuten. Der Personen versuchen daraufhin den besten Weg zu einem Notausgang zu finden und benachbarte Personen dabei über ihre mobilen Geräte zu warnen.
 
 Als Gefahrensituationen (siehe Abschnitt \ref{sec:gefahrensituationen}) zählt eine gewisse Anzahl von Giftgasbomben mit eingebautem Zeitzünder, die je ein Gefahrenevent darstellen. Die freigesetzten Gasmengen sind regulierbar und breiten sich innerhalb des freien Raumes aus.
 
-Zur Evakuierung der Personen aus dem Gefahrenevent werden Notausgänge (siehe Abschnitt \ref{sec:notausgaenge}) in dem Grundriss platziert, deren Position sich während der Simulation nicht ändert, sogenannte \emph{anchor notes}.
+Zur Evakuierung der Personen aus dem Gefahrenevent werden Notausgänge (siehe Abschnitt \ref{sec:notausgaenge}) im Grundriss platziert, deren Position sich während der Simulation nicht ändert, sogenannte \emph{anchor notes}.
 
 Eine feste Position ist notwendig zur Realisierung der dezentralen Lokalisierungsalgorithmen, die auf den mobilen Geräten der Personen aktiv sind und bei einer dynamischen Evakuierung assistieren. Durch eine lokal eingeschränkte Kommunikationsfähigkeit (siehe Abschnitt \ref{sec:kommunikationsmodell}) werden Informationen über die Passierbarkeit der Notausgänge an die mobilen Geräte verteilt. Dies ermöglicht die sichere Evakuierung, falls beispielsweise das Giftgas einen Notausgang erreicht hat oder die Fluchtwege blockiert sind.
 

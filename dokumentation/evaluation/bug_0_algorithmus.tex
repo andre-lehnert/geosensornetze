@@ -12,7 +12,9 @@ Bei dem Bug-2-Algorithmus wird eine sogenannte \emph{m-Linie} zwischen Person un
 
 Abbildung \ref{fig:bug_2} zeigt schematisch einen Grundriss mit einer Person bzw. einem Agenten und einem Notausgang. Die \emph{m-Linie} ist gestrichelt dargestellt, die Wände schwarz.
 
-Nach dem Auslösen der Flucht bewegt sich die Person entlang der m-Linie, bis eine Wand detektiert wird. Eine solche Detektion ist bereits bei dem \emph{random walk} implementiert worden. Es wird von der Person nun ein sogenanntes \emph{wall following} durchgeführt, bis die m-Linie näher am Notausgang passiert wird. Für diesen Schritt kann die initiale m-Linie lokal gespeichert werden oder falls möglich mit der approximierten Position eine neue m-Linie berechnet werden. Die Person bewegt sich erneut entlang der m-Linie.
+Nach dem Auslösen der Flucht bewegt sich die Person entlang der m-Linie, bis eine Wand detektiert wird. Eine solche Detektion ist bereits bei dem \emph{random walk} implementiert worden. 
+
+Es wird von der Person nun ein sogenanntes \emph{wall following} durchgeführt, bis die m-Linie erneut, aber näher am Notausgang passiert wird. Für diesen Schritt kann die initiale m-Linie lokal gespeichert werden oder falls möglich mit der approximierten Position eine neue m-Linie berechnet werden. Die Person bewegt sich erneut entlang der m-Linie.
 
 
 

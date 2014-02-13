@@ -5,9 +5,7 @@
 
 Die mobilen Geräte bestimmen über die \emph{Multilateration Lokalisierung} die approximierte Position der Personen. Daraus wird die Entfernung zu den Notausgängen geschätzt. Im Falle einer Gefahrensituation flüchten die Personen zu dem nächst gelegenen und verfügbaren Notausgang.
 
-Für die Orientierung während der Flucht steuert die Umgebung (Zelluläre Automaten) die Bewegung der Person.
-
-Die zellulären Automaten dienen zur Modellierung räumlich diskreter dynamischer Systeme. In diesem Fall wird die zweidimensionale Simulationsumgebung als Zellularraum $Z$ und die Patches als Zellen $z \in Z$ betrachtet. Die Patches bilden ein orthogonales Gitter.
+Bei der Flucht steuert die Umgebung (zelluläre Automaten) die Bewegung der Person. Die zellulären Automaten dienen zur Modellierung räumlich diskreter dynamischer Systeme. In diesem Fall wird die zweidimensionale Simulationsumgebung als Zellularraum $Z$ und die Patches als Zellen $z \in Z$ betrachtet. Die Patches bilden ein orthogonales Gitter.
 
 Für die endliche Nachbarschaft der Zellen ergibt sich:
 
@@ -32,9 +30,9 @@ Neben der Menge an benachbarten Zellen besitzt jede Zelle einen diskreten Zustan
 $Q = \{NONE, SPREADING, IDLE, DONE\}$
 \end{quote}
 
-Zusätzlich besitzt jede Zelle lokale Zustandsübergangsregeln $\delta \colon Q^{N}\to Q$, die in Abhängigkeit mit den Zuständen und Werte aller Nachbarn zum Zeitpunkt $t$ deren neuen Zustand bestimmt. Für jeden diskreten Zeitschritt $t + 1$ werden die Zustandsübergangsregeln für alle Zellen angewendet.
+Zusätzlich besitzt jede Zelle lokale Zustandsübergangsregeln $\delta \colon Q^{N}\to Q$, die in Abhängigkeit mit den Zuständen und Werte aller Nachbarn zum Zeitpunkt $t$ deren neuen Zustand bestimmen. Für jeden diskreten Zeitschritt $t + 1$ werden die Zustandsübergangsregeln für alle Zellen angewendet.
 
-Besonders ist hier, dass sowohl der Zustand einer Zelle überführt wird, als auch die Signalausbreitung der Notausgänge simuliert wird. Jede benachbarte Zelle $Z_{Neighbor} \subset Z\setminus\{z\}$ erhält den inkrementierten Signal-Dämpfungswert des Vorgängers $z \in Z$. Nachdem die dynamische Signalausbreitung abgeschlossen ist, werden die zellulären Automaten als terminiert, d.h. statisch angesehen. Zustands- und Wertänderungen sind nicht mehr möglich. Die Signalausbreitung ist beendet, sobald die maximale Dämpfung erreicht wurde.
+Besonders ist hier, dass sowohl der Zustand einer Zelle überführt wird, als auch die Signalausbreitung der Notausgänge simuliert wird. Jede benachbarte Zelle $Z_{Neighbor} \subset Z\setminus\{z\}$ erhält den inkrementierten Signal-Dämpfungswert des Vorgängers $z \in Z$. Nachdem die dynamische Signalausbreitung abgeschlossen ist, werden die zellulären Automaten als terminiert angesehen. Zustands- und Wertänderungen sind nicht mehr möglich. Die Signalausbreitung ist beendet, sobald die maximale Dämpfung erreicht wurde.
 
 Abbildung \ref{fig:flooding} zeigt die Zeitschritte $t_{1}$ bis $t_{9}$ bei Anwendung der Von-Neumann-Nachbarschaftsbeziehung. Die schwarze Zelle markiert die Position eines Notausgangs. Zum Zeitpunkt $t_{0}$ ist wird diese Zelle mit dem Signal-Dämpfungswert = 0 und dem Zustand \verb|SPREADING| (spontan) initialisiert.
 
@@ -47,9 +45,9 @@ Abbildung \ref{fig:flooding} zeigt die Zeitschritte $t_{1}$ bis $t_{9}$ bei Anwe
 
 Die Signalausbreitung unterliegt dem lokalen Verhalten der zellulären Automaten durch die entsprechenden Zustandsübergangsregeln. Bei $i \geq 3$ Notausgängen sind die Zustandsübergangsregeln entsprechend komplex\footnote{Nach der Klassifizierung durch \cite{Wolfram} können die zellulären Automaten der Klasse 4 zugeordnet werden.} und werden an dieser Stelle nicht detailliert beschrieben.
 
-\subsection{Orientierung der Personen bei der Flucht}
+\paragraph{Orientierung der Personen bei der Flucht}
 
-Nachdem die Signalausbreitung abgeschlossen ist, orientiert sich eine Person bei der Flucht anhand der lokalen Signal-Dämpfungswerten der aktuellen Zelle und der benachbarten Zellen. Das Bewegungsmodell wurde bereits in Abschnitt \ref{sec:bewegungsmodell} angeschnitten. Abbildung \ref{fig:fleeing} dient daher als visuelle Unterstützung der Fluchtwegbestimmung.
+Nachdem die Signalausbreitung abgeschlossen ist, orientiert sich eine Person bei der Flucht anhand der lokalen Signal-Dämpfungswerte der aktuellen Zelle und der benachbarten Zellen. Das Bewegungsmodell wurde bereits in Abschnitt \ref{sec:bewegungsmodell} angeschnitten. Abbildung \ref{fig:fleeing} dient daher als visuelle Unterstützung der Fluchtwegbestimmung.
 
 Zum Zeitpunkt $t_{-1}$ detektiert die Person eine Gefahrensituation. Die Person hat, über die \emph{Multilateration Lokalisierung} und der Kommunikation der Notausgänge, den Notausgang auf  $z_{exit} \in Z$ als nächstes verfügbares Evakuierungsziel bestimmt.
 

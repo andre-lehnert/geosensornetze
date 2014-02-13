@@ -1,6 +1,7 @@
 \section{Lokalisierung}
 
-Um die beste Lokalisierung mit dem Algorithmus zu erreichen, spielen die Parameter die größte Rolle. In den folgenden Tabellen und Analysen wird deutlich, wie groß die Unterschiede zwischen den verschiedenen Ausführungen sein kann, wenn man einen Parameter verändert. Zwischen den Lokalisierungen in einer Tabelle werden die Personen nicht neu generiert, die Werte in einer Tabelle sind also vergleichbar. Zwischen verschiedenen Tabellen werden die Personen jedoch neu generiert, also kann es zu generellen Abweichungen kommen, da die Verteilung der Personen auch eine Rolle in der Genauigkeit spielt.
+Um die beste Lokalisierung mit dem \emph{Multilateration Algorithmus} zu erreichen, spielt die Parameter-Konfiguration die größte Rolle. In den folgenden Tabellen und Analysen wird deutlich, wie groß die Unterschiede zwischen den verschiedenen Ausführungen sein kann, wenn man einen Parameter verändert. \par
+Zwischen den Lokalisierungen in einer Zeile werden die Personen nicht neu generiert, die Werte in einer Zeile sind also vergleichbar. Zwischen verschiedenen Tabellen werden die Personen jedoch neu generiert, also kann es zu generellen Abweichungen kommen, da die Verteilung der Personen auch eine Rolle in der Genauigkeit spielt.
 
 \paragraph{Beschreibung der Parameter und Tabellenspalten}
 
@@ -8,11 +9,11 @@ Um die beste Lokalisierung mit dem Algorithmus zu erreichen, spielen die Paramet
    \item[number-of-exits] (Tabellenspalte \emph{\#Exits}) \hfill \\
 	Anzahl der Ausgänge und Sensorpunkte für den Algorithmus. Der Algorithmus soll mit mehr Sensorpunkten besser approxmieren, ab 3 ist eine realistische Berechnung überhaupt erst möglich.
    \item[personCount] (Tabellenspalte \emph{\#Person}) \hfill \\
-	Anzahl der Personen in der Simulation. Eine Mindestanzahl ist nötig, um das Kommunikationsnetz aufzubauen. Mehr Personen bedeutet eine genauere Abschätzung der Distanzen zu den Sensorpunkten, da der Hop Counts zuverlässiger ist. Das ist durch die Verteilung der Personen gegeben, bei sehr vielen Personen ist die Chance höher, das die Hop Counts \emph{normaler} verteilt sind.
+	Anzahl der Personen in der Simulation. Eine Mindestanzahl ist nötig, um das Kommunikationsnetz aufzubauen. Mehr Personen bedeutet eine genauere Abschätzung der Distanzen zu den Sensorpunkten, da der Hop Counts zuverlässiger ist. Das ist durch die Verteilung der Personen gegeben, bei sehr vielen Personen ist die Chance höher, dass die Hop Counts \emph{normaler} verteilt sind.
    \item[detection-radius] (Tabellenspalte \emph{detRad}) \hfill \\
-	Radius mit dem der UDG bestimmt wird. Das Attribut ist auch für den Hop Count verantwortlich, wenn man ihn höher wählt, dann ist der Hop Count für weiterstehende Personen kleiner, da der Kommunikationsradius höher ist. Ein kleinerer Wert könnte dazu führen, dass das Netz nicht vollständig alle Notausgänge und Personen verbindet, zu groß führt zu einem ungenauen Hop Count.
+	Radius mit dem der UDG bestimmt wird. Das Attribut ist auch für den Hop Count verantwortlich, wenn man ihn höher wählt, dann ist der Hop Count für weiter entfernt stehende Personen kleiner, da der Kommunikationsradius höher ist. Ein kleinerer Wert könnte dazu führen, dass das Netz nicht vollständig alle Notausgänge und Personen verbindet, zu groß führt zu einem ungenauen Hop Count.
    \item[locate-iterations] (Tabellenspalte \emph{\#iter}) \hfill \\
-	Wieviele Iterationen der Algorithmus durchläuft. Mehr Iterationen bedeutet höhere Genauigkeit, aber auch höherer Rechenaufwand.
+	Wie viele Iterationen der Algorithmus durchläuft. Mehr Iterationen bedeutet höhere Genauigkeit, aber auch höherer Rechenaufwand.
    \item[approx-dist] (Tabellenspalte \emph{~dist}) \hfill \\
 	Die Distanz die der Algorithmus zu jedem Hop Count annimmt. Die Zahl ist abhängig von der Personendichte und dem detection-radius.
    \item[average-estimated-distance] (Tabellenspalte \emph{avgDist}) \hfill \\
@@ -44,7 +45,7 @@ No & \#Exits & \#Person & detRad & \#iter & ~dist & avgDist & minDist & maxDist 
 \label{fig:eva01}
 \end{table}
 
-An der Tabelle \ref{fig:eva01} kann man bei den Anzahl der Iterationen sehen, wie die Genauigkeit des Algorithmus mit der Anzahl der Iterationen steigt. Zwischen 5 und 20 Iterationen ist eine Verbesserung von 50\% zu sehen, wenn die approx-dist dementsprechend gewählt wurde. Von 20 auf 30 Iterationen ist die Verbesserung in Relation mit dem Rechenaufwand wohl irrelevant. In den zukünfiigen Experimenten sei die Anzahl der Iterationen stets 20.
+An der Tabelle \ref{fig:eva01} kann man bei den Anzahl der Iterationen sehen, wie die Genauigkeit des Algorithmus mit der Anzahl der Iterationen steigt. Zwischen 5 und 20 Iterationen ist eine Verbesserung von 50\% zu sehen, wenn die approx-dist dementsprechend gewählt wurde. Von 20 auf 30 Iterationen ist die Verbesserung in Relation mit dem Rechenaufwand wohl irrelevant. In den zukünftigen Experimenten sei die Anzahl der Iterationen stets 20.
 
 
 \begin{table}[h]
@@ -60,7 +61,7 @@ No & \#Exits & \#Person & detRad & \#iter & ~dist & avgDist & minDist & maxDist 
 \label{fig:eva02}
 \end{table}
 
-An der Tabelle \ref{fig:eva02} wird der Effekt von verschiedenen approx-dist Werten veranschaulicht. Man findet eine gute Approximation bei \( \frac{2}{3} \) vom Detection Radius. Wenn ie approx-dist noch höher gewählt wird, fallen zuviele geschätzte Position außerhalb der Simulationsumgebung an und das Ergebnis wird verfälscht. Dabei muss noch beachtet werden, dass der detection-radius gesenkt werden konnte, da nun mehr Personen vorhanden sind, die im Kommunikationsnetz den Hop Count genauer weiterreichen und repräsentieren können.
+An der Tabelle \ref{fig:eva02} wird der Effekt von verschiedenen approx-dist Werten veranschaulicht. Man findet eine gute Approximation bei \( \frac{2}{3} \) vom Detection Radius. Wenn die approx-dist noch höher gewählt wird, fallen zu viele geschätzte Position außerhalb der Simulationsumgebung an und das Ergebnis wird verfälscht. Dabei muss noch beachtet werden, dass der detection-radius gesenkt werden konnte, da nun mehr Personen vorhanden sind, die im Kommunikationsnetz den Hop Count genauer weiterreichen und repräsentieren können.
 
 
 \begin{table}[h]
@@ -75,7 +76,7 @@ No & \#Exits & \#Person & detRad & \#iter & ~dist & avgDist & minDist & maxDist 
 \label{fig:eva03}
 \end{table}
 
-Bei der Tabelle \ref{fig:eva03} ist verdeutlicht, dass bei einer größeren Anzahl von Personen eine höhere Dichte entsteht und durch einen kleineren detection-radius zusammen mit einem passenden approx-dist wesentlich genauere Positionen gefunden werden können. Hier ist auch erneut zu sehen, dass \( \frac{2}{3} \) vom Detection Radius wohl ein sinnvoller Wert ist, gegeben einem sinnvollen detection-radius, der nicht viel zu hoch ist, für die vorliegende Dichte der Personen. In den folgenden Experimenten bleiben wir bei 200 Personen mit einem detection-radius von 25.
+Bei der Tabelle \ref{fig:eva03} wird verdeutlicht, dass bei einer größeren Anzahl von Personen eine höhere Dichte entsteht und durch einen kleineren detection-radius zusammen mit einer passenden approx-dist wesentlich genauere Positionen gefunden werden können. Hier ist auch erneut zu sehen, dass \( \frac{2}{3} \) vom Detection Radius wohl ein sinnvoller Wert ist. In den folgenden Experimenten bleiben wir bei 200 Personen mit einem detection-radius von 25.
 
 \begin{table}[h]
 \begin{tabular}{|l|l|l|l|l|l|l|l|l|}
@@ -89,7 +90,7 @@ No & \#Exits & \#Person & detRad & \#iter & ~dist & avgDist & minDist & maxDist 
 \label{fig:eva04}
 \end{table}
 
-In Tabelle \ref{fig:eva04} wird deutlich, wie wichtig es ist viele gleichverteilte Orientierungspunkte zu haben für den Algorithmus. Die Genauigkeit ist deutlich höher im Mittel, insbesondere der kleinste und größte Abstand ist wesentlich besser.
+In Tabelle \ref{fig:eva04} wird deutlich, wie wichtig es ist viele gleich verteilte Orientierungspunkte für den Algorithmus zu haben. Die Genauigkeit ist im Mittel deutlich höher, insbesondere der kleinste und größte Abstand ist wesentlich besser.
 
 \begin{table}[h]
 \begin{tabular}{l|l|l|l|l|l|l|l|l|}
@@ -103,4 +104,4 @@ No & \#Exits & \#Person & detRad & \#iter & ~dist & avgDist & minDist & maxDist 
 \label{fig:eva05}
 \end{table}
 
-Bei Tabelle \ref{fig:eva05} mit 9 Exits ist noch eine Verbesserung zu sehen, inbesondere wieder in der min und max distance. Bei mehr Orientierungspunkten, einem dichteren Netzwerk und mehr Personen wäre eine Genauigkeit auf wenige Patches genau problemlos möglich.
+Bei Tabelle \ref{fig:eva05} mit 9 Notausgängen ist noch eine Verbesserung zu sehen, insbesondere wieder in der min- und max-distance. Bei mehr Orientierungspunkten, einem dichteren Netzwerk und mehr Personen wäre eine Genauigkeit auf wenige Patches genau problemlos möglich.

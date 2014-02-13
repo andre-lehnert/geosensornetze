@@ -1,7 +1,7 @@
 \section{Multilateration Lokalisierung}
 \label{sec:gradient_localization}
 
-Der Algorithmus startet beim Setup der Simulation mit der Bestimmung der Hop Counts von allen Personen zu allen Ausgängen. Der \emph{Hop Count} repräsentiert im Netzwerk die Anzahl der Sprünge, die benötigt wird, um einen Knoten zu erreichen. Sei beispielsweise ein Notausgang mit einer Person verbunden, so hat sie einen Hop Count von 1 vom Notausgang aus. Ist diese Person mit einer anderen Person verbunden, die wiederum \emph{nicht} mit dem Notausgang verbunden ist, so hat sie einen Hop Count von 2.
+Der Algorithmus startet beim Setup der Simulation mit der Bestimmung der Hop Counts von allen Personen zu allen Ausgängen. Der \emph{Hop Count} repräsentiert im Netzwerk die Anzahl der Sprünge, die benötigt werden, um einen Knoten zu erreichen. Sei beispielsweise ein Notausgang mit einer Person verbunden, so hat sie einen Hop Count von 1 vom Notausgang aus. Ist diese Person mit einer anderen Person verbunden, die wiederum \emph{nicht} mit dem Notausgang verbunden ist, so hat sie einen Hop Count von 2.
 
 \paragraph{Theorie} 
 
@@ -17,7 +17,7 @@ In der Formel \ref{eq:dist} bestimmen wir die Formel, die die Distanz zwischen e
 E_j = \sum_{i=1}^{n} (d_{ji} - \hat d_{ji})^2
 \end{equation}
 
-In der Formel \ref{eq:error} bestimmt die Summe des quadrierten Fehler, d.h. die Fehleinschätzung unserer geschätzten Distanz zu der tatsächlichen Distanz. Dabei ist \( d \) die tatsächliche Position und \( \hat d \) die geschätzte Position. Nun ist also \( d \) die unbekannte und wir wollen diesen Fehler minimieren.
+Die Formel \ref{eq:error} bestimmt die Summe des quadrierten Fehler, d.h. die Fehleinschätzung unserer geschätzten Distanz zu der tatsächlichen Distanz. Dabei ist \( d \) die tatsächliche Position und \( \hat d \) die geschätzte Position. Nun ist also \( d \) die unbekannte und wir wollen diesen Fehler minimieren.
 
 \begin{equation} \label{eq:abl}
  \frac{\partial E_j}{\partial x_i} = \sum_{i=1}^{n}(x_j - x_i) \left( 1-\frac{d_{ji}}{\hat d_{ji}} \right) \textrm{ and }  \frac{\partial E_j}{\partial y_i} = \sum_{i=1}^{n}(y_j - y_i) \left( 1-\frac{d_{ji}}{\hat d_{ji}} \right)
@@ -34,7 +34,7 @@ Um den Fehler zu minimieren bilden wir die partiellen Ableitungen in \ref{eq:abl
  \label{visu}
 \end{figure}
 
-In der Implementierung wählen wir als Punkt \( \hat d \) den Ausgang, der dem Charakter laut hop count am nächsten steht, da jede Person die Position aller Notausgänge im Netzwerk kennt. Bei der Implementierung orientiert sich der Algorithmus an den Referenzcode der zur Verfügung gestellt wurde. Nachdem der Hop Count beim Setup für jede Person bestimmt wurde, kann der Algorithmus für jede Person ausgeführt werden. Wieviele Iterationen vorgenommen werden, ist ein einstellbarer Parameter. Nachdem eine Position für eine Person geschätzt wurde, wird sie als rote Person in die Simulationsumgebung integriert und mit der richtigen Person mit einem roten Link verbunden, wie auf der Abbildung \ref{visu} zu sehen ist.
+In der Implementierung wählen wir als Punkt \( \hat d \) den Notausgang, der der Person laut Hop count am nächsten steht, da jede Person die Position aller Notausgänge im Netzwerk kennt. Bei der Implementierung orientiert sich der Algorithmus an dem zur Verfügung gestellten Referenzcode. Nachdem der Hop Count beim Setup für jede Person bestimmt wurde, kann der Algorithmus für jede Person ausgeführt werden. Wie viele Iterationen vorgenommen werden, ist ein einstellbarer Parameter. Nachdem eine Position für eine Person geschätzt wurde, wird sie als rote Person in die Simulationsumgebung integriert und mit der richtigen Person mit einem roten Link verbunden, wie auf der Abbildung \ref{visu} zu sehen ist.
 
 
 
